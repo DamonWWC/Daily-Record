@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="never">
+    <title>Document</title>
+</head>
+<body>
+  <script type="importmap">
+    {
+      "imports": {
+        "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+      }
+    }
+  </script>
+    <div id="app"> <p>
+        This text only updates 1 second after you've stopped typing:
+      </p>
+      <p>{{ text}}</p>
+      <input v-model="text" />
+    </div>
+
+<script type="module">
+import { createApp,customRef } from 'vue'
+import { useDebounceRef } from'./debounceRef.js'
+  createApp({
+    setup() {
+        const text=useDebounceRef('Hello Vue!',2000)
+        return {
+            text
+        }
+    }
+  }).mount('#app')
+</script>
+
+</body>
+</html>
