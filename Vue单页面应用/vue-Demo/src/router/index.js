@@ -29,12 +29,11 @@ const routes1={
     title:'首页'
   }
 };
-console.log([...routes,routes1]);
+export const allroute= [...routes]
+console.log(allroute);
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes:[...routes,routes1]
+  routes:allroute
 })
-
-export const allroute= [...routes,routes1]
 
 export default router

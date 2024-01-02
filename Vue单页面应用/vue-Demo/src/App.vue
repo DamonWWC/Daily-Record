@@ -1,27 +1,76 @@
+<template>
+  <div class="wrapper">
+    <ul class="bg-red-400">
+      <router-link v-for="route in routes" :key="route.path" slots="li" :to="route.path">
+        {{ route.meta.title }}
+      </router-link>
+    </ul>
+    <main style="height: 100%;">
+      <router-view></router-view>
+    </main>
+  </div>
+</template>
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { useRoute, useRouter } from "vue-router";
+import { allroute } from './router/index';
+import { ref } from 'vue';
+const routes = ref(allroute);
 </script>
+<style lang="scss" scoped>
+.wrapper {
+  background-color: transparent;
+  height: 100%;
 
-<template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  ul {
+    background-color: transparent;
+    height: 48px;
+    line-height: 48px;
+    margin: 0 8px;
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    li {
+      height: 48px;
+      position: relative;
+      padding: 0 16px;
+      text-align: center;
+      font-size: 14px;
+      color: #FFFFFF;
+      opacity: 0.65;
+      cursor: pointer;
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
+      &:hover {
+        opacity: 1;
+      }
+    }
 
-  <RouterView />
-</template>
+    .router-link-active {
+      color: #13FFF5;
+      opacity: 1;
 
-<style scoped>
-header {
+      &::before {
+        content: '';
+        // bottom: 6px;
+        // left: 50%;
+        transform: translateX(-50%);
+        position: absolute;
+        width: 24px;
+        height: 2px;
+        background: #13FFF5;
+        border-radius: 1px;
+      }
+    }
+  }
+}
+
+main {
+  margin: 0 24px 24px 24px;
+  background: #051d32;
+  height: calc(100% - 72px);
+}
+
+
+/* header {
   line-height: 1.5;
   max-height: 100vh;
 }
@@ -81,5 +130,5 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
-}
+} */
 </style>

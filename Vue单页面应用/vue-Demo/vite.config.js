@@ -21,5 +21,19 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  css: {
+    postcss: {
+      plugins: [
+        // require("tailwindcss"),
+        // require("autoprefixer"),
+      ]
+    },
+    preprocessorOptions: {
+      scss: {
+        // 给 sass-loader 传递选项
+        // additionalData: `@import "@/styles/variables.scss";`
+      }
+    }
   }
 })
