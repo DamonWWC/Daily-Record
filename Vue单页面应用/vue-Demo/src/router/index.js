@@ -19,6 +19,8 @@ const routes= Object.entries(pages).map(([path,meta])=>{
     component:comps[comPath],
     meta
   }
+}).sort((a,b)=>{
+  return a.meta.menuOrder-b.meta.menuOrder
 });
 const routes1={
   path:'/',
