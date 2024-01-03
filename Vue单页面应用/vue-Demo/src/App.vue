@@ -1,11 +1,14 @@
 <template>
   <div class="wrapper">
-    <ul class="bg-red-400">
-      <router-link v-for="route in routes" :key="route.path" slots="li" :to="route.path">
-        {{ route.meta.title }}
-      </router-link>
+    <ul class="flex items-center">
+      <li v-for="route in routes" :key="route.path">
+        <router-link :to="route.path" >
+          {{ route.meta.title }}
+        </router-link>
+      </li>
+
     </ul>
-    <main style="height: 100%;">
+    <main>
       <router-view></router-view>
     </main>
   </div>
@@ -29,13 +32,14 @@ const routes = ref(allroute);
     line-height: 48px;
     margin: 0 8px;
 
+    // position: relative;
     li {
       height: 48px;
       position: relative;
       padding: 0 16px;
       text-align: center;
       font-size: 14px;
-      color: #FFFFFF;
+      color: black;
       opacity: 0.65;
       cursor: pointer;
 
@@ -50,8 +54,8 @@ const routes = ref(allroute);
 
       &::before {
         content: '';
-        // bottom: 6px;
-        // left: 50%;
+        bottom: 6px;
+        left: 50%;
         transform: translateX(-50%);
         position: absolute;
         width: 24px;
@@ -64,7 +68,7 @@ const routes = ref(allroute);
 }
 
 main {
-  margin: 0 24px 24px 24px;
+  margin: 0 8px;
   background: #051d32;
   height: calc(100% - 72px);
 }
