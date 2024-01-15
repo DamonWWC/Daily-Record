@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button class="btn">打折</button>
+    <label>价格：4599.00</label>
+    <script src="./animation.js"></script>
+    <script>
+        const label=document.querySelector("label");
+        const btn=document.querySelector(".btn");
+         
+        
+        btn.onclick=function(){
+            animation(1000,2000,200,(val)=>
+            {
+                label.textContent=`价格：${val.toFixed(2)}`;
+            });
+        }
+
+        
+    </script>
+</body>
+</html>
