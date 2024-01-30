@@ -6,7 +6,7 @@ const app=http.createServer((req,res)=>{
     
     switch(urlObj.pathname){
         case '/api/user':
-            res.end(`${urlObj.query.callback} (${JSON.stringify({
+            res.end(`${urlObj.query.callback}  (${JSON.stringify({
                 name:"gp145",
                 age:100
             })})`)
