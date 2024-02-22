@@ -91,7 +91,7 @@ class MainWindow(QMainWindow):
         # 当前view加载地址
  
         self.webview = WebEngineView(self)
-        self.webview.setUrl(QUrl("http://www.baidu.com"))
+        self.webview.setUrl(QUrl("http://dev-k8s.pcitech.com:31114//hjmos-lnc-web/#/H5Page/h5Panorama"))
         self.setCentralWidget(self.webview)
  
         # 使用QToolBar创建导航栏，并使用QAction创建按钮

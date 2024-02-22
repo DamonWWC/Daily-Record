@@ -59,18 +59,11 @@
 			<UiBuildOutputFiles Include="$(UiRoot)$(UiBuildOutput)**\*.*" />
 		</ItemGroup>
 		
-		<Copy
-			SourceFiles="@(UiBuildOutputFiles)"
-			DestinationFiles="@(UiBuildOutputFiles->'$(WwwRoot)%(RecursiveDir)%(Filename)%(Extension)')" />
+		<Copy SourceFiles="@(UiBuildOutputFiles)" DestinationFiles="@(UiBuildOutputFiles->'$(WwwRoot)%(RecursiveDir)%(Filename)%(Extension)')" />
 
-		<MakeDir
-      Directories="$(TargetDir)\$(WwwRoot)"
-      Condition=" '$(EmbedWwwRoot)' != 'true' And !Exists('$(TargetDir\$(WwwRoot)') " />
+		<MakeDir Directories="$(TargetDir)\$(WwwRoot)" Condition=" '$(EmbedWwwRoot)' != 'true' And !Exists('$(TargetDir\$(WwwRoot)') " />
 
-		<Copy
-			SourceFiles="@(UiBuildOutputFiles)"
-			DestinationFiles="@(UiBuildOutputFiles->'$(TargetDir)\$(WwwRoot)%(RecursiveDir)%(Filename)%(Extension)')"
-      Condition=" '$(EmbedWwwRoot)' != 'true' " />
+		<Copy SourceFiles="@(UiBuildOutputFiles)" DestinationFiles="@(UiBuildOutputFiles->'$(TargetDir)\$(WwwRoot)%(RecursiveDir)%(Filename)%(Extension)')" Condition=" '$(EmbedWwwRoot)' != 'true' " />
 
 		<RemoveDir Directories="$(UiRoot)$(UiBuildOutput)" />
 	</Target>
