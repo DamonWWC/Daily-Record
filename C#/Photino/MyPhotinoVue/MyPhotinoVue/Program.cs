@@ -53,7 +53,7 @@ class Program
                 // "window.external.receiveMessage(callback: Function)"
                 window.SendWebMessage(response);
             })
-            .Load("https://www.bilibili.com/video/BV1e6421G7az/?spm_id_from=333.1007.tianma.1-2-2.click"); // Can be used with relative path strings or "new URI()" instance to load a website.
+            .Load("http://dev-k8s.pcitech.com:31114//hjmos-lnc-web/#/H5Page/h5Panorama"); // Can be used with relative path strings or "new URI()" instance to load a website.
 
         window.WaitForClose(); // Starts the application event loop
     }
