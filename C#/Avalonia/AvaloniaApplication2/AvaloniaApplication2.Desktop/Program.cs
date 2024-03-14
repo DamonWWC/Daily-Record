@@ -42,6 +42,7 @@ class Program
         settings.ResourcesDirPath = Path.Combine(cefPath, PlatformInfo.IsMacOS ? "Resources" : "");
         settings.LogSeverity = CefLogSeverity.Warning;
         settings.UncaughtExceptionStackSize = 8;
+        
 
         //App.FrameworkInitialized += App_FrameworkInitialized;
         //App.FrameworkShutdown += App_FrameworkShutdown;
@@ -86,10 +87,10 @@ class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace()
-            .UseReactiveUI()
-         .With(new FontManagerOptions
-         {
-             DefaultFamilyName = "Noto Sans CJK SC"
-         });
+            .UseReactiveUI();
+         //.With(new FontManagerOptions
+         //{
+         //    DefaultFamilyName = "Noto Sans CJK SC"
+         //});
 
 }
