@@ -86,10 +86,10 @@ var widthOnRejected = new ResiliencePipelineBuilder()
     {
         DefaultRateLimiterOptions = new ConcurrencyLimiterOptions
         {
-            //并发个数，也就是同时可运行个数
-            PermitLimit = 1,
-            //
-            QueueLimit=0
+            //并发个数，也就是同时可运行个数，超过这个数量的任务将被阻塞或者排队等待。
+            PermitLimit = 3,
+            //任务在被执行之前可以排队等待的最大数量，一旦达到了设置的值，任何新添加的任务请求将被拒绝，通常会返回一个错误或者采取其他的处理方式
+            QueueLimit = 0
         },
         OnRejected = args =>
         {
@@ -97,6 +97,7 @@ var widthOnRejected = new ResiliencePipelineBuilder()
             return default;
         }
     }).Build();
+
 
 
 
@@ -116,11 +117,14 @@ async void Run(int num)
 {
     try
     {
-        await widthOnRejected.ExecuteAsync(async ct =>
+       var aa= await widthOnRejected.ExecuteAsync(async ct =>
         {
             await Task.Delay(2000*num, ct);
+            
             Console.WriteLine($"Run{num}{DateTime.Now}");
+            return new ValueTask<string>("1");
         }, CancellationToken.None);
+        var bb = aa.Result;
     }
     catch (RateLimiterRejectedException)
     {
