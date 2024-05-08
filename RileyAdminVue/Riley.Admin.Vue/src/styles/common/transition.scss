@@ -9,3 +9,14 @@
         transform: scale(1);
     }
 }
+
+@keyframes error-num{
+    0%{
+        transform:transformY(60px);
+        opacity:0;
+    }
+    100%{
+        transform:transformY(0);
+        opacity:1;
+    }
+}
