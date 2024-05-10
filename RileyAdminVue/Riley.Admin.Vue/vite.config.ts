@@ -37,7 +37,14 @@ const viteConfig = defineConfig(({mode,command}:ConfigEnv)=>{
   server: {
     host: '0.0.0.0',
     port: 8080,
-    open: true
+    open: true,
+    proxy:{
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        //rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
   },
   resolve: {
     alias: {
@@ -51,6 +58,9 @@ const viteConfig = defineConfig(({mode,command}:ConfigEnv)=>{
       }
     }
   },
+  define:{
+    __NEXT_NAME__:JSON.stringify(process.env.npm_package_name)
+  }
 }
 })
 

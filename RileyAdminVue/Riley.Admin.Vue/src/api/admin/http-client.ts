@@ -1,12 +1,12 @@
 import axios, {
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-  HeadersDefaults,
-  RawAxiosRequestHeaders,
-  ResponseType
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+  type HeadersDefaults,
+  type RawAxiosRequestHeaders,
+  type ResponseType
 } from 'axios'
-import { ElLoading, ElMessage, LoadingOptions } from 'element-plus'
+import { ElLoading, ElMessage, type LoadingOptions } from 'element-plus'
 import { storeToRefs } from 'pinia'
 import {useUserInfo} from '@/stores/userInfo'
 
@@ -77,11 +77,11 @@ export class HttpClient<SecurityDataType = unknown> {
   private secure?: boolean
   private format?: ResponseType
 
-  constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType>) {
+  constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType>={}) {
     this.instance = axios.create({
       ...axiosConfig,
       timeout: 60000,
-      baseURL: axiosConfig.baseURl || import.meta.env.VITE_BASE_URL
+      baseURL: axiosConfig.baseURL || import.meta.env.VITE_BASE_URL
     })
     this.secure = secure
     this.format = format
@@ -126,7 +126,7 @@ export class HttpClient<SecurityDataType = unknown> {
       const propertyContent: any[] = property instanceof Array ? property : [property]
 
       for (const formItem of propertyContent) {
-        const isFileType = formItem instanceof Blob || fromItem instanceof File
+        const isFileType = formItem instanceof Blob || formItem instanceof File
         formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem))
       }
       return formData
@@ -203,6 +203,53 @@ export class HttpClient<SecurityDataType = unknown> {
   protected async refreshToken(config:any){
     const storeUseUserInfo=useUserInfo()
     const {userInfos} =storeToRefs(storeUseUserInfo)
+    const token=userInfos.value.token
+    if(!token){
+        storeUseUserInfo.clear()
+        return Promise.reject(config)
+    }
+
+    if(window.tokenRefreshing){
+        window.requests=window.requests ? window.requests :[]
+        return new Promise((resolve)=> {
+            window.requests.push(()=>{
+                resolve(this.instance(config))
+            })
+        })
+    }
+    window.tokenRefreshing=true
+
+    return this.request<AxiosResponse,any>({
+        path:`/api/admin/auth/refresh`,
+        method:'GET',
+        secure:true,
+        format:'json',
+        login:false,
+        query:{
+          token:token,
+        }
+    })
+    .then((res)=>{
+      if(res?.success){
+        const token=res.data.token
+        storeUseUserInfo.setToken(token)
+        if(window.requests?.length>0){
+          window.requests.forEach((apiRequest)=>apiRequest())
+          window.requests=[]
+        }
+        return this.instance(config)
+      } else {
+        storeUseUserInfo.clear()
+        return Promise.reject(res)
+      }
+    })
+    .catch((error)=>{
+      storeUseUserInfo.clear()
+      return Promise.reject(error)
+    })
+    .finally(()=>{
+      window.tokenRefreshing=false
+    })
   }
     /**
    * 储存每个请求的唯一cancel回调, 以此为标识
@@ -284,14 +331,14 @@ protected closeLoading(loading:boolean = false){
             if(loading){
                 loadingInstance.count++
                 if(loadingInstance.count===1){
-                    loadingInstance.Target=ElLoading.service(loadingOptions)
+                    loadingInstance.target=ElLoading.service(loadingOptions)
                 }
             }
 
             ///
-            const {userInfos}=storeToRefs()
+            const {userInfos}=storeToRefs(useUserInfo())
             const accessToken=userInfos.value.accessToken
-            config.header['Authorization']=`Bearer ${accessToken}`
+            config.headers['Authorization']=`Bearer ${accessToken}`
             return config
         },
         (error)=>{
@@ -333,7 +380,7 @@ protected closeLoading(loading:boolean = false){
     return this.instance
     .request({
         ...requestParams,
-        header:{
+        headers:{
             ...(requestParams.headers || []),
             ...(type && type !== ContentType.FormData ? { 'Content-Type' : type } : {}),
         } as RawAxiosRequestHeaders,

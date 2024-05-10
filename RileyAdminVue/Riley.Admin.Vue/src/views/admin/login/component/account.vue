@@ -35,15 +35,19 @@
 </template>
 
 <script setup lang="ts" name="loginAccount">
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { type AuthLoginInput } from '@/api/admin/data-contracts'
+import { useUserInfo } from '@/stores/userInfo';
+import { AuthApi } from '@/api/admin/Auth';
 
+
+const formRef = ref()
 const state = reactive({
     showDialog: false,
     isShowPassword: false,
     ruleForm: {
-        userName: '',
-        password: '',
+        userName: 'admin',
+        password: '123asd',
         captchaId: '',
         captchaData: ''
     } as AuthLoginInput,
@@ -55,10 +59,30 @@ const state = reactive({
     }
 })
 
-const onSignIn = () => 
-{ 
-    
+const onSignIn = () => {
+    formRef.value.validate(async (valid: boolean) => {
+        if (!valid) return
+
+        //state.disabled.signIn=true
+        login()
+    })
+
 }
+
+const login = async () => {
+    state.loading.signIn = true
+    const res = await new AuthApi().login(state.ruleForm).catch(() => {
+        state.loading.signIn = false
+    })
+    if(!res?.success){
+        state.loading.signIn=false
+        return 
+    }
+    state.loading.signIn=false
+    const token = res.data?.token
+    useUserInfo().setToken(token)
+}
+
 </script>
 
 <style scoped lang="scss">
