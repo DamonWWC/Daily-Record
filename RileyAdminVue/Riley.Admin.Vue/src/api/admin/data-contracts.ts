@@ -13,3 +13,22 @@ export interface ResultOutputObject{
     msg?:string | null
     data?:any
 }
+
+/** 手机号登录信息 */
+export interface AuthMobileLoginInput {
+    /**
+     * 手机号
+     * @minLength 1
+     */
+    mobile: string
+    /**
+     * 验证码
+     * @minLength 1
+     */
+    code: string
+    /**
+     * 验证码Id
+     * @minLength 1
+     */
+    codeId: string
+  }

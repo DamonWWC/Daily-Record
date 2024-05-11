@@ -1,4 +1,4 @@
-import { verifyEmail } from '/@/utils/toolsValidate'
+import { verifyEmail } from './toolsValidate'
 /**
  * 是否手机号
  */

@@ -2,7 +2,7 @@
     <div class="w-full">
         <el-input text :maxlength="props.maxlength" placeholder="请输入验证码" autocomplete="off" v-bind="$attrs">
             <template #prefix>
-                <el-icon class="el-input__icon"><ele-Message /></el-icon>
+                <el-icon class="el-input__icon"><i-ep-Message /></el-icon>
             </template>
             <template #suffix>
                 <el-button v-show="state.status !== 'countdown'" :loading="state.loading.getCode" type="primary" link
@@ -101,8 +101,8 @@ const getCode = () => {
 
 
     state.loading.getCode = true
-    
-    
+    startCountdown()
+
 }
 
 </script>
