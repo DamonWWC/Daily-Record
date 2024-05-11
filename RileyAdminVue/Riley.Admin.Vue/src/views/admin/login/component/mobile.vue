@@ -53,7 +53,7 @@ const state = reactive({
 })
 
 const validate = (callback: Function) => {
-  formRef.value.validate('mobile', (isVaild: boolean) => {
+  formRef.value.validateField('mobile', (isVaild: boolean) => {
     if (!isVaild) {
       phoneRef.value?.focus()
       return
