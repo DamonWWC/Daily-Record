@@ -1,0 +1,10 @@
+{
+  "DbConfig": {
+    "key": "admindb",
+
+
+    "type": "MySql",
+    "connectionString": "Server=119.23.227.72; Port=3307; Database=admin; Uid=root; Pwd=123456; Charset=utf8mb4;SslMode=none;Min pool size=1"
+  }
+
+}

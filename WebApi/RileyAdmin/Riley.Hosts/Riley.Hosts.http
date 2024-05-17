@@ -1,0 +1,6 @@
+@Riley.Hosts_HostAddress = http://localhost:5054
+
+GET {{Riley.Hosts_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
