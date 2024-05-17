@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.Options;
+using Riley.Admin.Core;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Riley.Hosts
@@ -10,55 +11,7 @@ namespace Riley.Hosts
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
-                .AddNegotiate();
-
-            builder.Services.AddAuthorization(options =>
-            {
-                // By default, all incoming requests will be authorized according to the default policy.
-                options.FallbackPolicy = options.DefaultPolicy;
-            });
-
-
-            Load(builder.Configuration,"dbconfig");
-            builder.Services.Configure<DbConfig>(builder.Configuration.GetSection("DbConfig"));
-
-
-
-            var connectionString =  builder.Services.BuildServiceProvider().GetService<IOptions<DbConfig>>();
-          
-            var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
-            builder.Services.AddDbContext<ApplicationDbContext>(
-                options => options.UseMySql(connectionString.Value.ConnectionString, serverVersion));
-
-            
-
-            var app = builder.Build();
-        
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
+            new HostApp().Run(args, typeof(Program).Assembly);
         }
 
 
@@ -115,23 +68,7 @@ namespace Riley.Hosts
             public string? CreatedTime { get; set; } = null;
         }
 
-        public static void Load(ConfigurationManager configurationManager,string fileName,string enviromentName="",bool optional=true,bool reloadOnChange=false)
-        {
-            var filePath = Path.Combine(AppContext.BaseDirectory, "Configs");
-
-            if (!Directory.Exists(filePath))
-                return ;
-
-            
-              configurationManager.SetBasePath(filePath)
-                .AddJsonFile(fileName + ".json", optional, reloadOnChange);
-
-            if(!string.IsNullOrWhiteSpace(enviromentName))
-            {
-                configurationManager.AddJsonFile(fileName + "." + enviromentName + ".json", optional: optional, reloadOnChange: reloadOnChange);
-            }
-            
-        }
+       
         public class DbConfig()
         {
             public string Key { get; set; }
