@@ -3,7 +3,12 @@ using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RileyAdmin.自定义配置提供程序;
+using System.Reflection;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using RileyAdmin.选项;
+using Microsoft.Extensions.Options;
 
 namespace RileyAdmin
 {
@@ -13,8 +18,30 @@ namespace RileyAdmin
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
 
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+            // Add services to the container.
+            ConfigurationManager configurationManagee = new ConfigurationManager();
+            //builder.Services.Configure<PositionOptions>(
+            //    builder.Configuration.GetSection(PositionOptions.Position));
+
+            builder.Services.AddOptions<PositionOptions>().Bind(builder.Configuration.GetSection(PositionOptions.Position));
+
+
+            builder.Services.PostConfigure<PositionOptions>( myoptios =>
+            {
+                myoptios.Title = "demo";
+            });
+
+
+
+            var config = builder.Configuration.GetSection(PositionOptions.Position).Get<PositionOptions>();
+
+
+
+         
+            builder.Configuration.AddEFConfiguration(opt => opt.UseInMemoryDatabase("InMemoryDb"));
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -82,6 +109,22 @@ namespace RileyAdmin
 
             var app = builder.Build();
 
+
+            app.Use(async(context, next) =>
+            {
+                 if(context.Request.Path=="/")
+                {
+                    await context.Response.WriteAsync("Terminal Middleware");
+                    return;
+                }
+                await next(context);
+            });
+
+
+            app.MapGet("/Routing/{message:alpha}", (string message) => $"Hello{message}");
+            
+            var aa = app.Services.GetRequiredService<IOptions<PositionOptions>>().Value;
+           
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

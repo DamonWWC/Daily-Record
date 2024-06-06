@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Web;
@@ -30,6 +31,7 @@ namespace Riley.Admin.Core
             {                
                 logger.Info("Applations startup");
 
+               
                 var builder = WebApplication.CreateBuilder(args);
                 builder.ConfigureApplication(assembly ?? Assembly.GetCallingAssembly());
 
@@ -46,7 +48,7 @@ namespace Riley.Admin.Core
                 
                 
 
-                var appConfig=AppInfo
+                //var appConfig=AppInfo
 
 
                 var app = builder.Build();

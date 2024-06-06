@@ -42,5 +42,6 @@ namespace RileyAdmin.Controllers
 
             return "Bearer " + token;
         }
+
     }
 }
