@@ -14,8 +14,10 @@ namespace RileyAdmin
 {
     public class Program
     {
+       
         public static void Main(string[] args)
         {
+         
             var builder = WebApplication.CreateBuilder(args);
 
 
@@ -108,8 +110,8 @@ namespace RileyAdmin
 
 
             var app = builder.Build();
-
-
+            
+          
             app.Use(async(context, next) =>
             {
                  if(context.Request.Path=="/")
