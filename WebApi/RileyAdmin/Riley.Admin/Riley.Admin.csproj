@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Core\Db\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Riley.Common\Riley.Common.csproj" />
   </ItemGroup>
 

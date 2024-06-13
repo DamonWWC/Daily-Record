@@ -1,4 +1,4 @@
-namespace Riley.Hosts
+namespace Riley.Admin.Services.Db.Models
 {
     public class WeatherForecast
     {

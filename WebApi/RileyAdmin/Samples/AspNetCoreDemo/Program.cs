@@ -12,7 +12,7 @@ namespace AspNetCoreDemo
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddProblemDetails();
             builder.Services.AddControllers(options =>
             {
                 options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormater());
@@ -49,6 +49,7 @@ namespace AspNetCoreDemo
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                app.UseExceptionHandler("/error-development");
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }

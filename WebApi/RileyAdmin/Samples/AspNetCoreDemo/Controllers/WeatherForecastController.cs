@@ -60,6 +60,7 @@ namespace AspNetCoreDemo.Controllers
         [HttpGet("{username}")]
         public IActionResult GetByName(string username)
         {
+            
             AdUser? userInfo = _adminContext.AdUsers.FirstOrDefault(p => p.UserName == username);
 
             return userInfo == null ? NotFound() : Ok(userInfo);

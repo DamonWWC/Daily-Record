@@ -29,8 +29,10 @@ namespace Riley.Common.Helpers
 
             if (!string.IsNullOrWhiteSpace(enviromentName))
             {
-                builder.AddJsonFile(fileName + "." + enviromentName + ".json", optional: optional, reloadOnChange: reloadOnChange);
+                var name = fileName + "." + enviromentName + ".json";
+                builder.AddJsonFile(name, optional: optional, reloadOnChange: reloadOnChange);
             }
+            var aaa = builder.Build();
             return builder.Build();
 
         }
