@@ -12,6 +12,7 @@ namespace Riley.Admin.Core.Auth
     {
         string Create(Claim[] claims);
 
+
         JwtSecurityToken Decode(string jwtToken);
 
     }
