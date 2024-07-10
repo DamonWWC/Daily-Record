@@ -27,6 +27,8 @@ namespace Riley.Admin.Services.Auth
         {
             _adminContext = adminContext;
             _jwtConfig = jwtConfig.Value;
+
+
             _userToken = userToken;
         }
 
