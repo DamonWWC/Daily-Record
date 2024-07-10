@@ -123,6 +123,10 @@ public partial class AdminContext : DbContext
         
     
 
+
+
+
+
         modelBuilder.Entity<AdApi>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
