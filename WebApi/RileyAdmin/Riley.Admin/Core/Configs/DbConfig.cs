@@ -26,11 +26,11 @@ namespace Riley.Admin.Core.Configs
         /// 数据库类型
         /// </summary>
         //public DataType Type { get; set; } = DataType.Sqlite;
-
+         //= "Server=119.23.227.72; Port=3307; Database=admin; Uid=root; Pwd=123456; Charset=utf8mb4;SslMode=none;Min pool size=1";
         /// <summary>
         /// 数据库字符串
         /// </summary>
-        public string ConnectionString { get; set; } = "Server=119.23.227.72; Port=3307; Database=admin; Uid=root; Pwd=123456; Charset=utf8mb4;SslMode=none;Min pool size=1";
+        public string ConnectionString { get; set; }
 
         /// <summary>
         /// 指定程序集
@@ -189,5 +189,13 @@ namespace Riley.Admin.Core.Configs
         /// 租户Id
         /// </summary>
         public long TenantId { get; set; }
+    }
+
+
+    public class DBConfig1
+    {
+        public string Key { get; set; }
+        public string Type { get; set; }
+        public string ConnectionString { get; set; }
     }
 }

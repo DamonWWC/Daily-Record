@@ -25,6 +25,7 @@ namespace RileyAdmin
             builder.Logging.AddConsole();
             // Add services to the container.
             ConfigurationManager configurationManagee = new ConfigurationManager();
+         
             //builder.Services.Configure<PositionOptions>(
             //    builder.Configuration.GetSection(PositionOptions.Position));
 

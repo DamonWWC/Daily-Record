@@ -32,7 +32,6 @@ namespace Riley.Common.Helpers
                 var name = fileName + "." + enviromentName + ".json";
                 builder.AddJsonFile(name, optional: optional, reloadOnChange: reloadOnChange);
             }
-            var aaa = builder.Build();
             return builder.Build();
 
         }

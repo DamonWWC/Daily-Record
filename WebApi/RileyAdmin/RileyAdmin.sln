@@ -15,7 +15,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{E784
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClientDemo", "Samples\HttpClientDemo\HttpClientDemo.csproj", "{46C91E04-CA60-4549-8291-DA125B55584B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreDemo", "Samples\AspNetCoreDemo\AspNetCoreDemo.csproj", "{D17CCF96-37CE-424E-A72E-12BE7B9E4EF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreDemo", "Samples\AspNetCoreDemo\AspNetCoreDemo.csproj", "{D17CCF96-37CE-424E-A72E-12BE7B9E4EF5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6FC405CE-D7C1-4A8E-A189-05168CB2BD9A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

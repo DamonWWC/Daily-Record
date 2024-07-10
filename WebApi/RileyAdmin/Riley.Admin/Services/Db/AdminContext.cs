@@ -6,6 +6,38 @@ using Riley.Admin.Services.Db.Models;
 
 namespace Riley.Admin.Services.Db;
 
+public class TrainPIDSInfo 
+{
+    public int Id { get; set; }
+
+    /// <summary>
+    /// 车组号
+    /// </summary>
+    public string TrainNo { get; set; }
+
+    /// <summary>
+    /// 服务号
+    /// </summary>
+    public string TrainNumber { get; set; }
+
+    /// <summary>
+    /// 方向
+    /// </summary>
+    public string Redundancy { get; set; }
+
+    /// <summary>
+    /// 列车设备信息
+    /// </summary>
+    public string TrainEquipment { get; set; }
+
+   
+
+   
+
+ 
+}
+
+
 public partial class AdminContext : DbContext
 {
     public AdminContext()
@@ -16,6 +48,8 @@ public partial class AdminContext : DbContext
         : base(options)
     {
     }
+
+  
 
     public virtual DbSet<AdApi> AdApis { get; set; }
 
@@ -77,15 +111,17 @@ public partial class AdminContext : DbContext
 
     public virtual DbSet<Demo> Demos { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseMySql("server=119.23.227.72;port=3307;database=admin;uid=root;pwd=123456;charset=utf8mb4;sslmode=none;min pool size=1", ServerVersion.Parse("8.0.36-mysql"));
+    //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+    //        => optionsBuilder.UseMySql("server=119.23.227.72;port=3307;database=admin;uid=root;pwd=123456;charset=utf8mb4;sslmode=none;min pool size=1", ServerVersion.Parse("8.0.36-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
+        
+    
 
         modelBuilder.Entity<AdApi>(entity =>
         {
