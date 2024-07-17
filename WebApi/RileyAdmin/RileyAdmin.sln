@@ -5,9 +5,22 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RileyAdmin", "RileyAdmin\RileyAdmin.csproj", "{205218ED-AF0C-4CDC-8058-24DEADC477C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Riley.Hosts", "Riley.Hosts\Riley.Hosts.csproj", "{3BFC1349-F9CC-4589-AB57-5197442F4C34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Riley.Hosts", "Riley.Hosts\Riley.Hosts.csproj", "{3BFC1349-F9CC-4589-AB57-5197442F4C34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Riley.Admin", "Riley.Admin\Riley.Admin.csproj", "{DC2073FF-9CAB-4E7A-A9D5-A7A1DAA2A7D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Riley.Admin", "Riley.Admin\Riley.Admin.csproj", "{DC2073FF-9CAB-4E7A-A9D5-A7A1DAA2A7D9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Riley.Common", "Riley.Common\Riley.Common.csproj", "{8407E2A9-42C5-49E7-BEDA-64B517D78BC6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{E784BDFD-7DD5-4447-AF82-6DD254418125}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpClientDemo", "Samples\HttpClientDemo\HttpClientDemo.csproj", "{46C91E04-CA60-4549-8291-DA125B55584B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreDemo", "Samples\AspNetCoreDemo\AspNetCoreDemo.csproj", "{D17CCF96-37CE-424E-A72E-12BE7B9E4EF5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6FC405CE-D7C1-4A8E-A189-05168CB2BD9A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,9 +40,25 @@ Global
 		{DC2073FF-9CAB-4E7A-A9D5-A7A1DAA2A7D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC2073FF-9CAB-4E7A-A9D5-A7A1DAA2A7D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC2073FF-9CAB-4E7A-A9D5-A7A1DAA2A7D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8407E2A9-42C5-49E7-BEDA-64B517D78BC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8407E2A9-42C5-49E7-BEDA-64B517D78BC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8407E2A9-42C5-49E7-BEDA-64B517D78BC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8407E2A9-42C5-49E7-BEDA-64B517D78BC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46C91E04-CA60-4549-8291-DA125B55584B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46C91E04-CA60-4549-8291-DA125B55584B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46C91E04-CA60-4549-8291-DA125B55584B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46C91E04-CA60-4549-8291-DA125B55584B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D17CCF96-37CE-424E-A72E-12BE7B9E4EF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D17CCF96-37CE-424E-A72E-12BE7B9E4EF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D17CCF96-37CE-424E-A72E-12BE7B9E4EF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D17CCF96-37CE-424E-A72E-12BE7B9E4EF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{46C91E04-CA60-4549-8291-DA125B55584B} = {E784BDFD-7DD5-4447-AF82-6DD254418125}
+		{D17CCF96-37CE-424E-A72E-12BE7B9E4EF5} = {E784BDFD-7DD5-4447-AF82-6DD254418125}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {102B7931-1179-4953-B1F0-B328B80B7DBB}
