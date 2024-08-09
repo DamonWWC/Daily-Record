@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "动态编译代码", "动�
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "多线程", "多线程\多线程.csproj", "{A6F7A305-94C1-4118-AA14-46584E790598}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBenchmarks", "MyBenchmarks\MyBenchmarks.csproj", "{727E3527-B78E-4706-8E89-CB90E78C5DF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBenchmarks", "MyBenchmarks\MyBenchmarks.csproj", "{727E3527-B78E-4706-8E89-CB90E78C5DF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "可复制粘贴的DataGrid", "可复制粘贴的DataGrid\可复制粘贴的DataGrid.csproj", "{485CACC7-96ED-47A3-92CD-28592A2633F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,14 @@ Global
 		{727E3527-B78E-4706-8E89-CB90E78C5DF1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{727E3527-B78E-4706-8E89-CB90E78C5DF1}.Release|x64.ActiveCfg = Release|Any CPU
 		{727E3527-B78E-4706-8E89-CB90E78C5DF1}.Release|x64.Build.0 = Release|Any CPU
+		{485CACC7-96ED-47A3-92CD-28592A2633F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{485CACC7-96ED-47A3-92CD-28592A2633F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{485CACC7-96ED-47A3-92CD-28592A2633F2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{485CACC7-96ED-47A3-92CD-28592A2633F2}.Debug|x64.Build.0 = Debug|Any CPU
+		{485CACC7-96ED-47A3-92CD-28592A2633F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{485CACC7-96ED-47A3-92CD-28592A2633F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{485CACC7-96ED-47A3-92CD-28592A2633F2}.Release|x64.ActiveCfg = Release|Any CPU
+		{485CACC7-96ED-47A3-92CD-28592A2633F2}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
