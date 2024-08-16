@@ -1,2 +1,7 @@
-﻿  Sample_1.cpp
+﻿  BALL.cpp
+E:\资料\学习代码\Daily-Record\C++\C++Sample\Sample_1\BALL.cpp(57,54): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+E:\资料\学习代码\Daily-Record\C++\C++Sample\Sample_1\BALL.cpp(57,40): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+E:\资料\学习代码\Daily-Record\C++\C++Sample\Sample_1\BALL.cpp(57,26): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+E:\资料\学习代码\Daily-Record\C++\C++Sample\Sample_1\BALL.cpp(80,17): warning C4244: “参数”: 从“time_t”转换到“unsigned int”，可能丢失数据
+E:\资料\学习代码\Daily-Record\C++\C++Sample\Sample_1\BALL.cpp(92,17): warning C4244: “参数”: 从“time_t”转换到“unsigned int”，可能丢失数据
   Sample_1.vcxproj -> E:\资料\学习代码\Daily-Record\C++\C++Sample\x64\Debug\Sample_1.exe

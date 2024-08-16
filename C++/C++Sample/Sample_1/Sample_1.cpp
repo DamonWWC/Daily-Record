@@ -31,7 +31,7 @@ void strcout(const char* str)
 	using namespace std;
 	int count = 0;
 	static	int total = 0;
-	cout << "\"" << str << "\" contains";
+	cout << "\"" << str << "\" contains\n";
 	while (*str++)
 	{
 		count++;
