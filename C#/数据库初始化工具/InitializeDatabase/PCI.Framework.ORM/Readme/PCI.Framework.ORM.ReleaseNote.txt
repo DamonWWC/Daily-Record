@@ -1,0 +1,261 @@
+﻿程序功能简介
+	基于ADO.NET的封装，提供统一的数据库访问功能；
+	支持多数据库类型：mysql，oracle，db2，sql server
+集成框架
+    Dapper v1.50.2
+	DapperExtension v1.6.3
+	SQLBuilder 
+编译环境说明
+	Window10, 编译器：VS2017/2019 .NetFramework:4.0
+编译变量
+	编译开关：Release
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.15#20240321-1
+修改人:gxf
+说明:
+新增文件:
+		
+新增功能:
+
+修改文件:  
+		IDAFacade.cs.cs,DAFacade.cs
+修改问题:
+		1、IDAFacade继承IDisposable，支持Dispose关闭和释放数据库连接；
+新增配置:
+		无
+兼容性:
+		
+注意事项:
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.14#20231107-1
+修改人:wrw
+说明:
+新增文件:
+		GBaseDialect.cs,GBaseDAFacade.cs
+新增功能:
+		1、新增GBase支持（基于ODBC）;
+		2、处理GBase参数化查询不兼容问题
+修改文件:  
+		ConnectType.cs,DAFacadeFactory.cs,LambdaToSql.cs,DAFacade.cs
+修改问题:
+		
+新增配置:
+		无
+兼容性:
+		
+注意事项:	
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.13#20220219-1
+修改人:gxf
+说明:
+新增文件:
+		无
+新增功能:
+		
+修改文件:  
+        DAFacade.cs\IDAFacade.cs
+修改问题:
+		1、代码优化，ExecuteReader方法增加事务参数(DB2兼容需要)；(bugfix#8393)
+新增配置:
+		无
+兼容性:
+		
+注意事项:	
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.12#20211029-1
+修改人:huangli
+说明:
+新增文件:
+		无
+新增功能:
+		
+修改文件:  
+        DAFacade.cs\DAFacadeFactory.cs\IDAFacade.cs
+修改问题:
+		1、修复QueryFirst<T>查询结果集为空时，没有返回结果问题；
+		2、bugfix#bugfix#7249;bugfix#7247
+新增配置:
+		无
+兼容性:
+		
+注意事项:	
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.11#20210830-1
+修改人:wzq
+说明:
+新增文件:
+		无
+新增功能:
+		
+修改文件:  
+        DAFacade.cs
+修改问题:
+		1、修复QueryFirst<T>查询结果集为空时，没有返回结果问题；
+新增配置:
+		无
+兼容性:
+		
+注意事项:	
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.10#20210325-1
+修改人:李双全
+说明:
+新增文件:
+		无
+新增功能:
+		
+修改文件:  
+        DAFacade.cs/IDAFacade.cs
+修改问题:
+		ExecuteScalar、ExecuteTable、ExecuteReader方法加入执行超时时间参数
+新增配置:
+		无
+兼容性:
+		
+注意事项:	
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.9#20201112-1
+修改人:李双全
+说明:
+新增文件:
+		无
+新增功能:
+		
+修改文件:  
+        DB2DAFacade.cs/MySqlDaFacade.cs/OracleDAFacade.cs/SQLServerDAFacade.cs/DAFacade.cs
+修改问题:
+		修改参数的默认长度为100，避免读取数据库返回的字符串太长被截断的问题
+新增配置:
+		无
+兼容性:
+		
+注意事项:	
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.8#20201026-1
+修改人:李双全
+说明:
+新增文件:
+		无
+新增功能:
+		
+修改文件:  
+        SqlGenerator.cs/SqlMapper.cs
+修改问题:
+		执行Sql语句之前不将Sql转换为大写，避免有些sql模糊查询不到数据，只将表名、列名转换为大写。
+新增配置:
+		无
+兼容性:
+		
+注意事项:	
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.7#20200901-1
+修改人:李双全
+说明:
+新增文件:
+		无
+新增功能:
+		
+修改文件:  
+        TransactionManager.cs
+修改问题:
+		1.取消TransactionManager，不要使用TransactionManager，使用事务时，用da.CreateTransaciton方法；
+新增配置:
+		无
+兼容性:
+		
+注意事项:	
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.6#20200826-1
+修改人:李双全
+说明:
+新增文件:
+		无
+新增功能:
+		
+修改文件:  
+        SqlMapper.cs
+修改问题:
+		转换SQL语句为大写，防止小写在Oracle或者DB2上报错
+新增配置:
+		无
+兼容性:
+		
+注意事项:	
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.5#20200807-1
+修改人:李双全
+说明:
+新增文件:
+		无
+新增功能:
+		
+修改文件:  
+        IDAFacade.cs、DAFacade.cs	
+		LambdaToSql.cs、DB2Dialect.cs
+修改问题:
+		1、修改参数的默认长度为50，之前是10，会导致字符串被截断
+		2、ORM针对Db2的测试，部分问题的优化
+新增配置:
+		无
+兼容性:
+		
+注意事项:	
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.4#20200624-1
+修改人:李双全
+说明:
+新增文件:
+		无
+新增功能:
+		SqlLogger.cs	
+修改文件:  
+        SqlMapper.cs/DAFacade.cs/DAQueryable.cs/DAQueryable.cs/IDAQueryable.cs
+修改问题:
+		1.加入SQL日志，SqlLogger.Log，由各客户端去记录SQL语句及参数
+		2.GetPageList有两个重载，统一page参数从1开始，传入小于1的参数抛出异常
+		3.CreateDAQuery中加入分页函数
+新增配置:
+		无
+兼容性:
+		
+注意事项:	
++----------------------------------------------------------------+
+PCI.Framework.ORM模块版本号:1.0.3#20200609-1
+修改人:李双全
+说明:
+新增文件:
+		无
+新增功能:
+		无	
+修改文件:  
+        DAFacade.cs、SqlMapper.cs、DAFacade.cs、DAQueryable.cs、LambdaToSql.cs
+修改问题:
+		1.加入Order by降序
+		2.Where(x=>1==1)翻译成where 1=1
+		3.对可空值类型.HasValue的解析
+		4.加入SqlMapper.IsIgnoreDynamicCase开关，用于Dynamic取值时是否忽略大小写
+		5.修复GetList传入null的表达式时报错问题
+		6.当一个属性在ClassMapper中被Ignore（被Ignore的字段通常没有与数据库列对应）时，select字段时忽略被Ignore的字段
+新增配置:
+		无
+兼容性:
+		
+注意事项:	
++----------------------------------------------------------------+
+
+2020年5月08日 v1.0.2.0
+1、加入多表查询函数CreateQuery
+2、其他的一些优化
+3、修改Select语句，当实体类与列名不对应时，修改为select ..as..
++----------------------------------------------------------------+
+2020年4月20日 v1.0.1
+1、集成Lambda2sql源码；
+2、增加根据表达式查询：GetList<T>,GetPageList<T>,Delete<T>,Update<T>,Count<T>
+3、修改命名空间为Internal
+
++----------------------------------------------------------------+
+2020年3月23日 v1.0.0
+1、集成Dapper，DapperExtension源码；
+2、统一命名空间PCI.Framework.ORM
+3、增加分页查询接口，GetPageList<T>
+
