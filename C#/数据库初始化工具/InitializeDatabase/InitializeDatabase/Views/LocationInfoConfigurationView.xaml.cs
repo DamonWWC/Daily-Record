@@ -12,9 +12,6 @@ namespace InitializeDatabase.Views
             InitializeComponent();
         }
 
-        private void DataGrid_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-
-        }
+       
     }
 }

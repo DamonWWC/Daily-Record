@@ -2,35 +2,118 @@
     x:Class="InitializeDatabase.Views.LocationInfoConfigurationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+    xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
     xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:helper="clr-namespace:InitializeDatabase.Helper"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:prism="http://prismlibrary.com/"
     Name="user"
     prism:ViewModelLocator.AutoWireViewModel="True">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <hc:Drawer
+            Name="DrawerLeft"
+            Dock="Right"
+            ShowMask="True"
+            ShowMode="Cover">
+            <Border
+                Width="800"
+                Background="{DynamicResource RegionBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="0,1,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Border BorderBrush="Gray" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Left"
+                                Style="{StaticResource TextBlockTitle}"
+                                Text="sql脚本" />
+                            <Button
+                                Grid.Row="0"
+                                HorizontalAlignment="Right"
+                                hc:IconElement.Geometry="{StaticResource DeleteFillCircleGeometry}"
+                                Command="hc:ControlCommands.Close"
+                                Foreground="{DynamicResource PrimaryTextBrush}"
+                                Style="{StaticResource ButtonIcon}" />
+                        </Grid>
+                    </Border>
+
+                    <avalonedit:TextEditor
+                        Grid.Row="1"
+                        Style="{StaticResource TextEditorCustom}"
+                        SyntaxHighlighting="SQL ">
+                        <i:Interaction.Behaviors>
+                            <helper:AvalonEditBehaviour CodeText="{Binding SqlText}" />
+                        </i:Interaction.Behaviors>
+                    </avalonedit:TextEditor>
+                </Grid>
+            </Border>
+        </hc:Drawer>
+        <!--<hc:SearchBar />
         <hc:ComboBox
             hc:InfoElement.ShowClearButton="True"
             DisplayMemberPath="Description"
             ItemsSource="{Binding LocationInfos}"
             SelectedValue="{Binding MergInfo, Mode=TwoWay}"
-            SelectedValuePath="Id" />
+            SelectedValuePath="Id" />-->
+        <hc:TextBox
+            Width="300"
+            Margin="10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            hc:InfoElement.Placeholder="输入所属线路Id"
+            hc:InfoElement.Title="线路Id:"
+            hc:InfoElement.TitlePlacement="Left">
+            <hc:TextBox.Text>
+                <Binding Path="LineInfo" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <hc:RegexRule ErrorContent="请输入整数" Type="Int" />
+                        <hc:NoBlankTextRule ErrorContent="线路ID不能为空" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </hc:TextBox.Text>
+        </hc:TextBox>
+        <StackPanel
+            Margin="10,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Orientation="Horizontal">
+            <Button Command="{Binding SaveCommand}">
+                保存
+            </Button>
+            <ToggleButton
+                Command="{Binding SaveCommand}"
+                Content="查看"
+                IsChecked="{Binding IsOpen, ElementName=DrawerLeft}" />
+        </StackPanel>
+
+
         <DataGrid
             Grid.Row="1"
             AutoGenerateColumns="False"
+            CanUserAddRows="False"
             ColumnWidth="*"
             HeadersVisibility="Column"
             ItemsSource="{Binding LocationInfos}"
-            KeyDown="DataGrid_KeyDown"
-            RowHeaderWidth="60">
+            RowHeaderWidth="60"
+            SelectionUnit="Cell">
             <DataGrid.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="{Binding PasteCommand}" Header="粘贴" />
+                    <MenuItem
+                        Command="{Binding PasteCommand}"
+                        Header="粘贴"
+                        IsEnabled="{c:Binding 'LocationInfos.Count==0'}" />
                     <MenuItem Command="{Binding ClearCommand}" Header="清空" />
+                    <MenuItem Command="{Binding AddCommand}" Header="新增一行" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
 
@@ -57,12 +140,22 @@
                                 DisplayMemberPath="Description"
                                 ItemsSource="{Binding Path=DataContext.LocationInfos, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                 SelectedValue="{Binding MergInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                SelectedValuePath="Id" />
+                                SelectedValuePath="Description" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
             </DataGrid.Columns>
         </DataGrid>
+        <TextBlock
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="24"
+            Opacity="0.3"
+            Visibility="{c:Binding 'LocationInfos.Count==0',
+                                   FalseToVisibility=Collapsed}">
+            右键粘贴数据
+        </TextBlock>
     </Grid>
 </UserControl>
