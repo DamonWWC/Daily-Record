@@ -31,6 +31,9 @@ namespace InitializeDatabase.ViewModels
                     case "车站信息":
                         _regionManager.RequestNavigate("ContentRegion", "LocationInfoConfigurationView");
                         break;
+                    case "子系统专业配置":
+                        _regionManager.RequestNavigate("ContentRegion", "SubSystemConfigurationView");
+                        break;
                 }
                 
             }

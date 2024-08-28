@@ -3,11 +3,13 @@ using LiteDB;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
+using Prism.Ioc;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
+
 
 namespace InitializeDatabase.ViewModels
 {
@@ -15,9 +17,9 @@ namespace InitializeDatabase.ViewModels
     {
 
         private readonly ILiteDatabase db;
-        public LocationInfoConfigurationViewModel(ILiteDatabase liteDatabase)
-        {
-            db = liteDatabase;
+        public LocationInfoConfigurationViewModel()
+        {            
+            db = ContainerLocator.Container.Resolve<ILiteDatabase>("InitData"); ;
             LocationTypes = EnumHelper.ToList<LocationType>().Where(p => p != LocationType.None).ToList();
             GetInfoFromDb();
         }
