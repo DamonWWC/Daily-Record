@@ -1,4 +1,5 @@
 ﻿using InitializeDatabase.Helper;
+using LiteDB;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -12,9 +13,13 @@ namespace InitializeDatabase.ViewModels
 {
     public class LocationInfoConfigurationViewModel : BindableBase
     {
-        public LocationInfoConfigurationViewModel()
+
+        private readonly ILiteDatabase db;
+        public LocationInfoConfigurationViewModel(ILiteDatabase liteDatabase)
         {
-            LocationTypes = EnumHelper.ToList<LocationType>().Where(p => p != LocationType.None).ToList();                
+            db = liteDatabase;
+            LocationTypes = EnumHelper.ToList<LocationType>().Where(p => p != LocationType.None).ToList();
+            GetInfoFromDb();
         }
 
         #region property
@@ -76,7 +81,7 @@ namespace InitializeDatabase.ViewModels
                     Name = items.ElementAtOrDefault(1),
                     Description = items.ElementAtOrDefault(2),
                     Type = EnumHelper.ToEnum<LocationType>(string.IsNullOrWhiteSpace(items.ElementAtOrDefault(3)) || !Enum.IsDefined(typeof(LocationType), items.ElementAtOrDefault(3)) ? "None" : items.ElementAtOrDefault(3)),
-                    MergInfo = items.ElementAtOrDefault(4)
+                    MergInfo = items.ElementAtOrDefault(4),                  
                 });
             }
             LocationInfos = new ObservableCollection<LocationInfo>(locationInfos);
@@ -89,17 +94,6 @@ namespace InitializeDatabase.ViewModels
         {
             LocationInfos = [];
         }
-
-
-        private DelegateCommand _SaveCommand;
-        public DelegateCommand SaveCommand =>
-            _SaveCommand ?? (_SaveCommand = new DelegateCommand(ExecuteSaveCommand));
-
-        void ExecuteSaveCommand()
-        {
-            CreateSqlText();            
-        }
-
         private DelegateCommand _AddCommand;
         public DelegateCommand AddCommand => _AddCommand ??= new DelegateCommand(ExecuteAddCommand);
 
@@ -107,6 +101,16 @@ namespace InitializeDatabase.ViewModels
         {
             LocationInfos.Add(new LocationInfo());
         }
+
+        private DelegateCommand _SaveCommand;
+        public DelegateCommand SaveCommand => _SaveCommand ??= new DelegateCommand(ExecuteSaveCommand);
+
+        void ExecuteSaveCommand()
+        {
+            CreateSqlText();            
+        }
+
+     
         #endregion cmd
 
 
@@ -115,27 +119,44 @@ namespace InitializeDatabase.ViewModels
 
         private void CreateSqlText()
         {
-            StringBuilder sql = new StringBuilder();
+            StringBuilder sql = new();
             sql.Append("TRUNCATE TABLE LOCATION;").AppendLine();
             List<string> merginfo=[];
             int i = 1;
             foreach (var item in LocationInfos)
             {
+                item.LineId = LineInfo;
                 string str = $"INSERT INTO location VALUES ({item.Id}, '{item.Name}', '{item.Description}', {item.Id}, {LineInfo}, 'mics', SYSDATE, null,null, '{item.Description}', 0);";
                 sql.Append(str).AppendLine();
                 if (!string.IsNullOrWhiteSpace(item.MergInfo))
                 {
-                    merginfo.Add($"INSERT INTO MICS_LOCATIONMERG (PKEY,LOCATION,LOCATION2,MERGTYPE,DELETED) VALUES ({i++},{item.Id},{LocationInfos.FirstOrDefault(p=>p.Description==item.MergInfo).Id},'1','0');");
+                    merginfo.Add($"INSERT INTO MICS_LOCATIONMERG (PKEY,LOCATION,LOCATION2,MERGTYPE,DELETED) VALUES ({i++},{LocationInfos.FirstOrDefault(p=>p.Description==item.MergInfo).Id},{item.Id},'1','0');");
                 }
             }
             sql.AppendLine();
             sql.Append("TRUNCATE TABLE MICS_LOCATIONMERG;").AppendLine();
             sql.Append(string.Join("\t\n",merginfo));
             
-
             SqlText = sql.ToString();
+            SaveDb();
         }
 
+        private void SaveDb()
+        {
+            if (LocationInfos != null)
+            {
+                var col = db.GetCollection<LocationInfo>("locationInfos");
+                col.DeleteAll();
+                col.InsertBulk(LocationInfos);
+            }
+        }
+
+        private void GetInfoFromDb()
+        {
+            var col = db.GetCollection<LocationInfo>("locationInfos");
+            LocationInfos = new ObservableCollection<LocationInfo>(col.Query().ToArray());
+        }
+        
 
 
         #endregion
@@ -148,6 +169,7 @@ namespace InitializeDatabase.ViewModels
         public string Description { get; set; }
         public LocationType Type { get; set; }
         public string MergInfo { get; set; }
+        public string LineId { get; set; }
     }
 
     public enum LocationType

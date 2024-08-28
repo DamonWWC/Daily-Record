@@ -1,4 +1,5 @@
 ﻿using InitializeDatabase.Views;
+using LiteDB;
 using PCI.Framework.ORM;
 using Prism.Ioc;
 using Prism.Regions;
@@ -20,7 +21,7 @@ namespace InitializeDatabase
         {
             
             containerRegistry.RegisterInstance(DAFacadeFactory.CreateDAFacade(ConnectType.Dm, "Server=172.25.11.144;Port=5236;Database=micsDB;User Id=MICS;PWD=DGL1mics;", 120));
-
+            containerRegistry.RegisterInstance<ILiteDatabase>(new LiteDatabase(@"Filename=InitData.db;Password=micsServer"));
             containerRegistry.RegisterForNavigation<LocationInfoConfigurationView>();
             
         }
