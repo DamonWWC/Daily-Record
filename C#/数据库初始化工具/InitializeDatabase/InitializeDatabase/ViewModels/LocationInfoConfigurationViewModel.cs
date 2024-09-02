@@ -9,24 +9,26 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
-
+using Prism.Events;
 
 namespace InitializeDatabase.ViewModels
 {
     public class LocationInfoConfigurationViewModel : BindableBase
     {
-
         private readonly ILiteDatabase db;
-        public LocationInfoConfigurationViewModel()
-        {            
-            db = ContainerLocator.Container.Resolve<ILiteDatabase>("InitData"); ;
+        private IEventAggregator _ea;
+
+        public LocationInfoConfigurationViewModel(IEventAggregator ea)
+        {
+            db = ContainerLocator.Container.Resolve<ILiteDatabase>("InitData");
+            _ea = ea;
             LocationTypes = EnumHelper.ToList<LocationType>().Where(p => p != LocationType.None).ToList();
             GetInfoFromDb();
         }
 
         #region property
 
-        private ObservableCollection<LocationInfo> _LocationInfos=[];
+        private ObservableCollection<LocationInfo> _LocationInfos = [];
 
         /// <summary>
         /// 位置信息
@@ -37,7 +39,6 @@ namespace InitializeDatabase.ViewModels
             set { SetProperty(ref _LocationInfos, value); }
         }
 
-     
         private List<LocationType> _LocationTypes;
 
         public List<LocationType> LocationTypes
@@ -47,6 +48,7 @@ namespace InitializeDatabase.ViewModels
         }
 
         private string _LineInfo;
+
         public string LineInfo
         {
             get { return _LineInfo; }
@@ -54,11 +56,13 @@ namespace InitializeDatabase.ViewModels
         }
 
         private string _SqlText;
+
         public string SqlText
         {
             get { return _SqlText; }
             set { SetProperty(ref _SqlText, value); }
         }
+
         #endregion property
 
         #region cmd
@@ -83,7 +87,7 @@ namespace InitializeDatabase.ViewModels
                     Name = items.ElementAtOrDefault(1),
                     Description = items.ElementAtOrDefault(2),
                     Type = EnumHelper.ToEnum<LocationType>(string.IsNullOrWhiteSpace(items.ElementAtOrDefault(3)) || !Enum.IsDefined(typeof(LocationType), items.ElementAtOrDefault(3)) ? "None" : items.ElementAtOrDefault(3)),
-                    MergInfo = items.ElementAtOrDefault(4),                  
+                    MergInfo = items.ElementAtOrDefault(4),
                 });
             }
             LocationInfos = new ObservableCollection<LocationInfo>(locationInfos);
@@ -96,10 +100,11 @@ namespace InitializeDatabase.ViewModels
         {
             LocationInfos = [];
         }
+
         private DelegateCommand _AddCommand;
         public DelegateCommand AddCommand => _AddCommand ??= new DelegateCommand(ExecuteAddCommand);
 
-        void ExecuteAddCommand()
+        private void ExecuteAddCommand()
         {
             LocationInfos.Add(new LocationInfo());
         }
@@ -107,24 +112,32 @@ namespace InitializeDatabase.ViewModels
         private DelegateCommand _SaveCommand;
         public DelegateCommand SaveCommand => _SaveCommand ??= new DelegateCommand(ExecuteSaveCommand);
 
-        void ExecuteSaveCommand()
+        private void ExecuteSaveCommand()
         {
-            CreateSqlText();            
+            CreateSqlText();
         }
 
-     
+        private DelegateCommand _ShowCommand;
+
+        public DelegateCommand ShowCommand =>
+            _ShowCommand ?? (_ShowCommand = new DelegateCommand(ExecuteShowCommand));
+
+        private void ExecuteShowCommand()
+        {
+            CreateSqlText();
+            _ea.GetEvent<ShowSqlEvent>().Publish(SqlText);
+        }
+
         #endregion cmd
 
-
         #region Func
-
 
         private void CreateSqlText()
         {
             StringBuilder sql = new();
             sql.Append("TRUNCATE TABLE LOCATION;").AppendLine();
-            List<string> merginfo=[];
-            int i = 1;
+            List<string> merginfo = [];
+            ushort i = 1;
             foreach (var item in LocationInfos)
             {
                 item.LineId = LineInfo;
@@ -132,13 +145,13 @@ namespace InitializeDatabase.ViewModels
                 sql.Append(str).AppendLine();
                 if (!string.IsNullOrWhiteSpace(item.MergInfo))
                 {
-                    merginfo.Add($"INSERT INTO MICS_LOCATIONMERG (PKEY,LOCATION,LOCATION2,MERGTYPE,DELETED) VALUES ({i++},{LocationInfos.FirstOrDefault(p=>p.Description==item.MergInfo).Id},{item.Id},'1','0');");
+                    merginfo.Add($"INSERT INTO MICS_LOCATIONMERG (PKEY,LOCATION,LOCATION2,MERGTYPE,DELETED) VALUES ({i++},{LocationInfos.FirstOrDefault(p => p.Description == item.MergInfo).Id},{item.Id},'1','0');");
                 }
             }
             sql.AppendLine();
             sql.Append("TRUNCATE TABLE MICS_LOCATIONMERG;").AppendLine();
-            sql.Append(string.Join("\t\n",merginfo));
-            
+            sql.Append(string.Join("\t\n", merginfo));
+
             SqlText = sql.ToString();
             SaveDb();
         }
@@ -158,10 +171,8 @@ namespace InitializeDatabase.ViewModels
             var col = db.GetCollection<LocationInfo>("locationInfos");
             LocationInfos = new ObservableCollection<LocationInfo>(col.Query().ToArray());
         }
-        
 
-
-        #endregion
+        #endregion Func
     }
 
     public class LocationInfo

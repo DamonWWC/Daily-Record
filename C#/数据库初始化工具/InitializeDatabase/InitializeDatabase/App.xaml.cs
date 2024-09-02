@@ -22,7 +22,9 @@ namespace InitializeDatabase
             containerRegistry.RegisterInstance<ILiteDatabase>(new LiteDatabase(@"Filename=InitData.db;Password=micsServer"),"InitData");
             containerRegistry.RegisterInstance<ILiteDatabase>(new LiteDatabase(@"Filename=RawData.db;Password=micsServer"),"RawData");
             containerRegistry.RegisterForNavigation<LocationInfoConfigurationView>();
-            containerRegistry.RegisterForNavigation<SubSystemConfigurationView>();            
+            containerRegistry.RegisterForNavigation<SubSystemConfigurationView>();
+            containerRegistry.RegisterForNavigation<SubSystemInfoView>();
+           
         }
     }
 }

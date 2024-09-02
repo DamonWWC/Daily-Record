@@ -15,49 +15,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <hc:Drawer
-            Name="DrawerLeft"
-            Dock="Right"
-            ShowMask="True"
-            ShowMode="Cover">
-            <Border
-                Width="800"
-                Background="{DynamicResource RegionBrush}"
-                BorderBrush="{DynamicResource BorderBrush}"
-                BorderThickness="0,1,0,0">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Border BorderBrush="Gray" BorderThickness="0,0,0,1">
-                        <Grid>
-                            <TextBlock
-                                Margin="10,0,0,0"
-                                HorizontalAlignment="Left"
-                                Style="{StaticResource TextBlockTitle}"
-                                Text="sql脚本" />
-                            <Button
-                                Grid.Row="0"
-                                HorizontalAlignment="Right"
-                                hc:IconElement.Geometry="{StaticResource DeleteFillCircleGeometry}"
-                                Command="hc:ControlCommands.Close"
-                                Foreground="{DynamicResource PrimaryTextBrush}"
-                                Style="{StaticResource ButtonIcon}" />
-                        </Grid>
-                    </Border>
-
-                    <avalonedit:TextEditor
-                        Grid.Row="1"
-                        Style="{StaticResource TextEditorCustom}"
-                        SyntaxHighlighting="SQL ">
-                        <i:Interaction.Behaviors>
-                            <helper:AvalonEditBehaviour CodeText="{Binding SqlText}" />
-                        </i:Interaction.Behaviors>
-                    </avalonedit:TextEditor>
-                </Grid>
-            </Border>
-        </hc:Drawer>
+      
         <!--<hc:SearchBar />
         <hc:ComboBox
             hc:InfoElement.ShowClearButton="True"
@@ -90,10 +48,7 @@
             <Button Command="{Binding SaveCommand}">
                 保存
             </Button>
-            <ToggleButton
-                Command="{Binding SaveCommand}"
-                Content="查看"
-                IsChecked="{Binding IsOpen, ElementName=DrawerLeft}" />
+            <ToggleButton Command="{Binding ShowCommand}" Content="查看" />
         </StackPanel>
 
 

@@ -7,7 +7,20 @@
     xmlns:prism="http://prismlibrary.com/"
     prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel
+            Margin="10,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Orientation="Horizontal">
+            <Button Command="{Binding SaveCommand}">
+                保存
+            </Button>
+            <ToggleButton Command="{Binding ShowCommand}" Content="查看" />
+        </StackPanel>
         <DataGrid
             Grid.Row="1"
             AutoGenerateColumns="False"
@@ -29,12 +42,10 @@
             </DataGrid.ContextMenu>
 
             <DataGrid.Columns>
-
                 <DataGridTextColumn Binding="{Binding Name}" Header="专业名称" />
                 <DataGridTextColumn Binding="{Binding SubName}" Header="子系统名称" />
                 <DataGridTextColumn Binding="{Binding Agent}" Header="Agent" />
                 <DataGridTextColumn Binding="{Binding SubSystemKey}" Header="关联子系统Key" />
-
             </DataGrid.Columns>
         </DataGrid>
         <TextBlock
