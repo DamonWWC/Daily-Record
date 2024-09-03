@@ -24,6 +24,7 @@ namespace InitializeDatabase
             containerRegistry.RegisterForNavigation<LocationInfoConfigurationView>();
             containerRegistry.RegisterForNavigation<SubSystemConfigurationView>();
             containerRegistry.RegisterForNavigation<SubSystemInfoView>();
+            containerRegistry.RegisterForNavigation<MajorInfoConfigurationView>();
            
         }
     }

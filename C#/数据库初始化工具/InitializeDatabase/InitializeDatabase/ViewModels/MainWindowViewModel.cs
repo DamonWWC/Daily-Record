@@ -59,6 +59,9 @@ namespace InitializeDatabase.ViewModels
                     case "子系统信息":
                         _regionManager.RequestNavigate("ContentRegion", "SubSystemInfoView");
                         break;
+                    case "专业信息配置":
+                        _regionManager.RequestNavigate("ContentRegion", "MajorInfoConfigurationView");
+                        break;
                 }
             }
         }

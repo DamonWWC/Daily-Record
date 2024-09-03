@@ -79,6 +79,7 @@
             <hc:SideMenuItem Header="子系统专业配置">
                 <hc:SideMenuItem Header="子系统信息" />
                 <hc:SideMenuItem Header="专业信息" />
+                <hc:SideMenuItem Header="专业信息配置" />
             </hc:SideMenuItem>
             <hc:SideMenuItem Header="服务端配置 " />
 

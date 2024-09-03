@@ -21,8 +21,8 @@ public:
     ~Student() {}
     double Average() const;
     const std::string &Name() const;
-    double &operator[](int i);
-    double operator[](int i) const;
+    double &operator[](int i);//stu[0]=100
+    double operator[](int i) const;//a=stu[0]
     friend std::istream &operator>>(std::istream &is, Student &stu);
     friend std::istream &getline(std::istream &is, Student &stu);
     friend std::ostream &operator<<(std::ostream &os, const Student &stu);

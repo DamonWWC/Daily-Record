@@ -10,6 +10,9 @@
     <Compile Update="Views\LocationInfoConfigurationView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\MajorInfoConfigurationView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\SubSystemConfigurationView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -22,6 +25,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\MajorInfoConfigurationView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\SubSystemConfigurationView.xaml">

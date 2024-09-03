@@ -115,16 +115,35 @@ namespace InitializeDatabase.ViewModels
             sql.AppendLine("DELETE FROM MICS_DATAPOINT_SYSTEM ;")
                 .AppendLine(string.Join("\t\n", insertMICS_DATAPOINT_SYSTEM));
             SqlText = sql.ToString();
+            SaveDb();
+           
         }
 
+        private void SaveDb()
+        {
+            if (MajorInfos != null)
+            {
+                var col = initDataDb.GetCollection<MajorInfo>("majorInfos");
+                col.DeleteAll();
+                col.InsertBulk(MajorInfos);
+            }
+        }
         #endregion Function
     }
 
-    public class MajorInfo
+    public class MajorInfo:BindableBase
     {
         public int? SubSystemKey { get; set; }
         public string Name { get; set; }
         public string SubName { get; set; }
         public string Agent { get; set; }
+       
+
+        private bool _IsChecked;
+        public bool IsChecked
+        {
+            get { return _IsChecked; }
+            set { SetProperty(ref _IsChecked, value); }
+        }
     }
 }
