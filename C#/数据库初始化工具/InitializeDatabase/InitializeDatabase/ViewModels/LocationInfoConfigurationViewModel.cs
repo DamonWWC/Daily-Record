@@ -1,15 +1,15 @@
 ﻿using InitializeDatabase.Helper;
 using LiteDB;
 using Prism.Commands;
+using Prism.Events;
+using Prism.Ioc;
 using Prism.Mvvm;
 using System;
-using Prism.Ioc;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using Prism.Events;
 
 namespace InitializeDatabase.ViewModels
 {
@@ -90,7 +90,7 @@ namespace InitializeDatabase.ViewModels
                     MergInfo = items.ElementAtOrDefault(4),
                 });
             }
-            LocationInfos = new ObservableCollection<LocationInfo>(locationInfos);
+            LocationInfos = new ObservableCollection<LocationInfo>(locationInfos.OrderBy(p => int.Parse(p.Id)));
         }
 
         private DelegateCommand _ClearCommand;

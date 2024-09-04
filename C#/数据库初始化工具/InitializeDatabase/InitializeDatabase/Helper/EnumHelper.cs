@@ -76,6 +76,7 @@ namespace InitializeDatabase.Helper
 
             return (attributes.FirstOrDefault() as DescriptionAttribute)?.Description;
         }
+
         /// <summary>
         /// 获取枚举的属性
         /// </summary>

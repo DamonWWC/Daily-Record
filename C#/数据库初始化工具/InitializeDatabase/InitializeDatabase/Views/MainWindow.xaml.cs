@@ -9,7 +9,7 @@ namespace InitializeDatabase.Views
     {
         public MainWindow()
         {
-            InitializeComponent();          
+            InitializeComponent();
         }
     }
 }

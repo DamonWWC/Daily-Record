@@ -1,9 +1,9 @@
 ﻿<UserControl
     x:Class="InitializeDatabase.Views.MajorInfoConfigurationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:prism="http://prismlibrary.com/"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:prism="http://prismlibrary.com/"
     prism:ViewModelLocator.AutoWireViewModel="True">
     <UserControl.Resources>
 
@@ -18,7 +18,6 @@
                 </MultiBinding>
             </DataGridCheckBoxColumn.Binding>
         </DataGridCheckBoxColumn>
-
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -46,16 +45,19 @@
             ItemsSource="{Binding MajorConfigInfos}"
             RowHeaderWidth="60"
             SelectionUnit="Cell">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding PasteCommand}" Header="填充数据" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectedCellsChanged">
                     <prism:InvokeCommandAction Command="{Binding SelectionChanged}" />
                 </i:EventTrigger>
-
             </i:Interaction.Triggers>
             <DataGrid.ColumnHeaderStyle>
                 <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
-
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.CellStyle>
@@ -74,8 +76,6 @@
                     </Style.Triggers>
                 </Style>
             </DataGrid.CellStyle>
-
-
         </DataGrid>
     </Grid>
 </UserControl>

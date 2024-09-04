@@ -1,18 +1,12 @@
 ﻿using ICSharpCode.AvalonEdit;
 using Microsoft.Xaml.Behaviors;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace InitializeDatabase.Helper
 {
-   public sealed class AvalonEditBehaviour :Behavior<TextEditor>
+    public sealed class AvalonEditBehaviour : Behavior<TextEditor>
     {
-
-
         public string CodeText
         {
             get { return (string)GetValue(CodeTextProperty); }
@@ -21,13 +15,13 @@ namespace InitializeDatabase.Helper
 
         // Using a DependencyProperty as the backing store for CodeText.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CodeTextProperty =
-            DependencyProperty.Register("CodeText", typeof(string), typeof(AvalonEditBehaviour), 
-                new FrameworkPropertyMetadata(default(string),FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,PropertyChangedCallback));
+            DependencyProperty.Register("CodeText", typeof(string), typeof(AvalonEditBehaviour),
+                new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, PropertyChangedCallback));
 
         protected override void OnAttached()
         {
             base.OnAttached();
-            if(AssociatedObject!=null)
+            if (AssociatedObject != null)
             {
                 AssociatedObject.TextChanged += AssociatedObjectOnTextChanged;
             }
@@ -36,30 +30,30 @@ namespace InitializeDatabase.Helper
         protected override void OnDetaching()
         {
             base.OnDetaching();
-            if(AssociatedObject!=null)
+            if (AssociatedObject != null)
             {
                 AssociatedObject.TextChanged -= AssociatedObjectOnTextChanged;
             }
         }
 
-        private void AssociatedObjectOnTextChanged(object sender,EventArgs eventArgs)
+        private void AssociatedObjectOnTextChanged(object sender, EventArgs eventArgs)
         {
-            if(sender is TextEditor textEditor)
+            if (sender is TextEditor textEditor)
             {
-                if(textEditor.Document!=null)
+                if (textEditor.Document != null)
                 {
                     CodeText = textEditor.Document.Text;
                 }
             }
         }
 
-        private static void PropertyChangedCallback(DependencyObject dependencyObject,DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
+        private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
             var behavior = dependencyObject as AvalonEditBehaviour;
-            if(behavior.AssociatedObject!=null)
+            if (behavior.AssociatedObject != null)
             {
                 var editor = behavior.AssociatedObject;
-                if(editor.Document!=null)
+                if (editor.Document != null)
                 {
                     var caretOffset = editor.CaretOffset;
                     editor.Document.Text = dependencyPropertyChangedEventArgs.NewValue.ToString();

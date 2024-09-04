@@ -1,75 +1,31 @@
 ﻿using LiteDB;
 using Prism.Commands;
+using Prism.Events;
+using Prism.Ioc;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using Prism.Ioc;
-using System.Dynamic;
-using System.Xml;
-using System.Runtime.Remoting.Messaging;
-using HandyControl.Tools.Converter;
-using System.Globalization;
 
 namespace InitializeDatabase.ViewModels
 {
     public class MajorInfoConfigurationViewModel : BindableBase
     {
         private readonly ILiteDatabase initDataDb;
+        private IEventAggregator _ea;
         public ObservableCollection<DataGridBoundColumn> Columns { get; set; }
 
-        public MajorInfoConfigurationViewModel()
+        public MajorInfoConfigurationViewModel(IEventAggregator ea)
         {
-          
             initDataDb = ContainerLocator.Container.Resolve<ILiteDatabase>("InitData");
-
+            _ea = ea;
             InitData();
         }
-
-        private void InitData()
-        {
-            Columns =
-               [new DataGridTextColumn { Binding = new Binding("Name"), Header = "名称" },                   
-                 ];
-
-            var locationinfos = initDataDb.GetCollection<LocationInfo>("locationInfos").Query().ToArray();
-            var majorinfos = initDataDb.GetCollection<MajorInfo>("majorInfos").Query().ToArray();
-
-            int i = 0;
-          
-            foreach (var item in majorinfos)
-            {      
-                
-
-                Columns.Add(new DataGridCheckBoxColumn { Binding = new Binding($"SelectedMajor[{i++}].IsChecked"), Header = item.Name });
-                //var multi = new MultiBinding()
-                //{
-                //    Converter = new BooleanArr2BooleanConverter(),
-
-                //};
-                //multi.Bindings.Add(new Binding($"SelectedMajor[{i++}].IsChecked"));
-                //multi.Bindings.Add(new Binding("IsSelected")
-                //{
-                //    RelativeSource=new RelativeSource()
-                //    {
-                //        AncestorType=typeof(DataGridCell)
-                //    }
-
-                //});
-
-                //Columns.Add(new DataGridCheckBoxColumn { Binding = multi, Header = item.Name });
-            }
-            List<MajorConfigInfo> majorConfigInfos = new List<MajorConfigInfo>();
-            foreach (var item in locationinfos)
-            {
-                majorConfigInfos.Add(new MajorConfigInfo { Name = item.Name, SelectedMajor = majorinfos.Select(p => new MajorInfo { Name = p.Name, SubName = p.SubName, IsChecked = p.IsChecked }).ToArray() });
-            }
-            MajorConfigInfos = majorConfigInfos;
-        }
-
 
         private List<MajorConfigInfo> _MajorConfigInfos;
 
@@ -79,81 +35,132 @@ namespace InitializeDatabase.ViewModels
             set { SetProperty(ref _MajorConfigInfos, value); }
         }
 
+        private string _SqlText;
 
+        public string SqlText
+        {
+            get { return _SqlText; }
+            set { SetProperty(ref _SqlText, value); }
+        }
+
+        private void InitData()
+        {
+            Columns =
+               [new DataGridTextColumn { Binding = new Binding("Abbreviation"), Header = "缩写" },
+               new DataGridTextColumn { Binding = new Binding("Name"), Header = "名称" }
+                 ];
+            var locationinfos = initDataDb.GetCollection<LocationInfo>("locationInfos").Query().ToArray();
+            var majorinfos = initDataDb.GetCollection<MajorInfo>("majorInfos").Query().ToArray();
+
+            int i = 0;
+
+            foreach (var item in majorinfos)
+            {
+                Columns.Add(new DataGridCheckBoxColumn { Binding = new Binding($"SelectedMajor[{i++}].IsChecked"), Header = item.Name });
+            }
+            List<MajorConfigInfo> majorConfigInfos = [];
+            foreach (var item in locationinfos)
+            {
+                majorConfigInfos.Add(new MajorConfigInfo
+                {
+                    Abbreviation = item.Name,
+                    Name = item.Description,
+                    Id = item.Id,
+                    SelectedMajor = majorinfos.Select(p => new MajorInfo { Name = p.Name, SubName = p.SubName, IsChecked = p.IsChecked }).ToArray()
+                });
+            }
+            MajorConfigInfos = [.. majorConfigInfos.OrderBy(p => int.Parse(p.Id))];
+        }
+
+        private void CreateSqlText()
+        {
+            StringBuilder sql = new();
+            sql.AppendLine("INSERT INTO ENTITY (NAME,ADDRESS,DESCRIPTION,SUBSYSTEMKEY,LOCATIONKEY,SEREGI_ID,TYPEKEY,PHYSICAL_SUBSYSTEM_KEY,SCSDAT_ID,PARENTKEY,AGENTKEY,DELETED,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED)");
+            List<string> majorinfo = [];
+            var majorinfos = initDataDb.GetCollection<MajorInfo>("majorInfos").Query().ToArray();
+            foreach (var item in majorinfos)
+            {
+                var infos = MajorConfigInfos.Where(p => p.SelectedMajor.First(x => x.Name == item.Name).IsChecked);
+                if (infos == null || infos.Count() == 0) continue;
+                majorinfo.Add($"SELECT '{item.Name}' name,'{item.SubName}' subname,'{string.Join(",", infos.Select(p => p.Id))}' lon from dual");
+            }
+            sql.AppendLine(string.Join("union all \t\n", majorinfo));
+
+            SqlText = sql.ToString();
+        }
+
+        #region cmd
 
         private DelegateCommand _SaveCommand;
         public DelegateCommand SaveCommand => _SaveCommand ??= new DelegateCommand(ExecuteSaveCommand);
 
         private void ExecuteSaveCommand()
         {
-            InitData();
-            //CreateSqlText();
+            CreateSqlText();
         }
 
         private DelegateCommand _ShowCommand;
 
-        public DelegateCommand ShowCommand =>
-            _ShowCommand ?? (_ShowCommand = new DelegateCommand(ExecuteShowCommand));
+        public DelegateCommand ShowCommand => _ShowCommand ??= new DelegateCommand(ExecuteShowCommand);
 
         private void ExecuteShowCommand()
         {
-            //CreateSqlText();
-           // _ea.GetEvent<ShowSqlEvent>().Publish(SqlText);
+            CreateSqlText();
+            _ea.GetEvent<ShowSqlEvent>().Publish(SqlText);
         }
-        private DelegateCommand<object> _SelectionChanged;
-        public DelegateCommand<object> SelectionChanged =>
-_SelectionChanged ??= new DelegateCommand<object>(ExecuteSelectionChanged);
 
-        void ExecuteSelectionChanged(object param)
+        private DelegateCommand<object> _SelectionChanged;
+
+        public DelegateCommand<object> SelectionChanged =>
+            _SelectionChanged ??= new DelegateCommand<object>(ExecuteSelectionChanged);
+
+        private void ExecuteSelectionChanged(object param)
         {
-            if(param is SelectedCellsChangedEventArgs e)
+            if (param is SelectedCellsChangedEventArgs e)
             {
-                var item = e.AddedCells;
-                var header = item.ElementAtOrDefault(0).Column.Header;
-                var ii = item.ElementAtOrDefault(0).Item;
-                if(ii is MajorConfigInfo ob)
+                var cells = e.AddedCells;
+                var header = cells.ElementAtOrDefault(0).Column.Header;
+                var item = cells.ElementAtOrDefault(0).Item;
+                if (item is MajorConfigInfo major)
                 {
-                    var aa = ob.SelectedMajor.FirstOrDefault(p => p.Name == header.ToString());
-                    aa.IsChecked = !aa.IsChecked;
+                    var info = major.SelectedMajor.FirstOrDefault(p => p.Name == header.ToString());
+                    if (info != null)
+                    {
+                        info.IsChecked = !info.IsChecked;
+                    }
                 }
             }
         }
+
+        private DelegateCommand _PasteCommand;
+
+        public DelegateCommand PasteCommand => _PasteCommand ??= new DelegateCommand(ExecutePasteCommand);
+
+        private void ExecutePasteCommand()
+        {
+            var pasteText = Clipboard.GetText();
+            var cells = pasteText.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+
+            for (int i = 0; i < Math.Min(cells.Count(), MajorConfigInfos.Count()); i++)
+            {
+                var items = cells[i].Split('\t');
+                var selectedMajor = MajorConfigInfos[i].SelectedMajor;
+                for (int j = 0; j < Math.Min(items.Count(), selectedMajor.Count()); j++)
+                {
+                    selectedMajor[j].IsChecked = items[j] == "1";
+                }
+            }
+        }
+
+        #endregion cmd
     }
 
     public class MajorConfigInfo
     {
+        public string Abbreviation { get; set; }
         public string Name { get; set; }
+        public string Id { get; set; }
 
         public MajorInfo[] SelectedMajor { get; set; }
-    }
-    public class BooleanArr2BooleanConverter : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (values == null)
-            {
-                return false;
-            }
-
-            var arr = new List<bool>();
-            foreach (var item in values)
-            {
-                if (item is bool boolValue)
-                {
-                    arr.Add(boolValue);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            return arr.Any(item => item);
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
     }
 }

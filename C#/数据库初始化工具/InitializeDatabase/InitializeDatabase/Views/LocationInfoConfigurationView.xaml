@@ -15,7 +15,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-      
+
         <!--<hc:SearchBar />
         <hc:ComboBox
             hc:InfoElement.ShowClearButton="True"
@@ -50,7 +50,6 @@
             </Button>
             <ToggleButton Command="{Binding ShowCommand}" Content="查看" />
         </StackPanel>
-
 
         <DataGrid
             Grid.Row="1"
@@ -99,7 +98,6 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
             </DataGrid.Columns>
         </DataGrid>
         <TextBlock

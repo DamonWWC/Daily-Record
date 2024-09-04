@@ -17,15 +17,14 @@ namespace InitializeDatabase
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {            
+        {
             containerRegistry.RegisterInstance(DAFacadeFactory.CreateDAFacade(ConnectType.Dm, "Server=172.25.11.144;Port=5236;Database=micsDB;User Id=MICS;PWD=DGL1mics;", 120));
-            containerRegistry.RegisterInstance<ILiteDatabase>(new LiteDatabase(@"Filename=InitData.db;Password=micsServer"),"InitData");
-            containerRegistry.RegisterInstance<ILiteDatabase>(new LiteDatabase(@"Filename=RawData.db;Password=micsServer"),"RawData");
+            containerRegistry.RegisterInstance<ILiteDatabase>(new LiteDatabase(@"Filename=InitData.db;Password=micsServer"), "InitData");
+            containerRegistry.RegisterInstance<ILiteDatabase>(new LiteDatabase(@"Filename=RawData.db;Password=micsServer"), "RawData");
             containerRegistry.RegisterForNavigation<LocationInfoConfigurationView>();
             containerRegistry.RegisterForNavigation<SubSystemConfigurationView>();
             containerRegistry.RegisterForNavigation<SubSystemInfoView>();
             containerRegistry.RegisterForNavigation<MajorInfoConfigurationView>();
-           
         }
     }
 }

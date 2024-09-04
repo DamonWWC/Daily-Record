@@ -17,13 +17,7 @@ namespace InitializeDatabase.Views
                 {
                     dg.Columns.Add(item);
                 }
-
             }
-
         }
-
-        
-
-      
     }
 }

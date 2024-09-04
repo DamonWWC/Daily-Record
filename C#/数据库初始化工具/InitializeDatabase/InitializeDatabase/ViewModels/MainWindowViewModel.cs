@@ -12,13 +12,14 @@ namespace InitializeDatabase.ViewModels
     {
         private readonly IRegionManager _regionManager;
 
-        IEventAggregator _ea;
+        private IEventAggregator _ea;
+
         public MainWindowViewModel(IDAFacade dAFacade, IRegionManager regionManager, IEventAggregator ea)
         {
             _regionManager = regionManager;
             _ea = ea;
             _ea.GetEvent<ShowSqlEvent>().Subscribe(ShowSql);//订阅事件
-            _regionManager.RegisterViewWithRegion("ContentRegion", "LocationInfoConfigurationView");
+            _regionManager.RegisterViewWithRegion("ContentRegion", "MajorInfoConfigurationView");
         }
 
         private void ShowSql(string sql)
@@ -26,13 +27,17 @@ namespace InitializeDatabase.ViewModels
             IsOpen = true;
             SqlText = sql;
         }
+
         private string _SqlText;
+
         public string SqlText
         {
             get { return _SqlText; }
             set { SetProperty(ref _SqlText, value); }
         }
+
         private bool _IsOpen;
+
         public bool IsOpen
         {
             get { return _IsOpen; }
@@ -59,6 +64,7 @@ namespace InitializeDatabase.ViewModels
                     case "子系统信息":
                         _regionManager.RequestNavigate("ContentRegion", "SubSystemInfoView");
                         break;
+
                     case "专业信息配置":
                         _regionManager.RequestNavigate("ContentRegion", "MajorInfoConfigurationView");
                         break;

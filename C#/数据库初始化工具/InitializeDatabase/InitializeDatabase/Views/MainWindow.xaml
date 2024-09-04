@@ -1,13 +1,12 @@
 ﻿<Window
     x:Class="InitializeDatabase.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:helper="clr-namespace:InitializeDatabase.Helper"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:prism="http://prismlibrary.com/"
-    xmlns:vm="clr-namespace:InitializeDatabase.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:helper="clr-namespace:InitializeDatabase.Helper"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     Title="数据库初始化工具"
     Width="1920"
     Height="1080"
@@ -82,7 +81,6 @@
                 <hc:SideMenuItem Header="专业信息配置" />
             </hc:SideMenuItem>
             <hc:SideMenuItem Header="服务端配置 " />
-
         </hc:SideMenu>
 
         <ContentControl Grid.Column="1" prism:RegionManager.RegionName="ContentRegion" />

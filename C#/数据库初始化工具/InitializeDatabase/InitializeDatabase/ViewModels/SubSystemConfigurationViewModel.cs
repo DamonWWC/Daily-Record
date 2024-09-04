@@ -116,7 +116,6 @@ namespace InitializeDatabase.ViewModels
                 .AppendLine(string.Join("\t\n", insertMICS_DATAPOINT_SYSTEM));
             SqlText = sql.ToString();
             SaveDb();
-           
         }
 
         private void SaveDb()
@@ -128,18 +127,19 @@ namespace InitializeDatabase.ViewModels
                 col.InsertBulk(MajorInfos);
             }
         }
+
         #endregion Function
     }
 
-    public class MajorInfo:BindableBase
+    public class MajorInfo : BindableBase
     {
         public int? SubSystemKey { get; set; }
         public string Name { get; set; }
         public string SubName { get; set; }
         public string Agent { get; set; }
-       
 
         private bool _IsChecked;
+
         public bool IsChecked
         {
             get { return _IsChecked; }
