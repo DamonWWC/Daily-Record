@@ -17,7 +17,7 @@ namespace InitializeDatabase.ViewModels
     public class MajorInfoConfigurationViewModel : BindableBase
     {
         private readonly ILiteDatabase initDataDb;
-        private IEventAggregator _ea;
+        private readonly IEventAggregator _ea;
         public ObservableCollection<DataGridBoundColumn> Columns { get; set; }
 
         public MajorInfoConfigurationViewModel(IEventAggregator ea)
@@ -46,11 +46,14 @@ namespace InitializeDatabase.ViewModels
         private void InitData()
         {
             Columns =
-               [new DataGridTextColumn { Binding = new Binding("Abbreviation"), Header = "缩写" },
+               [
+                new DataGridTextColumn { Binding = new Binding("Id"), Header = "ID" ,Width=80},
+                new DataGridTextColumn { Binding = new Binding("Abbreviation"), Header = "缩写" },
                new DataGridTextColumn { Binding = new Binding("Name"), Header = "名称" }
                  ];
             var locationinfos = initDataDb.GetCollection<LocationInfo>("locationInfos").Query().ToArray();
             var majorinfos = initDataDb.GetCollection<MajorInfo>("majorInfos").Query().ToArray();
+            var majorconfiginfos = initDataDb.GetCollection<MajorConfigInfo>("majorconfigInfos").Query().ToArray();
 
             int i = 0;
 
@@ -61,32 +64,60 @@ namespace InitializeDatabase.ViewModels
             List<MajorConfigInfo> majorConfigInfos = [];
             foreach (var item in locationinfos)
             {
+                var ischecked = majorconfiginfos.FirstOrDefault(p => p.Id == item.Id)?.SelectedMajor;
                 majorConfigInfos.Add(new MajorConfigInfo
                 {
                     Abbreviation = item.Name,
                     Name = item.Description,
                     Id = item.Id,
-                    SelectedMajor = majorinfos.Select(p => new MajorInfo { Name = p.Name, SubName = p.SubName, IsChecked = p.IsChecked }).ToArray()
+                    SelectedMajor = majorinfos.Select(p => new MajorInfo { Name = p.Name, SubName = p.SubName, IsChecked = ischecked.FirstOrDefault(q => q.Name == p.Name)?.IsChecked ?? false }).ToArray()
                 });
             }
             MajorConfigInfos = [.. majorConfigInfos.OrderBy(p => int.Parse(p.Id))];
         }
 
+        private readonly List<Tuple<string, string>> Types =
+        [
+            new("",""),
+           new("||'.MICS-COMM'","'子系统通信状态'"),
+           new("||'.MICS-COMM.diiCommFault'","l.DESCRIPTION||'ISCS与'||t.name||'通信故障'"),
+       ];
+
         private void CreateSqlText()
         {
             StringBuilder sql = new();
-            sql.AppendLine("INSERT INTO ENTITY (NAME,ADDRESS,DESCRIPTION,SUBSYSTEMKEY,LOCATIONKEY,SEREGI_ID,TYPEKEY,PHYSICAL_SUBSYSTEM_KEY,SCSDAT_ID,PARENTKEY,AGENTKEY,DELETED,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED)");
             List<string> majorinfo = [];
             var majorinfos = initDataDb.GetCollection<MajorInfo>("majorInfos").Query().ToArray();
             foreach (var item in majorinfos)
             {
                 var infos = MajorConfigInfos.Where(p => p.SelectedMajor.First(x => x.Name == item.Name).IsChecked);
                 if (infos == null || infos.Count() == 0) continue;
-                majorinfo.Add($"SELECT '{item.Name}' name,'{item.SubName}' subname,'{string.Join(",", infos.Select(p => p.Id))}' lon from dual");
+                majorinfo.Add($"SELECT '{item.Name}' name,'{item.SubName}' subname, '{item.SubSystemKey}' subsystemkey,'{string.Join(",", infos.Select(p => p.Id))}' lon from dual");
             }
-            sql.AppendLine(string.Join("union all \t\n", majorinfo));
 
+            
+            if (majorinfo.Count > 0)
+            {
+                foreach (var type in Types)
+                {
+                    sql.AppendLine("INSERT INTO ENTITY (NAME,ADDRESS,DESCRIPTION,SUBSYSTEMKEY,LOCATIONKEY,SEREGI_ID,TYPEKEY,PHYSICAL_SUBSYSTEM_KEY,SCSDAT_ID,PARENTKEY,AGENTKEY,DELETED,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED)");
+                    sql.AppendLine($"SELECT l.name||'.'||t.name{type.Item1},'VIRTUAL' address,{type.Item2} description,t.subsystemkey,l.pkey,l.pkey,44 typekey,\r\nt.subsystemkey,NULL,(SELECT pkey FROM entity WHERE name=l.name) PARENTKEY, (SELECT pkey FROM entity WHERE name=initcap(lower(l.name))||'IotGateway') AGENTKEY,0 DELETED ,'MICS' ,SYSDATE,NULL,NULL\r\nFROM LOCATION L JOIN(");
+                    sql.AppendLine(string.Join(" union all \t\n", majorinfo));
+                    sql.AppendLine(") t ON 1=1 AND INSTR (','||t.lon||',' ,CONCAT(',',L.PKEY,',')) > 0;\r\n");
+                }
+            }
             SqlText = sql.ToString();
+            SaveDb();
+        }
+
+        private void SaveDb()
+        {
+            if (MajorConfigInfos != null)
+            {
+                var col = initDataDb.GetCollection<MajorConfigInfo>("majorconfigInfos");
+                col.DeleteAll();
+                col.InsertBulk(MajorConfigInfos);
+            }
         }
 
         #region cmd

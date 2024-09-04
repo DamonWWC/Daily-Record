@@ -16,7 +16,7 @@ namespace InitializeDatabase.ViewModels
     public class LocationInfoConfigurationViewModel : BindableBase
     {
         private readonly ILiteDatabase db;
-        private IEventAggregator _ea;
+        private readonly IEventAggregator _ea;
 
         public LocationInfoConfigurationViewModel(IEventAggregator ea)
         {
@@ -119,8 +119,7 @@ namespace InitializeDatabase.ViewModels
 
         private DelegateCommand _ShowCommand;
 
-        public DelegateCommand ShowCommand =>
-            _ShowCommand ?? (_ShowCommand = new DelegateCommand(ExecuteShowCommand));
+        public DelegateCommand ShowCommand => _ShowCommand ??= new DelegateCommand(ExecuteShowCommand);
 
         private void ExecuteShowCommand()
         {

@@ -15,17 +15,25 @@ namespace InitializeDatabase.ViewModels
 {
     public class SubSystemConfigurationViewModel : BindableBase
     {
-        private readonly IDAFacade _dAFacade;
+        // private readonly IDAFacade _dAFacade;
         private readonly ILiteDatabase initDataDb;
-        private readonly ILiteDatabase rawDataDb;
-        private IEventAggregator _ea;
 
-        public SubSystemConfigurationViewModel(IDAFacade dAFacade, IEventAggregator ea)
+        private readonly ILiteDatabase rawDataDb;
+        private readonly IEventAggregator _ea;
+
+        public SubSystemConfigurationViewModel(IEventAggregator ea)
         {
-            _dAFacade = dAFacade;
+            //_dAFacade = dAFacade;
             _ea = ea;
             initDataDb = ContainerLocator.Container.Resolve<ILiteDatabase>("InitData");
             rawDataDb = ContainerLocator.Container.Resolve<ILiteDatabase>("RawData");
+            InitData();
+        }
+
+        private void InitData()
+        {
+            var col = initDataDb.GetCollection<MajorInfo>("majorInfos");
+            MajorInfos = new ObservableCollection<MajorInfo>(col.FindAll());
         }
 
         private ObservableCollection<MajorInfo> _MajorInfos;
@@ -84,8 +92,7 @@ namespace InitializeDatabase.ViewModels
 
         private DelegateCommand _ShowCommand;
 
-        public DelegateCommand ShowCommand =>
-            _ShowCommand ?? (_ShowCommand = new DelegateCommand(ExecuteShowCommand));
+        public DelegateCommand ShowCommand => _ShowCommand ??= new DelegateCommand(ExecuteShowCommand);
 
         private void ExecuteShowCommand()
         {
@@ -101,12 +108,12 @@ namespace InitializeDatabase.ViewModels
         {
             StringBuilder sql = new();
 
-            List<string> insertMICS_DIC_SUBSYSNAME = new List<string>();
-            List<string> insertMICS_DATAPOINT_SYSTEM = new List<string>();
+            List<string> insertMICS_DIC_SUBSYSNAME = [];
+            List<string> insertMICS_DATAPOINT_SYSTEM = [];
             ushort i = 1;
             foreach (var item in MajorInfos)
             {
-                insertMICS_DIC_SUBSYSNAME.Add($"INSERT INTO MICS_DIC_SUBSYSNAME (SUBSYSTEM_NAME,DESCRIPTION) VALUES({item.Name},{item.SubName});");
+                insertMICS_DIC_SUBSYSNAME.Add($"INSERT INTO MICS_DIC_SUBSYSNAME (SUBSYSTEM_NAME,DESCRIPTION) VALUES('{item.Name}','{item.SubName}');");
                 insertMICS_DATAPOINT_SYSTEM.Add($"INSERT INTO MICS_DATAPOINT_SYSTEM (PKEY,NAME,DESCRIPTION,AGENT,STATUS,UPDATE_TIME,RELATESUBSYSTEMKEY) VALUES ({i++},'{item.Name}','{item.SubName}','{item.Agent}','0',sysdate,{item.SubSystemKey});");
             }
 
