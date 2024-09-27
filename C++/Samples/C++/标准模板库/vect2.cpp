@@ -64,7 +64,7 @@ int main()
     return 0;
 }
 
-bool FillReview(Review & rr)
+bool FillReview(Review &rr)
 {
     cout << "Enter book title (quit to quit): ";
     getline(cin, rr.title);
@@ -79,7 +79,7 @@ bool FillReview(Review & rr)
     return true;
 }
 
-void ShowRReview(const Review & rr)
+void ShowRReview(const Review &rr)
 {
     cout << rr.rating << "\t" << rr.title << endl;
 }

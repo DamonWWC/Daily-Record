@@ -1,9 +1,25 @@
 #pragma once
+class Tv;
+class Remote
+{
+private:
+    int mode;
 
+public:
+    Remote(int m = Tv::TV) : mode(m) {}
+    bool voldown(Tv &t);
+    bool volup(Tv &t);
+    void onoff(Tv &t);
+    void chanup(Tv &t);
+    void chandown(Tv &t);
+    void set_chan(Tv &t, int c);
+    void set_mode(Tv &t);
+    void set_input(Tv &t);
+};
 class Tv
 {
 public:
-    friend class Remote;
+    // friend class Remote;
     enum
     {
         Off,
@@ -36,6 +52,8 @@ public:
     void set_input() { input = (input == TV) ? DVD : TV; }
     void settings() const;
 
+    friend void Remote::set_chan(Tv &t, int c);
+
 private:
     int state;
     int volume;
@@ -44,19 +62,11 @@ private:
     int mode;
     int input;
 };
-
-class Remote
-{
-private:
-    int mode;
-public:
-    Remote(int m = Tv::TV) : mode(m) {}
-    bool voldown(Tv &t) { return t.voldown(); }
-    bool volup(Tv &t) { return t.volup(); }
-    void onoff(Tv &t) { t.onoff(); }
-    void chanup(Tv &t) { t.chanup(); }
-    void chandown(Tv &t) { t.chandown(); }
-    void set_chan(Tv &t, int c) { t.channel = c; }
-    void set_mode(Tv &t) { t.set_mode(); }
-    void set_input(Tv &t) { t.set_input(); }
-};
+inline bool Remote::voldown(Tv &t) { return t.voldown(); }
+inline bool Remote::volup(Tv &t) { return t.volup(); }
+inline void Remote::onoff(Tv &t) { t.onoff(); }
+inline void Remote::chanup(Tv &t) { t.chanup(); }
+inline void Remote::chandown(Tv &t) { t.chandown(); }
+inline void Remote::set_chan(Tv &t, int c) { t.channel = c; }
+inline void Remote::set_mode(Tv &t) { t.set_mode(); }
+inline void Remote::set_input(Tv &t) { t.set_input(); }

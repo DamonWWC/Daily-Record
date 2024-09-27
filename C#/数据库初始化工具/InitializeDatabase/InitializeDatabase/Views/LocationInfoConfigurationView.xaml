@@ -12,8 +12,8 @@
     prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!--<hc:SearchBar />
@@ -32,10 +32,12 @@
             hc:InfoElement.Title="线路Id:"
             hc:InfoElement.TitlePlacement="Left">
             <hc:TextBox.Text>
-                <Binding Path="LineInfo" UpdateSourceTrigger="PropertyChanged">
+                <Binding Path="LineInfo"
+                         UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <hc:RegexRule ErrorContent="请输入整数" Type="Int" />
-                        <hc:NoBlankTextRule ErrorContent="线路ID不能为空" />
+                        <hc:RegexRule ErrorContent="请输入整数"
+                                      Type="Int"/>
+                        <hc:NoBlankTextRule ErrorContent="线路ID不能为空"/>
                     </Binding.ValidationRules>
                 </Binding>
             </hc:TextBox.Text>
@@ -48,7 +50,8 @@
             <Button Command="{Binding SaveCommand}">
                 保存
             </Button>
-            <ToggleButton Command="{Binding ShowCommand}" Content="查看" />
+            <ToggleButton Command="{Binding ShowCommand}"
+                          Content="查看"/>
         </StackPanel>
 
         <DataGrid
@@ -65,23 +68,28 @@
                     <MenuItem
                         Command="{Binding PasteCommand}"
                         Header="粘贴"
-                        IsEnabled="{c:Binding 'LocationInfos.Count==0'}" />
-                    <MenuItem Command="{Binding ClearCommand}" Header="清空" />
-                    <MenuItem Command="{Binding AddCommand}" Header="新增一行" />
+                        IsEnabled="{c:Binding 'LocationInfos.Count==0'}"/>
+                    <MenuItem Command="{Binding ClearCommand}"
+                              Header="清空"/>
+                    <MenuItem Command="{Binding AddCommand}"
+                              Header="新增一行"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
 
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Id}" Header="编号" />
-                <DataGridTextColumn Binding="{Binding Name}" Header="名称" />
-                <DataGridTextColumn Binding="{Binding Description}" Header="描述" />
+                <DataGridTextColumn Binding="{Binding Id}"
+                                    Header="编号"/>
+                <DataGridTextColumn Binding="{Binding Name}"
+                                    Header="名称"/>
+                <DataGridTextColumn Binding="{Binding Description}"
+                                    Header="描述"/>
                 <DataGridTemplateColumn Header="类型">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <hc:ComboBox
                                 hc:InfoElement.ShowClearButton="True"
                                 ItemsSource="{Binding Path=DataContext.LocationTypes, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                SelectedItem="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                SelectedItem="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -94,7 +102,7 @@
                                 DisplayMemberPath="Description"
                                 ItemsSource="{Binding Path=DataContext.LocationInfos, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                 SelectedValue="{Binding MergInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                SelectedValuePath="Description" />
+                                SelectedValuePath="Description"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

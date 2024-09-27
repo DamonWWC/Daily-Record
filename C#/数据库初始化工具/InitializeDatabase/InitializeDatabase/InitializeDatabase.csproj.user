@@ -7,10 +7,19 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Views\Dialog\AgentSelectView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Dialog\AppServiceMapView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\LocationInfoConfigurationView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\MajorInfoConfigurationView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\ServiceAgentConfigView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\SubSystemConfigurationView.xaml.cs">
@@ -21,6 +30,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\Dialog\AgentSelectView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dialog\AppServiceMapView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\LocationInfoConfigurationView.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -28,6 +43,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MajorInfoConfigurationView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ServiceAgentConfigView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\SubSystemConfigurationView.xaml">

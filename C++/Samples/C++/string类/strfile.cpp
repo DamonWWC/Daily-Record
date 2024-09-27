@@ -1,30 +1,29 @@
-#include<iostream>
-#include<fstream>
+#include <iostream>
+#include <fstream>
 #include <string>
-#include<cstdlib>
+#include <cstdlib>
 
 int main()
 {
     using namespace std;
     ifstream fin;
     fin.open("tobuy.txt");
-    if(fin.is_open()==false)
+    if (fin.is_open() == false)
     {
-        cerr<<"Can't open tobuy.txt file for input";
+        cerr << "Can't open tobuy.txt file for input";
         exit(EXIT_FAILURE);
     }
 
     string item;
-    int count=0;
-    getline(fin,item,':');
-    while(fin)
+    int count = 0;
+    getline(fin, item, ':');
+    while (fin)
     {
         ++count;
-        cout<<count<<": "<<item<<endl;
-        getline(fin,item,':');
+        cout << count << ": " << item << endl;
+        getline(fin, item, ':');
     }
-    cout<<"Done\n";
+    cout << "Done\n";
     fin.close();
     return 0;
-
 }

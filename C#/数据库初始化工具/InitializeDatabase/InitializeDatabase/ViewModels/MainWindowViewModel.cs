@@ -19,7 +19,7 @@ namespace InitializeDatabase.ViewModels
             _regionManager = regionManager;
             _ea = ea;
             _ea.GetEvent<ShowSqlEvent>().Subscribe(ShowSql);//订阅事件
-            _regionManager.RegisterViewWithRegion("ContentRegion", "MajorInfoConfigurationView");
+            _regionManager.RegisterViewWithRegion("ContentRegion", "ServiceAgentConfigView");
         }
 
         private void ShowSql(string sql)
@@ -67,6 +67,9 @@ namespace InitializeDatabase.ViewModels
 
                     case "专业信息配置":
                         _regionManager.RequestNavigate("ContentRegion", "MajorInfoConfigurationView");
+                        break;
+                    case "服务端配置":
+                        _regionManager.RequestNavigate("ContentRegion", "ServiceAgentConfigView");
                         break;
                 }
             }

@@ -12,8 +12,8 @@ private:
 public:
     ArrayTP() {};
     explicit ArrayTP(const T &v);
-    virtual T &operator[](int i);
-    virtual T operator[](int i) const;
+    virtual T &operator[](int i);      // 可修改数组里的内容
+    virtual T operator[](int i) const; // 只能读取数组的内容
 };
 
 template <class T, int n>
@@ -25,23 +25,23 @@ ArrayTP<T, n>::ArrayTP(const T &v)
     }
 }
 
-template<class T,int n>
-T &ArrayTP<T,n>::operator[](int i)
+template <class T, int n>
+T &ArrayTP<T, n>::operator[](int i)
 {
-    if(i<0||i>=n)
+    if (i < 0 || i >= n)
     {
-        std::cerr<<"Error in array limits: "<<i<<" is out of range\n";
+        std::cerr << "Error in array limits: " << i << " is out of range\n";
         std::exit(EXIT_FAILURE);
     }
     return ar[i];
 }
 
-template<class T ,int n>
-T ArrayTP<T,n>::operator[](int i) const
+template <class T, int n>
+T ArrayTP<T, n>::operator[](int i) const
 {
-    if(i<0||i>=n)
+    if (i < 0 || i >= n)
     {
-        std::cerr<<"Error in array limits: "<<i<<" is out of range\n";
+        std::cerr << "Error in array limits: " << i << " is out of range\n";
         std::exit(EXIT_FAILURE);
     }
     return ar[i];

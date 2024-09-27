@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:local="clr-namespace:InitializeDatabase"
+    xmlns:local="clr-namespace:InitializeDatabase" xmlns:interactivity="HandyControl.in"
     xmlns:prism="http://prismlibrary.com/">
     <Application.Resources>
         <ResourceDictionary>
@@ -195,6 +195,87 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+
+            <!--<Style x:Key="TransferBaseStyle1" TargetType="hc:Transfer">
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Padding" Value="2" />
+                <Setter Property="SelectionMode" Value="Extended" />
+                <Setter Property="hc:BorderElement.CornerRadius" Value="{StaticResource DefaultCornerRadius}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+                <Setter Property="ItemContainerStyle" Value="{StaticResource TransferItemBaseStyle}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="hc:Transfer">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Border
+                                    Grid.RowSpan="4"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="{Binding Path=(hc:BorderElement.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}">
+                                    <hc:ToggleBlock
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Stretch"
+                                        IsChecked="{Binding HasItems, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
+                                        <hc:ToggleBlock.CheckedContent>
+                                            <hc:ScrollViewer
+                                                Padding="{TemplateBinding Padding}"
+                                                Focusable="false"
+                                                HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                                IsInertiaEnabled="{Binding Path=(hc:ScrollViewer.IsInertiaEnabled), RelativeSource={RelativeSource TemplatedParent}}"
+                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+                                                <ItemsPresenter />
+                                            </hc:ScrollViewer>
+                                        </hc:ToggleBlock.CheckedContent>
+                                        <hc:ToggleBlock.UnCheckedContent>
+                                            <hc:Empty />
+                                        </hc:ToggleBlock.UnCheckedContent>
+                                    </hc:ToggleBlock>
+                                </Border>
+                                <StackPanel
+                                    Grid.Row="0"
+                                    Grid.RowSpan="4"
+                                    Grid.Column="1"
+                                    Margin="8,0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                                    <Button hc:IconElement.Geometry="{StaticResource LeftGeometry}" Command="interactivity:ControlCommands.Cancel" />
+                                    <Button
+                                        Margin="0,8,0,0"
+                                        hc:IconElement.Geometry="{StaticResource RightGeometry}"
+                                        Command="interactivity:ControlCommands.Selected" />
+                                </StackPanel>
+                                <ListBox
+                                    x:Name="PART_SelectedListBox"
+                                    Grid.Row="0"
+                                    Grid.RowSpan="4"
+                                    Grid.Column="2"
+                                    Padding="{TemplateBinding Padding}"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    ItemContainerStyle="{TemplateBinding ItemContainerStyle}"
+                                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                                    SelectionMode="{TemplateBinding SelectionMode}" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>-->
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
