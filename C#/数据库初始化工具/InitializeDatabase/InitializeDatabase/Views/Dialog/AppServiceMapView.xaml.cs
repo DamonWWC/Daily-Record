@@ -10,6 +10,6 @@ namespace InitializeDatabase.Views.Dialog
         public AppServiceMapView()
         {
             InitializeComponent();
-        }
+        }   
     }
 }

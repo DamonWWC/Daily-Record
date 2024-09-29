@@ -94,7 +94,7 @@ namespace InitializeDatabase.ViewModels
         {
             if (param is AgentConfigInfo agentConfigInfo)
             {
-                _dialogService.ShowDialog("AppServiceMapView", new DialogParameters { { "info", agentConfigInfo.AppServiceMap } }, r =>
+                _dialogService.ShowDialog("AppServiceMapView", new DialogParameters { { "info", agentConfigInfo.AppServiceMap },{ "title",agentConfigInfo.AgentName} }, r =>
                 {
                     if (r.Result == ButtonResult.OK)
                     {

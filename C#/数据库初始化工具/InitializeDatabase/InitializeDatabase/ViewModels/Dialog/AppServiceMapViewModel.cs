@@ -1,15 +1,15 @@
-﻿using LiteDB;
+﻿using F23.StringSimilarity;
+using HandyControl.Data;
+using InitializeDatabase.Helper;
+using LiteDB;
 using Prism.Commands;
+using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
-using Prism.Ioc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
-using HandyControl.Data;
-using F23.StringSimilarity;
-using InitializeDatabase.Helper;
+using System.Text;
 
 namespace InitializeDatabase.ViewModels.Dialog
 {
@@ -22,7 +22,7 @@ namespace InitializeDatabase.ViewModels.Dialog
             rawDataDb = ContainerLocator.Container.Resolve<ILiteDatabase>("RawData");
         }
 
-        public string Title => "应用服务选择";
+        public string Title { get; set; }
 
         public event Action<IDialogResult> RequestClose;
 
@@ -37,13 +37,24 @@ namespace InitializeDatabase.ViewModels.Dialog
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
+            if (parameters.TryGetValue("title", out string title))
+            {
+                Title = $"{title}应用服务选择";
+            }
             if (parameters.TryGetValue("info", out string param))
             {
                 _allIceServiceInfos = rawDataDb.GetCollection<IceServiceInfo>("iceServiceInfo").Query().ToList();
                 if (!string.IsNullOrWhiteSpace(param))
                 {
-                    string[] maps = param.Split(',');
-                    _allIceServiceInfos.FindAll(p => param.Contains(p.ServiceId.ToString())).ForEach(p => p.IsChecked = true);
+                    string[] maps = param.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+
+                    foreach (var item in _allIceServiceInfos)
+                    {
+                        item.OCC = maps[0].Contains(item.ServiceId.ToString());
+                        item.Station = maps[1].Contains(item.ServiceId.ToString());
+                        item.Depot = maps[2].Contains(item.ServiceId.ToString());
+                        item.Substation = maps[3].Contains(item.ServiceId.ToString());
+                    }
                 }
                 Filter();
             }
@@ -76,15 +87,15 @@ namespace InitializeDatabase.ViewModels.Dialog
             List<IceServiceInfo> allIceServiceInfos;
             if (IsFilter)
             {
-                allIceServiceInfos = _allIceServiceInfos.Where(p => p.IsChecked)?.ToList();               
+                allIceServiceInfos = _allIceServiceInfos.Where(p => p.IsChecked)?.ToList();
             }
             else
             {
                 allIceServiceInfos = _allIceServiceInfos;
             }
             var result = Filter1(allIceServiceInfos).ToList();
-           
-            if(result.Count()!=0)
+
+            if (result.Count() != 0)
             {
                 result.Sort((x, y) => y.Item1.CompareTo(x.Item1));
                 IceServiceInfos = result.Select(p => p.Item2).ToList();
@@ -92,12 +103,12 @@ namespace InitializeDatabase.ViewModels.Dialog
             else
             {
                 IceServiceInfos = allIceServiceInfos;
-            }  
+            }
         }
 
         private IEnumerable<(double, IceServiceInfo)> Filter1(List<IceServiceInfo> allIceServiceInfos)
         {
-            if (string.IsNullOrWhiteSpace(SearchText)) yield break; 
+            if (string.IsNullOrWhiteSpace(SearchText)) yield break;
             foreach (var item in allIceServiceInfos)
             {
                 var similarity = new JaroWinkler().Similarity(SearchText, item.Description);
@@ -105,16 +116,16 @@ namespace InitializeDatabase.ViewModels.Dialog
                 {
                     yield return (similarity, item);
                 }
-            }        
+            }
         }
 
         private string SearchText;
         private DelegateCommand<object> _SearchStartedCommand;
 
-        public DelegateCommand<object> SearchStartedCommand =>_SearchStartedCommand ??= new DelegateCommand<object>(ExecuteSearchStartedCommand);
+        public DelegateCommand<object> SearchStartedCommand => _SearchStartedCommand ??= new DelegateCommand<object>(ExecuteSearchStartedCommand);
 
+        private DebounceDispatcher dispatcher = new DebounceDispatcher();
 
-        DebounceDispatcher dispatcher = new DebounceDispatcher();
         private void ExecuteSearchStartedCommand(object param)
         {
             dispatcher.Debounce(() =>
@@ -125,7 +136,6 @@ namespace InitializeDatabase.ViewModels.Dialog
                     Filter();
                 }
             }, 500);
-           
         }
 
         private DelegateCommand _ConfirmCommand;
@@ -133,7 +143,12 @@ namespace InitializeDatabase.ViewModels.Dialog
 
         private void ExecuteConfirmCommand()
         {
-            RequestClose?.Invoke(new DialogResult(ButtonResult.OK, new DialogParameters { { "info", string.Join(",", IceServiceInfos.Where(p => p.IsChecked).Select(p => p.ServiceId)) } }));
+            StringBuilder result = new();
+            result.AppendLine($"中央：{string.Join(",", IceServiceInfos.Where(p => p.OCC).Select(p => p.ServiceId))}");
+            result.AppendLine($"车站：{string.Join(",", IceServiceInfos.Where(p => p.Station).Select(p => p.ServiceId))}");
+            result.AppendLine($"段场：{string.Join(",", IceServiceInfos.Where(p => p.Depot).Select(p => p.ServiceId))}");
+            result.AppendLine($"主变：{string.Join(",", IceServiceInfos.Where(p => p.Substation).Select(p => p.ServiceId))}");
+            RequestClose?.Invoke(new DialogResult(ButtonResult.OK, new DialogParameters { { "info", result.ToString() } }));
         }
 
         private DelegateCommand _CancelCommand;
@@ -142,6 +157,17 @@ namespace InitializeDatabase.ViewModels.Dialog
         private void ExecuteCancelCommand()
         {
             RequestClose?.Invoke(new DialogResult(ButtonResult.Cancel));
+        }
+
+        private DelegateCommand<object> _CheckCommand;
+        public DelegateCommand<object> CheckCommand => _CheckCommand ??= new DelegateCommand<object>(ExecuteCheckCommand);
+
+        private void ExecuteCheckCommand(object param)
+        {
+            if (param is IceServiceInfo iceServiceInfo && !iceServiceInfo.IsChecked)
+            {
+                Filter();
+            }
         }
 
         private List<IceServiceInfo> _allIceServiceInfos = [];
@@ -193,8 +219,34 @@ namespace InitializeDatabase.ViewModels.Dialog
         [BsonIgnore]
         public bool IsChecked
         {
-            get { return _IsChecked; }
-            set { SetProperty(ref _IsChecked, value); }
+            get
+            {
+                return OCC || Station || Depot || Substation;
+            }
         }
+
+        private bool _OCC;
+
+        [BsonIgnore]
+        public bool OCC
+        {
+            get { return _OCC; }
+            set { SetProperty(ref _OCC, value); }
+        }
+
+        [BsonIgnore]
+        public bool Station { get; set; }
+
+        /// <summary>
+        /// 段场
+        /// </summary>
+        [BsonIgnore]
+        public bool Depot { get; set; }
+
+        /// <summary>
+        /// 主变
+        /// </summary>
+        [BsonIgnore]
+        public bool Substation { get; set; }
     }
 }

@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:local="clr-namespace:InitializeDatabase" xmlns:interactivity="HandyControl.in"
+    xmlns:interactivity="HandyControl.in"
+    xmlns:local="clr-namespace:InitializeDatabase"
     xmlns:prism="http://prismlibrary.com/">
     <Application.Resources>
         <ResourceDictionary>

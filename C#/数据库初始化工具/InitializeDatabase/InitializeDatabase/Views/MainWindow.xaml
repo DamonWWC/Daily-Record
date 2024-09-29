@@ -10,7 +10,8 @@
     Title="数据库初始化工具"
     Width="1920"
     Height="1080"
-    prism:ViewModelLocator.AutoWireViewModel="True">
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    WindowStartupLocation="CenterScreen">
 
     <Grid>
         <Grid.ColumnDefinitions>
