@@ -124,7 +124,7 @@ namespace InitializeDatabase.ViewModels.Dialog
 
         public DelegateCommand<object> SearchStartedCommand => _SearchStartedCommand ??= new DelegateCommand<object>(ExecuteSearchStartedCommand);
 
-        private DebounceDispatcher dispatcher = new DebounceDispatcher();
+        private readonly DebounceDispatcher dispatcher = new();
 
         private void ExecuteSearchStartedCommand(object param)
         {

@@ -4,9 +4,11 @@ using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Timers;
 
 namespace InitializeDatabase.ViewModels
 {
@@ -16,6 +18,9 @@ namespace InitializeDatabase.ViewModels
         private readonly ILiteDatabase rawDataDb;
         private readonly IDialogService _dialogService;
 
+        Timer timer;
+        DateTime now = DateTime.Now;
+
         public ServiceAgentConfigViewModel(IDAFacade dAFacade, IDialogService dialogService)
         {
             _dAFacade = dAFacade;
@@ -23,7 +28,32 @@ namespace InitializeDatabase.ViewModels
             rawDataDb = ContainerLocator.Container.Resolve<ILiteDatabase>("RawData");
             _agentInfos = rawDataDb.GetCollection<AgentInfo>("agentInfo").Query().ToList();
             InitData();
+
+            timer = new Timer(1000);
+            timer.Elapsed += Timer_Elapsed;
+            timer.Start();
         }
+
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Content1++;
+            
+            if ((DateTime.Now-now ).TotalSeconds >= 120)
+            {
+                
+                timer.Stop();
+                timer.Dispose();
+
+            }
+        }
+
+        private int _Content1=0;
+        public int Content1
+        {
+            get { return _Content1; }
+            set { SetProperty(ref _Content1, value); }
+        }
+
 
         private readonly List<AgentInfo> _agentInfos;
 

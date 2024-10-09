@@ -19,7 +19,7 @@
             <Button Command="{Binding SaveCommand}">
                 保存
             </Button>
-            <ToggleButton Command="{Binding ShowCommand}" Content="查看" />
+            <ToggleButton Command="{Binding ShowCommand}" Content="{Binding Content1}" />
         </StackPanel>
 
         <DataGrid
