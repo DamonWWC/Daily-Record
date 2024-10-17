@@ -6,6 +6,99 @@
     xmlns:hj="https://handyorg.github.io/handycontrol"
     xmlns:prism="http://prismlibrary.com/"
     prism:ViewModelLocator.AutoWireViewModel="True">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ColumnStyle" TargetType="DataGridColumnHeader">
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+
+                            <Grid
+                                Grid.Column="0"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="150" />
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="7"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Content="MICS_APPLICATION" />
+                                <Rectangle
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="7"
+                                    Height="1"
+                                    VerticalAlignment="Stretch"
+                                    Fill="Black"
+                                    Visibility="Visible" />
+                                <ContentPresenter
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Content="CHECK_DB" />
+                                <Rectangle
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Width="1"
+                                    VerticalAlignment="Stretch"
+                                    Fill="#ccc"
+                                    Visibility="Visible" />
+                                <ContentPresenter
+                                    Grid.Row="2"
+                                    Grid.Column="2"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Content="CHECK_COMM" />
+                                <Rectangle
+                                    Grid.Row="2"
+                                    Grid.Column="3"
+                                    Width="1"
+                                    VerticalAlignment="Stretch"
+                                    Fill="#ccc"
+                                    Visibility="Visible" />
+                                <ContentPresenter
+                                    Grid.Row="2"
+                                    Grid.Column="4"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Content="EXCHANGE_TYPE" />
+                                <Rectangle
+                                    Grid.Row="2"
+                                    Grid.Column="5"
+                                    Width="1"
+                                    VerticalAlignment="Stretch"
+                                    Fill="#ccc"
+                                    Visibility="Visible" />
+                                <ContentPresenter
+                                    Grid.Row="2"
+                                    Grid.Column="6"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Content="AUTO_FAIL_BACK" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -19,7 +112,7 @@
             <Button Command="{Binding SaveCommand}">
                 保存
             </Button>
-            <ToggleButton Command="{Binding ShowCommand}" Content="{Binding Content1}" />
+            <ToggleButton Command="{Binding ShowCommand}" Content="查看" />
         </StackPanel>
 
         <DataGrid
@@ -34,17 +127,13 @@
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Command="{Binding SelectCommand}" Header="选择Agent" />
-                    <MenuItem
-                        Command="{Binding PasteCommand}"
-                        Header="粘贴"
-                        IsEnabled="{c:Binding 'MajorInfos.Count==0'}" />
                     <MenuItem Command="{Binding ClearCommand}" Header="清空" />
-                    <MenuItem Command="{Binding AddCommand}" Header="新增一行" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.ColumnHeaderStyle>
                 <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    <Setter Property="Height" Value="60" />
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.CellStyle>
@@ -53,7 +142,6 @@
                     <Setter Property="VerticalAlignment" Value="Center" />
                     <Setter Property="Cursor" Value="Hand" />
                     <Setter Property="Background" Value="Transparent" />
-
                     <Style.Triggers>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
@@ -73,69 +161,118 @@
                 <DataGridTextColumn
                     Binding="{Binding AgentName}"
                     Header="服务端模块"
-                    IsReadOnly="True" />
+                    IsReadOnly="True" Width="1.5*"/>
                 <DataGridTextColumn
                     Binding="{Binding AppType}"
                     Header="应用类型"
                     IsReadOnly="True" />
-                <DataGridTemplateColumn Header="中央">
+                <DataGridTemplateColumn CanUserResize="False" Header="中央">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox IsChecked="{Binding OCC, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="车站">
+                <DataGridTemplateColumn CanUserResize="False" Header="车站">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox IsChecked="{Binding Station, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="段场">
+                <DataGridTemplateColumn CanUserResize="False" Header="段场">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox IsChecked="{Binding Depot, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="主变">
+                <DataGridTemplateColumn CanUserResize="False" Header="主变">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox IsChecked="{Binding Substation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="CHECK_DB">
+                <DataGridTemplateColumn CanUserResize="False" Header="不配置">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding CheckDB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox IsChecked="{Binding IsConfig, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    Width="5*"
+                    CanUserResize="False"
+                    HeaderStyle="{StaticResource ColumnStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid IsEnabled="{c:Binding !IsConfig}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="150" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="150" />
+                                </Grid.ColumnDefinitions>
+                                <CheckBox
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsChecked="{Binding Path=CheckDB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Grid.Column="2"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsChecked="{Binding Path=CheckComm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Grid.Column="4"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsChecked="{Binding Path=ExchangeType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox
+                                    Grid.Column="6"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsChecked="{Binding Path=AutoFailBack, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--<DataGridTemplateColumn Header="CHECK_DB">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding CheckDB, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsThreeState="True" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="CHECK_COMM">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding CheckComm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox IsChecked="{Binding CheckComm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsThreeState="True" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="EXCHANGE_TYPE">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding ExchangType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox IsChecked="{Binding ExchangType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsThreeState="True" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="AUTO_FAIL_BACK">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding AutoFailBack, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox IsChecked="{Binding AutoFailBack, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsThreeState="True" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
 
-                <DataGridTemplateColumn Header="应用服务" IsReadOnly="False">
+                <DataGridTemplateColumn
+                    CanUserResize="False"
+                    Header="应用服务"
+                    IsReadOnly="False">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
 
