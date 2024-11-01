@@ -30,7 +30,7 @@
 20. 引用，特殊的指针，不能修改的指针，不允许更改指向的指针。不存在空引用，会避免野指针，必须初始化，一旦指向一个地方，就一直引用不会变。可以认为是变量的别名。例如 int& a = b;为了支持函数的运算符重载。
 
 
-STL
+STL(algorithm(算法)、container(容器)、iterator(迭代器))
 1. 容器：vector，list，deque，set，map，multiset，multimap，stack，queue，priority_queue。
 priority_queue：优先队列，是一种数据结构，它允许以任意顺序插入元素，但是只能检索最大（或最小）元素。
 2. 仿函数：一般不会单独使用，主要是为了搭配STL算法使用。

@@ -1,8 +1,8 @@
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-greaterThan(QT_MAJOR_VERSION, 5): QT += core5compat
-CONFIG += warn_off
+
+CONFIG += c++17
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -10,13 +10,16 @@ CONFIG += warn_off
 
 SOURCES += \
     main.cpp \
-    widget.cpp
+    widget.cpp \
+    widget1.cpp
 
 HEADERS += \
-    widget.h
+    widget.h \
+    widget1.h
 
 FORMS += \
-    widget.ui
+    widget.ui \
+    widget1.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

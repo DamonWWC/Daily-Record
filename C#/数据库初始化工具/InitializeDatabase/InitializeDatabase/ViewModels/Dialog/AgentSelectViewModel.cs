@@ -64,7 +64,11 @@ namespace InitializeDatabase.ViewModels.Dialog
                 if (!_addNewItems.Any(p => p.Id == info.Id))
                 {
                     _addNewItems.Add(info);
-                }                
+                }
+                else
+                {
+                    _addNewItems.Remove(info);
+                }
             }
         }
 

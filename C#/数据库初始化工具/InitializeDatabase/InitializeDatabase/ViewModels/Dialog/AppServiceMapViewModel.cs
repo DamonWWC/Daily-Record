@@ -142,13 +142,8 @@ namespace InitializeDatabase.ViewModels.Dialog
         public DelegateCommand ConfirmCommand => _ConfirmCommand ??= new DelegateCommand(ExecuteConfirmCommand);
 
         private void ExecuteConfirmCommand()
-        {
-            StringBuilder result = new();
-            result.AppendLine($"中央：{string.Join(",", IceServiceInfos.Where(p => p.OCC).Select(p => p.ServiceId))}");
-            result.AppendLine($"车站：{string.Join(",", IceServiceInfos.Where(p => p.Station).Select(p => p.ServiceId))}");
-            result.AppendLine($"段场：{string.Join(",", IceServiceInfos.Where(p => p.Depot).Select(p => p.ServiceId))}");
-            result.AppendLine($"主变：{string.Join(",", IceServiceInfos.Where(p => p.Substation).Select(p => p.ServiceId))}");
-            RequestClose?.Invoke(new DialogResult(ButtonResult.OK, new DialogParameters { { "info", result.ToString() } }));
+        {          
+            RequestClose?.Invoke(new DialogResult(ButtonResult.OK, new DialogParameters { { "info", IceServiceInfos.Where(p=>p.IsChecked) } }));
         }
 
         private DelegateCommand _CancelCommand;

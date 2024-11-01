@@ -1,4 +1,5 @@
 ﻿using HandyControl.Tools.Extension;
+using InitializeDatabase.ViewModels.Dialog;
 using LiteDB;
 using PCI.Framework.ORM;
 using Prism.Commands;
@@ -6,6 +7,7 @@ using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -16,6 +18,7 @@ namespace InitializeDatabase.ViewModels
     public class ServiceAgentConfigViewModel : BindableBase
     {
         private readonly IDAFacade _dAFacade;
+        private readonly ILiteDatabase db;
         private readonly ILiteDatabase rawDataDb;
         private readonly ILiteDatabase initDataDb;
         private readonly IDialogService _dialogService;
@@ -28,6 +31,7 @@ namespace InitializeDatabase.ViewModels
             _ea = ea;
             rawDataDb = ContainerLocator.Container.Resolve<ILiteDatabase>("RawData");
             initDataDb = ContainerLocator.Container.Resolve<ILiteDatabase>("InitData");
+            db = ContainerLocator.Container.Resolve<ILiteDatabase>("InitData");
             _agentInfos = rawDataDb.GetCollection<AgentInfo>("agentInfo").Query().ToList();
             _monitorProcessInfos = rawDataDb.GetCollection<MonitorProcessInfo>("monitorProcessInfo").Query().ToList();
             InitData();
@@ -106,11 +110,17 @@ namespace InitializeDatabase.ViewModels
                 {
                     if (r.Result == ButtonResult.OK)
                     {
-                        if (r.Parameters.TryGetValue("info", out string result))
+                        if (r.Parameters.TryGetValue("info", out IEnumerable<IceServiceInfo> _icsServiceInfos))
                         {
-                            if (!string.IsNullOrWhiteSpace(result))
+                            if (_icsServiceInfos != null && _icsServiceInfos.Count() > 0)
                             {
-                                agentConfigInfo.AppServiceMap = result;
+                                StringBuilder str = new();
+                                str.AppendLine($"中央：{string.Join(",", _icsServiceInfos.Where(p => p.OCC).Select(p => p.ServiceId))}");
+                                str.AppendLine($"车站：{string.Join(",", _icsServiceInfos.Where(p => p.Station).Select(p => p.ServiceId))}");
+                                str.AppendLine($"段场：{string.Join(",", _icsServiceInfos.Where(p => p.Depot).Select(p => p.ServiceId))}");
+                                str.AppendLine($"主变：{string.Join(",", _icsServiceInfos.Where(p => p.Substation).Select(p => p.ServiceId))}");
+                                agentConfigInfo.AppServiceMap = str.ToString();
+                                agentConfigInfo.IceServiceInfos = _icsServiceInfos.ToList();
                             }
                         }
                     }
@@ -146,10 +156,10 @@ namespace InitializeDatabase.ViewModels
         {
             StringBuilder sql = new();
 
-            // sql.AppendLine(string.Join(" union all \n", occsql));
             sql.AppendLine(CreateMonitoredProcessSql());
             sql.AppendLine(CreateAgentSql());
             sql.AppendLine(CreateMicsApplication());
+            sql.AppendLine(CreateIceServiceSql());
             SqlText = sql.ToString();
         }
 
@@ -196,7 +206,7 @@ namespace InitializeDatabase.ViewModels
                 if (item.Value.Count > 0)
                 {
                     string str = string.Join(",", initDataDb.GetCollection<LocationInfo>("locationInfos").Find(p => p.Type == item.Key).Select(p => p.Id));
-                    sql.AppendLine($"---{item.Key}\nINSERT INTO ENTITY (NAME,ADDRESS,DESCRIPTION,SUBSYSTEMKEY,LOCATIONKEY,SEREGI_ID,TYPEKEY,PHYSICAL_SUBSYSTEM_KEY,SCSDAT_ID,PARENTKEY,AGENTKEY,DELETED,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED)\r\nSELECT initcap(lower(l.name))||t.name,t.address,l.name||t.description,(SELECT PKEY FROM SUBSYSTEM s WHERE name=t.subname) SUBSYSTEMKEY,l.pkey,l.pkey,2 typekey,\r\n NULL,NULL,(SELECT pkey FROM entity WHERE name='Parent Entity') PARENTKEY, (SELECT pkey FROM entity WHERE name='Parent Entity') AGENTKEY,0 DELETED ,'MICS' ,SYSDATE,NULL,NULL\r\n FROM LOCATION L JOIN \n(\n{string.Join(" union all \n", item.Value)}\n) T ON 1=1 WHERE l.PKEY IN ({str})\n\n");
+                    sql.AppendLine($"---{item.Key}\nINSERT INTO ENTITY (NAME,ADDRESS,DESCRIPTION,SUBSYSTEMKEY,LOCATIONKEY,SEREGI_ID,TYPEKEY,PHYSICAL_SUBSYSTEM_KEY,SCSDAT_ID,PARENTKEY,AGENTKEY,DELETED,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED)\r\nSELECT initcap(lower(l.name))||t.name,t.address,l.name||t.description,(SELECT PKEY FROM SUBSYSTEM s WHERE name=t.subname) SUBSYSTEMKEY,l.pkey,l.pkey,2 typekey,\r\n NULL,NULL,(SELECT pkey FROM entity WHERE name='Parent Entity') PARENTKEY, (SELECT pkey FROM entity WHERE name='Parent Entity') AGENTKEY,0 DELETED ,'MICS' ,SYSDATE,NULL,NULL\r\n FROM LOCATION L JOIN \n(\n{string.Join(" union all \n", item.Value)}\n) T ON 1=1 WHERE l.PKEY IN ({str});\n\n");
                 }
             });
             return sql.ToString();
@@ -245,7 +255,7 @@ namespace InitializeDatabase.ViewModels
                 if (item.Value.Count > 0)
                 {
                     string str = string.Join(",", initDataDb.GetCollection<LocationInfo>("locationInfos").Find(p => p.Type == item.Key).Select(p => p.Id));
-                    sql.AppendLine($"---{item.Key}\nINSERT INTO ENTITY (NAME,ADDRESS,DESCRIPTION,SUBSYSTEMKEY,LOCATIONKEY,SEREGI_ID,TYPEKEY,PHYSICAL_SUBSYSTEM_KEY,SCSDAT_ID,PARENTKEY,AGENTKEY,DELETED,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED)\r\nSELECT initcap(lower(l.name))||t.name,t.address,l.name||t.description,(SELECT PKEY FROM SUBSYSTEM s WHERE name=t.subname) SUBSYSTEMKEY\r\n ,l.pkey,l.pkey,\r\n (SELECT pkey FROM entitytype WHERE name=t.typename) typekey,\r\n (SELECT PKEY FROM SUBSYSTEM s WHERE name=t.subname) PHYSICAL_SUBSYSTEM_KEY,NULL,(SELECT pkey FROM entity WHERE name=initcap(lower(l.name))||REPLACE(t.name,'Agent','')||'MonitoredProcess') PARENTKEY, null AGENTKEY,0 DELETED ,'MICS' ,SYSDATE,NULL,NULL\r\nFROM LOCATION L JOIN  \n(\n{string.Join(" union all \n", item.Value)}\n) T ON 1=1 WHERE l.PKEY IN ({str})\n\n");
+                    sql.AppendLine($"---{item.Key}\nINSERT INTO ENTITY (NAME,ADDRESS,DESCRIPTION,SUBSYSTEMKEY,LOCATIONKEY,SEREGI_ID,TYPEKEY,PHYSICAL_SUBSYSTEM_KEY,SCSDAT_ID,PARENTKEY,AGENTKEY,DELETED,CREATED_BY,DATE_CREATED,MODIFIED_BY,DATE_MODIFIED)\r\nSELECT initcap(lower(l.name))||t.name,t.address,l.name||t.description,(SELECT PKEY FROM SUBSYSTEM s WHERE name=t.subname) SUBSYSTEMKEY\r\n ,l.pkey,l.pkey,\r\n (SELECT pkey FROM entitytype WHERE name=t.typename) typekey,\r\n (SELECT PKEY FROM SUBSYSTEM s WHERE name=t.subname) PHYSICAL_SUBSYSTEM_KEY,NULL,(SELECT pkey FROM entity WHERE name=initcap(lower(l.name))||REPLACE(t.name,'Agent','')||'MonitoredProcess') PARENTKEY, null AGENTKEY,0 DELETED ,'MICS' ,SYSDATE,NULL,NULL\r\nFROM LOCATION L JOIN  \n(\n{string.Join(" union all \n", item.Value)}\n) T ON 1=1 WHERE l.PKEY IN ({str});\n\n");
                 }
             });
             return sql.ToString();
@@ -255,7 +265,7 @@ namespace InitializeDatabase.ViewModels
         /// MICS_APPLICATION表数据初始化
         /// </summary>
         private string CreateMicsApplication()
-        {          
+        {
             Dictionary<string, List<string>> dic = new()
             {
                 {"check_db",new List<string>() },
@@ -297,17 +307,69 @@ namespace InitializeDatabase.ViewModels
             sql.AppendLine("SELECT pkey AGENT_KEY, '1' enabled, DESCRIPTION display_name");
             sql.AppendLine(",(SELECT type_id FROM MICS_APP_TYPE mat WHERE upper(REPLACE(mat.TYPE_NAME,'_',''))=upper(substr(name,4))) app_type\r\n      ,'/u01/mics/bin' app_path\r\n      ,(SELECT 'mics_'||LOWER(type_name) FROM MICS_APP_TYPE mat WHERE upper(REPLACE(mat.TYPE_NAME,'_',''))=upper(substr(name,4))) app_name\r\n      ,(SELECT lower(substr(e.name,1,3))||'_'||LOWER(type_name)||'.pid' FROM MICS_APP_TYPE mat WHERE upper(REPLACE(mat.TYPE_NAME,'_',''))=upper(substr(name,4))) app_name");
             sql.AppendLine(dic["check_db"].Count == 0 ? ",'0' check_db" : $",CASE WHEN {string.Join("OR", dic["check_db"])} \nTHEN '1' ELSE '0' END check_db");
-            sql.AppendLine(dic["check_comm"].Count==0? ",'0' check_comm" : $",CASE WHEN {string.Join("OR", dic["check_comm"])} \nTHEN '1' ELSE '0' END check_comm");
-            sql.AppendLine(dic["exchange_type"].Count==0? ",'0' exchange_type" : $",CASE WHEN {string.Join("OR", dic["exchange_type"])} \nTHEN '1' ELSE '0' END exchange_type");
-            sql.AppendLine(dic["auto_failback"].Count==0? ",'0' auto_failback" : $",CASE WHEN {string.Join("OR", dic["auto_failback"])} \nTHEN '1' ELSE '0' END auto_failback");
+            sql.AppendLine(dic["check_comm"].Count == 0 ? ",'0' check_comm" : $",CASE WHEN {string.Join("OR", dic["check_comm"])} \nTHEN '1' ELSE '0' END check_comm");
+            sql.AppendLine(dic["exchange_type"].Count == 0 ? ",'0' exchange_type" : $",CASE WHEN {string.Join("OR", dic["exchange_type"])} \nTHEN '1' ELSE '0' END exchange_type");
+            sql.AppendLine(dic["auto_failback"].Count == 0 ? ",'0' auto_failback" : $",CASE WHEN {string.Join("OR", dic["auto_failback"])} \nTHEN '1' ELSE '0' END auto_failback");
             sql.AppendLine(",'3' log_level\r\n,'30' log_size\r\n,'1000' log_count\r\n,'MICS'||upper(substr(name,1,3)) aq_location\r\n,'GROUP' aq_qualifier\r\n,e.description \r\nFROM entity e");
-          
-            sql.AppendLine($"WHERE ({string.Join(" OR ", items)})");
-            if(exclude.Any())
+
+            sql.Append($"WHERE ({string.Join(" OR ", items)})");
+            if (exclude.Any())
             {
-                sql.AppendLine($"AND {string.Join("AND", exclude)}");
+                sql.Append($"AND {string.Join("AND", exclude)}");
             }
-           
+
+            return sql.Append(";\n\n").ToString();
+        }
+
+        private string CreateIceServiceSql()
+        {
+            var locationinfos = db.GetCollection<LocationInfo>("locationInfos").Query().ToArray();
+            StringBuilder sql = new("TRUNCATE TABLE MICS_APPLICATIONSERVICE_MAP;\nBEGIN\n");
+            foreach (var item in AgentConfigInfos)
+            {
+                if (item.IceServiceInfos == null) continue;
+                Dictionary<string, List<int>> dic = [];
+                foreach(var iceitem in item.IceServiceInfos)
+                {
+                    List<string> id = [];
+                    if (iceitem.OCC)
+                    {
+                        id.AddRange(locationinfos.Where(p => p.Type == LocationType.中心).Select(p => p.Id));
+                    }
+                    if (iceitem.Station)
+                    {
+                        id.AddRange( locationinfos.Where(p => p.Type == LocationType.车站).Select(p => p.Id));
+                    }
+                    if (iceitem.Depot)
+                    {
+                        id.AddRange(locationinfos.Where(p => p.Type == LocationType.车辆段).Select(p => p.Id));
+                    }
+                    if (iceitem.Substation)
+                    {
+                        id.AddRange(locationinfos.Where(p => p.Type == LocationType.主变).Select(p => p.Id));
+                    }
+                    var value = iceitem.ServiceId;
+                    var key = string.Join(",", id);
+                    if (dic.ContainsKey(key))
+                    {
+                        dic[key].Add(value);
+                    }
+                    else
+                    {
+                        dic[key]= [value];
+                    }
+                }  
+                foreach (var item1 in dic)
+                {
+                    sql.AppendLine($"  FOR x IN (SELECT pkey FROM entity WHERE name LIKE '%{item.AgentName}' AND LOCATIONKEY IN ({item1.Key}))\n  LOOP");
+                    foreach(var item2 in item1.Value)
+                    {
+                        sql.AppendLine($"    INSERT INTO MICS_APPLICATIONSERVICE_MAP (AGENT_KEY, SERVICE_ID) VALUES ( x.pkey, {item2} );");
+                    }
+                    sql.AppendLine("  END LOOP;\n");
+                }
+            }
+            sql.Append("END;");
 
             return sql.ToString();
         }
@@ -429,6 +491,14 @@ namespace InitializeDatabase.ViewModels
         {
             get { return _AppServiceMap; }
             set { SetProperty(ref _AppServiceMap, value); }
+        }
+
+        private List<IceServiceInfo> _IceServiceInfos;
+
+        public List<IceServiceInfo> IceServiceInfos
+        {
+            get { return _IceServiceInfos; }
+            set { SetProperty(ref _IceServiceInfos, value); }
         }
     }
 

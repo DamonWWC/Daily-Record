@@ -6,13 +6,48 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>760</width>
+    <height>596</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>50</y>
+     <width>256</width>
+     <height>192</height>
+    </rect>
+   </property>
+   <column>
+    <property name="text">
+     <string>新建列</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>新建列</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>新建列</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>新建列</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>新建列</string>
+    </property>
+   </column>
+  </widget>
  </widget>
  <resources/>
  <connections/>
