@@ -121,5 +121,11 @@ namespace AspNetCoreDemo.Controllers
         }
         [HttpGet("Version")]
         public ContentResult GetVersion() => Content("v1.0.0");
+
+
+        public ActionResult<string>GetABC()
+        {
+            return "11";
+        }
     }
 }
