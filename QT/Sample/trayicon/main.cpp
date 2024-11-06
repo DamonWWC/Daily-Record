@@ -1,12 +1,11 @@
-#include "widget.h"
+#include "frmtrayicon.h"
 
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Widget w;
-    w.setWindowTitle(QStringLiteral("异形窗体"));
+    frmtrayicon w;
     w.show();
     return a.exec();
 }

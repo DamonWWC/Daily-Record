@@ -16,8 +16,12 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
-protected:
-    bool eventFilter(QObject *watched,QEvent *evt);
+
+private slots:
+    void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
+
 private:
     Ui::Widget *ui;
 };

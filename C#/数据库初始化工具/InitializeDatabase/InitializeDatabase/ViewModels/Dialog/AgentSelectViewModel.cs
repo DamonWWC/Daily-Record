@@ -23,7 +23,9 @@ namespace InitializeDatabase.ViewModels.Dialog
         }
 
         public void OnDialogClosed()
-        { }
+        {
+
+        }
 
         private List<AgentInfo> _ConfigInfos;
 
@@ -37,8 +39,7 @@ namespace InitializeDatabase.ViewModels.Dialog
         public DelegateCommand ConfirmCommand => _ConfirmCommand ??= new DelegateCommand(ExecuteConfirmCommand);
 
         private void ExecuteConfirmCommand()
-        {
-            
+        {     
             RequestClose?.Invoke(new DialogResult(ButtonResult.OK,new DialogParameters { { "info",_addNewItems} }));
         }
 

@@ -13,6 +13,9 @@
     <Compile Update="Views\Dialog\AppServiceMapView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Dialog\NewIceInfoView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\LocationInfoConfigurationView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -34,6 +37,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Dialog\AppServiceMapView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Dialog\NewIceInfoView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\LocationInfoConfigurationView.xaml">

@@ -8,17 +8,19 @@ using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 
 namespace InitializeDatabase.ViewModels.Dialog
 {
     public class AppServiceMapViewModel : BindableBase, IDialogAware
     {
         private readonly ILiteDatabase rawDataDb;
+        private readonly IDialogService _dialogService;
 
-        public AppServiceMapViewModel()
+        public AppServiceMapViewModel(IDialogService dialogService)
         {
+            _dialogService = dialogService;
             rawDataDb = ContainerLocator.Container.Resolve<ILiteDatabase>("RawData");
         }
 
@@ -60,12 +62,20 @@ namespace InitializeDatabase.ViewModels.Dialog
             }
         }
 
-        private List<IceServiceInfo> _IceServiceInfos;
+        private ObservableCollection<IceServiceInfo> _IceServiceInfos;
 
-        public List<IceServiceInfo> IceServiceInfos
+        public ObservableCollection<IceServiceInfo> IceServiceInfos
         {
             get { return _IceServiceInfos; }
             set { SetProperty(ref _IceServiceInfos, value); }
+        }
+
+        private IceServiceInfo _IcsSelectedItem;
+
+        public IceServiceInfo IcsSelectedItem
+        {
+            get { return _IcsSelectedItem; }
+            set { SetProperty(ref _IcsSelectedItem, value); }
         }
 
         private bool _IsFilter;
@@ -98,11 +108,11 @@ namespace InitializeDatabase.ViewModels.Dialog
             if (result.Count() != 0)
             {
                 result.Sort((x, y) => y.Item1.CompareTo(x.Item1));
-                IceServiceInfos = result.Select(p => p.Item2).ToList();
+                IceServiceInfos = new ObservableCollection<IceServiceInfo>( result.Select(p => p.Item2));
             }
             else
             {
-                IceServiceInfos = allIceServiceInfos;
+                IceServiceInfos = new ObservableCollection<IceServiceInfo>( allIceServiceInfos);
             }
         }
 
@@ -142,8 +152,8 @@ namespace InitializeDatabase.ViewModels.Dialog
         public DelegateCommand ConfirmCommand => _ConfirmCommand ??= new DelegateCommand(ExecuteConfirmCommand);
 
         private void ExecuteConfirmCommand()
-        {          
-            RequestClose?.Invoke(new DialogResult(ButtonResult.OK, new DialogParameters { { "info", IceServiceInfos.Where(p=>p.IsChecked) } }));
+        {
+            RequestClose?.Invoke(new DialogResult(ButtonResult.OK, new DialogParameters { { "info", IceServiceInfos.Where(p => p.IsChecked) } }));
         }
 
         private DelegateCommand _CancelCommand;
@@ -162,6 +172,44 @@ namespace InitializeDatabase.ViewModels.Dialog
             if (param is IceServiceInfo iceServiceInfo && !iceServiceInfo.IsChecked)
             {
                 Filter();
+            }
+        }
+
+        private DelegateCommand _AddCommand;
+        public DelegateCommand AddCommand => _AddCommand ??= new DelegateCommand(ExecuteAddCommand);
+
+        private void ExecuteAddCommand()
+        {
+            _dialogService.ShowDialog("NewIceInfoView", null, r =>
+            {
+                if (r.Result == ButtonResult.OK)
+                {
+                    if (r.Parameters.TryGetValue("info", out IceServiceBaseInfo newinfo))
+                    {
+                        IceServiceInfos.Add(new IceServiceInfo
+                        {
+                            ServiceId = newinfo.ServiceId,
+                            ServiceType = newinfo.ServiceType,
+                            Enabled = newinfo.Enabled,
+                            AdapterName = newinfo.AdapterName,
+                            IdentifyName = newinfo.IdentifyName,
+                            ProtocolName = newinfo.ProtocolName,
+                            ProtocolPort = newinfo.ProtocolPort,
+                            Description = newinfo.Description
+                        });
+                    }
+                }
+            });
+        }
+
+        private DelegateCommand _DeleteCommand;
+        public DelegateCommand DeleteCommand => _DeleteCommand ??= new DelegateCommand(ExecuteDeleteCommand);
+
+        private void ExecuteDeleteCommand()
+        {
+            if (IcsSelectedItem != null)
+            {
+                IceServiceInfos.Remove(IcsSelectedItem);
             }
         }
 
@@ -197,14 +245,58 @@ namespace InitializeDatabase.ViewModels.Dialog
 
     public class IceServiceBaseInfo : BindableBase
     {
-        public int ServiceId { get; set; }
-        public int ServiceType { get; set; }
-        public int Enabled { get; set; }
-        public string AdapterName { get; set; }
-        public string IdentifyName { get; set; }
-        public string ProtocolName { get; set; }
-        public int ProtocolPort { get; set; }
-        public string Description { get; set; }
+        private int _ServiceId;
+        
+        public int ServiceId
+        {
+            get { return _ServiceId; }
+            set { SetProperty(ref _ServiceId, value); }
+        }
+        private int _ServiceType;
+        public int ServiceType
+        {
+            get { return _ServiceType; }
+            set { SetProperty(ref _ServiceType, value); }
+        }
+        
+        private int _Enabled;
+        public int Enabled
+        {
+            get { return _Enabled; }
+            set { SetProperty(ref _Enabled, value); }
+        }
+
+        private string _AdapterName;
+        public string AdapterName
+        {
+            get { return _AdapterName; }
+            set { SetProperty(ref _AdapterName, value); }
+        }
+        private string _IdentifyName;
+        public string IdentifyName
+        {
+            get { return _IdentifyName; }
+            set { SetProperty(ref _IdentifyName, value); }
+        }
+        private string _ProtocolName;
+        public string ProtocolName
+        {
+            get { return _ProtocolName; }
+            set { SetProperty(ref _ProtocolName, value); }
+        }
+        private int _ProtocolPort;
+        public int ProtocolPort
+        {
+            get { return _ProtocolPort; }
+            set { SetProperty(ref _ProtocolPort, value); }
+        }       
+        private string _Description;
+        public string Description
+        {
+            get { return _Description; }
+            set { SetProperty(ref _Description, value); }
+        }
+       
     }
 
     public class IceServiceInfo : IceServiceBaseInfo

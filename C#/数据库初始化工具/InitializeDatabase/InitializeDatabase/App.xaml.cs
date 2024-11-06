@@ -31,6 +31,7 @@ namespace InitializeDatabase
             containerRegistry.RegisterForNavigation<ServiceAgentConfigView>();
             containerRegistry.RegisterDialog<AgentSelectView>();
             containerRegistry.RegisterDialog<AppServiceMapView>();
+            containerRegistry.RegisterDialog<NewIceInfoView>();
         }
     }
 }

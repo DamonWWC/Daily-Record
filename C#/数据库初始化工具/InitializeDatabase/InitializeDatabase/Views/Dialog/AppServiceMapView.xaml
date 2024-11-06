@@ -49,14 +49,20 @@
             x:Name="da"
             Grid.Row="1"
             AutoGenerateColumns="False"
-            CanUserAddRows="False"
+            CanUserAddRows="True"
             CanUserSortColumns="True"
             ColumnWidth="*"
             HeadersVisibility="Column"
             IsReadOnly="True"
             ItemsSource="{Binding IceServiceInfos}"
             RowHeaderWidth="60"
-            SelectionUnit="Cell">
+            SelectedItem="{Binding IcsSelectedItem}">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding AddCommand}" Header="新增一行" />
+                    <MenuItem Command="{Binding DeleteCommand}" Header="删除选中行" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
             <DataGrid.ColumnHeaderStyle>
                 <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -72,14 +78,23 @@
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource Self}}" Value="true" />
-                                <Condition Binding="{Binding SelectionUnit, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" Value="Cell" />
+                                <Condition Binding="{Binding SelectionUnit, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" Value="CellOrRowHeader" />
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Foreground" Value="Black" />
-                            <Setter Property="Background" Value="Transparent" />
+                            <!--<Setter Property="Background" Value="Transparent" />-->
                         </MultiDataTrigger>
                     </Style.Triggers>
                 </Style>
             </DataGrid.CellStyle>
+            <DataGrid.RowStyle>
+                <Style BasedOn="{StaticResource DataGridRowStyle}" TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#FF7E7C7C" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
                 <!--<DataGridTemplateColumn Width="0.5*" Header="选择">
                     <DataGridTemplateColumn.CellTemplate>

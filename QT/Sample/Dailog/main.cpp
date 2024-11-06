@@ -1,12 +1,11 @@
-#include "widget.h"
+#include "customdialog.h"
 
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Widget w;
-    w.setWindowTitle(QStringLiteral("异形窗体"));
+    CustomDialog w;
     w.show();
     return a.exec();
 }
