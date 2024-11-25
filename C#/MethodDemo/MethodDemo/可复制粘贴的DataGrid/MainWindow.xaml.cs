@@ -20,34 +20,45 @@ namespace 可复制粘贴的DataGrid
         public MainWindow()
         {
             InitializeComponent();
-            KeyDown+= (sender, e) =>
-            {
-                var isCtrl = e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl);
-                if (isCtrl && e.Key == Key.V)
-                {
-                    var content = Clipboard.GetText();
-                    sourceDatas = new List<SourceData>();
-                    var aa = content.Split("\r\n");
-                    foreach (var item in content.Split("\r\n"))
-                    {
-                        if (string.IsNullOrWhiteSpace(item)) continue;
-                        var items = item.Split('\t');
-                        sourceDatas.Add(new SourceData{
-                            Name = items[0],
-                            SubSystem = items[1]
-                        });
-                        dg.Columns.Add(new DataGridCheckBoxColumn { Header = items[0], Binding = new Binding(items[0]) });
-                    }
-                    dg.ItemsSource = sourceDatas;
-                }
-            };
-            DataContext = this;
-            this.ConnectCommand = new RelayCommand<SourceData>((p) => 
-            {
-                selectedData = p;
+            //KeyDown+= (sender, e) =>
+            //{
+            //    var isCtrl = e.KeyboardDevice.IsKeyDown(Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(Key.RightCtrl);
+            //    if (isCtrl && e.Key == Key.V)
+            //    {
+            //        var content = Clipboard.GetText();
+            //        sourceDatas = new List<SourceData>();
+            //        var aa = content.Split("\r\n");
+            //        foreach (var item in content.Split("\r\n"))
+            //        {
+            //            if (string.IsNullOrWhiteSpace(item)) continue;
+            //            var items = item.Split('\t');
+            //            sourceDatas.Add(new SourceData{
+            //                Name = items[0],
+            //                SubSystem = items[1]
+            //            });
+            //            dg.Columns.Add(new DataGridCheckBoxColumn { Header = items[0], Binding = new Binding(items[0]) });
+            //        }
+            //        dg.ItemsSource = sourceDatas;
+            //    }
+            //};
+            //DataContext = this;
+            //this.ConnectCommand = new RelayCommand<SourceData>((p) => 
+            //{
+            //    selectedData = p;
 
 
-            });
+            //});
+
+            Task task = WaitAsync();
+            task.Wait();
+
+        }
+
+
+        async Task WaitAsync()
+        {
+            await Task.Delay(1000).ConfigureAwait(false);
+
         }
         List<SourceData> sourceDatas;
         SourceData selectedData;
