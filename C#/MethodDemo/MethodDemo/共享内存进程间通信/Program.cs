@@ -26,16 +26,16 @@ namespace 共享内存进程间通信
                     });
 
                     thread.Start();
-
+                    Thread.Sleep(2000);
                     string dataWrite = "Hello, Shared Memory!";
                     byte[] bufferToWrite = Encoding.UTF8.GetBytes(dataWrite);
                     accessor.WriteArray(0, bufferToWrite, 0, bufferToWrite.Length);
-                    accessor.WriteArray(0, bufferToWrite, 0, bufferToWrite.Length);
+                    //accessor.WriteArray(0, bufferToWrite, 0, bufferToWrite.Length);
                     thread.Join();
                 }
             }
 
-
+            Console.ReadKey();
                 Console.WriteLine("Hello, World!");
         }
 
