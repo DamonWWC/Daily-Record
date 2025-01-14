@@ -4,7 +4,7 @@
     {
         private int num = 0;
        
-        public Scope()
+        public Scope(Singleton singleton,Transient transient)
         {
                 
         }

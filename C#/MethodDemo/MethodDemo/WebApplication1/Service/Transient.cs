@@ -4,9 +4,9 @@
     {
         private readonly Scope _scope;
 
-        public Transient(Scope scope)
+        public Transient()
         {
-            _scope = scope;  
+           
         }
 
         public void DoSomething()
