@@ -13,7 +13,7 @@ namespace TaskSchedulerDemo
         private readonly Queue<Task> _taskQueue = new Queue<Task>();
         private readonly object _lock = new object();
         private bool _isRunning;
-
+       
         public PeriodicTaskScheduler(DateTime startTime,TimeSpan interval)
         {
             _startTime = startTime;

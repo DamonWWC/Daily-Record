@@ -5,6 +5,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         Title="{Binding Title}" Height="350" Width="525" >
     <Grid>
-        <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+        <!--<ContentControl prism:RegionManager.RegionName="ContentRegion" />-->
+        <Button Height="100" Width="100" Click="Button_Click" Background="#FFB01515">click</Button>
     </Grid>
 </Window>

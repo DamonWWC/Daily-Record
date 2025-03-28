@@ -15,6 +15,7 @@ namespace 文件映射进程间通信
                 Console.WriteLine($"{user.Id},{user.Name}");
                 Thread.Sleep(1000);
             }
+           
 
             //while (true)
             //{
