@@ -11,7 +11,7 @@ namespace DataTemplateDemo.Views
         public MainWindow()
         {
             InitializeComponent();
-            Content = new MainWindowViewModel2();
+            //Content = new MainWindowViewModel2();
         }
     }
 }

@@ -17,4 +17,10 @@
     <!--<Grid>
         <ContentControl Content="{Binding TemplateData}" />
     </Grid>-->
+    <Grid>
+        <Button
+            Width="100"
+            Height="100"
+            IsEnabled="False" />
+    </Grid>
 </Window>
