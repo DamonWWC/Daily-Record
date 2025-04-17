@@ -45,10 +45,42 @@
             tokenSource.Cancel();
 
 
-
+            Bar(new Foo(1, 2));
 
             Console.ReadKey();
             Console.WriteLine("Hello, World!");
+        }
+
+        static void Bar(Foo v)
+        {
+            //var (x, y) = v;
+            //Console.WriteLine($"X = {x}, Y = {y}");
+            var result = v switch
+            {
+                Foo(3, var y) => y,
+                Foo(var x, var y) => x + y,
+                _ => 0
+            };
+
+            Console.WriteLine(result);
+        }
+    }
+
+    class Foo
+    {
+        private int x;
+        private int y;
+
+        public Foo(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+       // public static implicit 
+        public void Deconstruct(out int x, out int y)
+        {
+            x = this.x;
+            y = this.y;
         }
     }
 }
