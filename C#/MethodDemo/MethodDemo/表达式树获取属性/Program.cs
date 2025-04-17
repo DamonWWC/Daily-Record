@@ -8,8 +8,17 @@ namespace 表达式树获取属性
         static void Main(string[] args)
         {
             Person person = new Person { Name = "Alice", Age = 30 };
+
+            var getter = CreateGetter<Person, string>("Name");
+            Console.WriteLine(getter(person));
+
+            var setter = CreateSetter<Person, int>("Age");
+            setter(person, 40);
+            Console.WriteLine(person.Age);
+
             Func<Person, object> getProperty = ExpressionCache<Person>.GetPropertyAccessor("Name");
             string name = (string)getProperty(person);
+
 
 
 
@@ -25,6 +34,25 @@ namespace 表达式树获取属性
             var aa = add.Invoke(1, 2);
             Console.WriteLine("Hello, World!");
         }
+
+        static Func<T,TProperty> CreateGetter<T,TProperty>(string propertyName)
+        {
+            var param = Expression.Parameter(typeof(T), "x");
+            var property = Expression.Property(param, propertyName);
+            var lambda=Expression.Lambda<Func<T, TProperty>>(property, param);
+            return lambda.Compile();
+        }
+
+        static Action<T,TProperty> CreateSetter<T,TProperty>(string propertyName)
+        {
+            var objParam = Expression.Parameter(typeof(T), "obj");
+            var valueParam = Expression.Parameter(typeof(TProperty), "value");
+            var propertry = Expression.Property(objParam, propertyName);
+            var assign= Expression.Assign(propertry, valueParam);
+            var lambda= Expression.Lambda<Action<T, TProperty>>(assign, objParam, valueParam);
+            return lambda.Compile();
+        }
+
     }
 
 
