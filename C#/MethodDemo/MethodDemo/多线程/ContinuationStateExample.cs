@@ -79,7 +79,7 @@ namespace 多线程
         }
 
 
-        private static async Task Main()
+        private static async Task Main1()
         {
 
 
@@ -109,7 +109,7 @@ namespace 多线程
             Console.ReadLine();
         }
 
-        private static void Main1()
+        private static void Main2()
         {
             byte threshold = 0x40;
 

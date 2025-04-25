@@ -92,5 +92,6 @@
     "valarray": "cpp",
     "variant": "cpp",
     "queue": "cpp"
-  }
+  },
+  "Codegeex.RepoIndex": true
 }
