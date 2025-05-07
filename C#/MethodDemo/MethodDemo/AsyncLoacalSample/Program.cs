@@ -7,20 +7,27 @@
         {
 
             //await Start();
+            SpinLock.Enter();
             asyncLocalValue.Value = 10;
             Console.WriteLine($"Main before async:{asyncLocalValue.Value}");
-
-            await DoAsyncWork().ConfigureAwait(false);
+            Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
+            await DoAsyncWork();
+            Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
             Console.WriteLine($"Main after async: {asyncLocalValue.Value}");
             Console.WriteLine("Hello, World!");
         }
         static async Task DoAsyncWork()
         {
-            
+            int value = 10;
+            int comparand = 10;
+            int newValue = 20;
+            int original = Interlocked.CompareExchange(ref value, newValue, comparand);
+            Console.WriteLine($"子{Thread.CurrentThread.ManagedThreadId}");
             Console.WriteLine($"DoAsyncWork before change: {asyncLocalValue.Value}");
             asyncLocalValue.Value = 20;
             Console.WriteLine($"DoAsyncWork after change: {asyncLocalValue.Value}");
             await Task.Delay(100).ConfigureAwait(false);
+            Console.WriteLine($"子{Thread.CurrentThread.ManagedThreadId}");
             Console.WriteLine($"DoAsyncWork after delay: {asyncLocalValue.Value}");
         }
         //private static AsyncLocal<string> _context = new AsyncLocal<string>();
@@ -45,5 +52,42 @@
         //    Console.WriteLine($"StepTwo: {_context.Value}"); // 输出 Updated in StepOne
         //    _context.Value = "Updated in StepTwo";
         //}
+
+       
+    }
+
+    public class Singleton
+    {
+        private static volatile Singleton _instance;
+        private static readonly object _lock = new object();
+
+        private Singleton() { }
+        public static Singleton Instance
+        {
+            get
+            {
+                if(_instance==null)
+                {
+                    Singleton newInstance = new Singleton();
+                    Interlocked.CompareExchange(ref _instance, newInstance, null);
+                }
+                return _instance;
+            }
+        }
+    }
+    public class SpinLock
+    {
+        private static int _locked = 1;
+        public static void Enter()
+        {
+            while(Interlocked.CompareExchange(ref _locked,1,0)!=0)
+            {
+
+            }
+        }
+        public static void Exit()
+        {
+            Interlocked.Exchange(ref _locked, 0);
+        }
     }
 }
