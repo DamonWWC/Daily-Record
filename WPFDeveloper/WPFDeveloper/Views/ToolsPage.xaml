@@ -1,0 +1,70 @@
+<Page x:Class="WPFDeveloper.Views.ToolsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WPFDeveloper.Views"
+      xmlns:hc="https://handyorg.github.io/handycontrol"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="工具箱">
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="20">
+                <TextBlock Text="开发工具箱" Style="{StaticResource TextBlockLargeBold}"/>
+                
+                <!-- 工具卡片列表 -->
+                <WrapPanel>
+                    <!-- JSON格式化工具 -->
+                    <hc:Card Effect="None" Margin="0,10,10,10" Width="250">
+                        <StackPanel Margin="10">
+                            <TextBlock Text="JSON格式化" FontSize="18" FontWeight="Bold"/>
+                            <TextBlock Text="JSON数据的格式化和验证工具" 
+                                     TextWrapping="Wrap" Margin="0,5,0,10"/>
+                            <Button Content="打开工具" 
+                                    Command="{Binding OpenJsonToolCommand}"
+                                    Style="{StaticResource ButtonPrimary}"/>
+                        </StackPanel>
+                    </hc:Card>
+
+                    <!-- Base64转换工具 -->
+                    <hc:Card Effect="None" Margin="0,10,10,10" Width="250">
+                        <StackPanel Margin="10">
+                            <TextBlock Text="Base64转换" FontSize="18" FontWeight="Bold"/>
+                            <TextBlock Text="Base64编码和解码工具" 
+                                     TextWrapping="Wrap" Margin="0,5,0,10"/>
+                            <Button Content="打开工具" 
+                                    Command="{Binding OpenBase64ToolCommand}"
+                                    Style="{StaticResource ButtonPrimary}"/>
+                        </StackPanel>
+                    </hc:Card>
+
+                    <!-- URL编解码工具 -->
+                    <hc:Card Effect="None" Margin="0,10,10,10" Width="250">
+                        <StackPanel Margin="10">
+                            <TextBlock Text="URL编解码" FontSize="18" FontWeight="Bold"/>
+                            <TextBlock Text="URL编码和解码工具" 
+                                     TextWrapping="Wrap" Margin="0,5,0,10"/>
+                            <Button Content="打开工具" 
+                                    Command="{Binding OpenUrlToolCommand}"
+                                    Style="{StaticResource ButtonPrimary}"/>
+                        </StackPanel>
+                    </hc:Card>
+
+                    <!-- 时间戳转换工具 -->
+                    <hc:Card Effect="None" Margin="0,10,10,10" Width="250">
+                        <StackPanel Margin="10">
+                            <TextBlock Text="时间戳转换" FontSize="18" FontWeight="Bold"/>
+                            <TextBlock Text="Unix时间戳与日期时间转换工具" 
+                                     TextWrapping="Wrap" Margin="0,5,0,10"/>
+                            <Button Content="打开工具" 
+                                    Command="{Binding OpenTimestampToolCommand}"
+                                    Style="{StaticResource ButtonPrimary}"/>
+                        </StackPanel>
+                    </hc:Card>
+                </WrapPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

@@ -1,0 +1,62 @@
+<Page x:Class="WPFDeveloper.Views.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:hc="https://handyorg.github.io/handycontrol"
+      xmlns:local="clr-namespace:WPFDeveloper.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="SettingsPage">
+
+    <Grid>
+        <StackPanel Margin="20">
+            <TextBlock Text="设置" 
+                       Style="{StaticResource TextBlockLargeBold}"
+                       Margin="0,0,0,20"/>
+            
+            <hc:Card Margin="0,0,0,10">
+                <StackPanel Margin="10">
+                    <TextBlock Text="外观" 
+                               Style="{StaticResource TextBlockTitleBold}"
+                               Margin="0,0,0,10"/>
+                    
+                    <hc:ToggleBlock HorizontalAlignment="Left" 
+                                   IsChecked="{Binding IsDarkTheme}"
+                                   CheckedContent="深色主题"
+                                   UnCheckedContent="浅色主题"/>
+                </StackPanel>
+            </hc:Card>
+            
+            <hc:Card Margin="0,0,0,10">
+                <StackPanel Margin="10">
+                    <TextBlock Text="通知" 
+                               Style="{StaticResource TextBlockTitleBold}"
+                               Margin="0,0,0,10"/>
+                    
+                    <CheckBox Content="启用通知" 
+                              IsChecked="{Binding EnableNotifications}"/>
+                </StackPanel>
+            </hc:Card>
+            
+            <hc:Card Margin="0,0,0,10">
+                <StackPanel Margin="10">
+                    <TextBlock Text="语言" 
+                               Style="{StaticResource TextBlockTitleBold}"
+                               Margin="0,0,0,10"/>
+                    
+                    <ComboBox SelectedValue="{Binding Language}" Width="200" HorizontalAlignment="Left">
+                        <ComboBoxItem Content="中文"/>
+                        <ComboBoxItem Content="English"/>
+                    </ComboBox>
+                </StackPanel>
+            </hc:Card>
+            
+            <Button Content="保存设置" 
+                    Command="{Binding SaveSettingsCommand}"
+                    Style="{StaticResource ButtonPrimary}"
+                    HorizontalAlignment="Left"
+                    Margin="0,20,0,0"/>
+        </StackPanel>
+    </Grid>
+</Page>

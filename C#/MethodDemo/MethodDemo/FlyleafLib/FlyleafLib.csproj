@@ -1,0 +1,107 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+	<UseWindowsForms>true</UseWindowsForms>
+	<UseWPF>true</UseWPF>
+	<PackageIcon>Flyleaf.png</PackageIcon>
+	<PackageIconUrl />
+	<RepositoryUrl></RepositoryUrl>
+	<Description>Media Player .NET Library for WinUI 3/WPF/WinForms (based on FFmpeg/DirectX)</Description>
+	<Version>3.7.55</Version>
+	<Authors>SuRGeoNix</Authors>
+	<Copyright>SuRGeoNix © 2024</Copyright>
+	<PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
+	<PackageProjectUrl>https://github.com/SuRGeoNix/Flyleaf</PackageProjectUrl>
+	<PackageTags>flyleaf flyleaflib video audio media player engine framework download extract ffmpeg vortice directx</PackageTags>
+	<IncludeSymbols>true</IncludeSymbols>
+	
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReleaseNotes>
+		* DecoderContext: Allows decoding errors during seeking
+		* FlyleafHost.Wpf: Fixes a possible issue with normal/fullscreen
+		* Updates System.Text.Json
+	</PackageReleaseNotes>
+  </PropertyGroup>
+	<!--<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
+		<OutputPath>..\..\..\Work\Hjmos_Client</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>-->
+  <PropertyGroup>
+    <LangVersion>11</LangVersion>
+    <AssemblyName>FlyleafLib1</AssemblyName>
+    <RootNamespace>FlyleafLib1</RootNamespace>
+    <OutputPath>E:\资料\学习代码\Daily-Record\C#\MethodDemo\MethodDemo\Flyleaf\bin\Debug\net472\Flyleaf</OutputPath>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>FlyleafLib.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
+    <WarningLevel>6</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
+    <WarningLevel>6</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows|AnyCPU'">
+    <WarningLevel>6</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows|AnyCPU'">
+    <WarningLevel>6</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FFmpeg.AutoGen" Version="5.1.2.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0-rc.1.24431.7" />
+    <PackageReference Include="Vortice.D3DCompiler" Version="[2.4.2]" />
+    <PackageReference Include="Vortice.Direct3D11" Version="[2.4.2]" />
+    <PackageReference Include="Vortice.DirectComposition" Version="[2.4.2]" />
+    <PackageReference Include="Vortice.Mathematics" Version="[1.4.26]" />
+    <PackageReference Include="Vortice.MediaFoundation" Version="[2.4.2]" />
+    <PackageReference Include="Vortice.XAudio2" Version="[2.4.2]" />
+  </ItemGroup>
+  
+  <ItemGroup>
+	<Import Include="System" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Net.Http" />
+    <Import Include="System.Numerics" />
+    <Import Include="System.Windows" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Xaml" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="Microsoft.CSharp" />
+    <Import Include="System.Xml" />
+    <Import Include="WindowsBase" />
+    <Import Include="WindowsFormsIntegration" />
+  </ItemGroup>
+	
+	<ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+		<Reference Include="System.Net.Http" />
+		<Reference Include="System.Web" />
+	</ItemGroup>
+  
+  <ItemGroup>
+    <None Include="..\Images\Flyleaf.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Flyeaf.Common\Flyleaf.Common.csproj" />
+  </ItemGroup>
+
+</Project>

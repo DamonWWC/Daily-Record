@@ -22,6 +22,7 @@ int main()
 		cout << "Enter next line (empty line to quit):\n";
 		cin.get(input, ArSize);
 	}
+	
 
 		return 0;
 }
