@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 
 namespace Flyleaf.Configuration
 {
@@ -20,8 +17,8 @@ namespace Flyleaf.Configuration
         /// </summary>
         public List<string> DefaultVideoUrls { get; set; } = new()
         {
-            "rtmp://ns8.indexforce.com/home/mystream",
-            "站台扶梯.mp4"
+            "rtmp://ns8.indexforce.com/home/mystream1",
+            "站台扶梯1.mp4"
         };
 
         /// <summary>
@@ -80,27 +77,27 @@ namespace Flyleaf.Configuration
         /// <returns>Loaded configuration or default if file doesn't exist</returns>
         public static VideoPlayerConfig LoadFromFile(string configPath = "appsettings.json")
         {
-            try
-            {
-                if (File.Exists(configPath))
-                {
-                    string json = File.ReadAllText(configPath);
-                    var config = JsonSerializer.Deserialize<VideoPlayerConfig>(json, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true,
-                        WriteIndented = true
-                    });
+            //try
+            //{
+            //    if (File.Exists(configPath))
+            //    {
+            //        string json = File.ReadAllText(configPath);
+            //        var config = JsonSerializer.Deserialize<VideoPlayerConfig>(json, new JsonSerializerOptions
+            //        {
+            //            PropertyNameCaseInsensitive = true,
+            //            WriteIndented = true
+            //        });
                     
-                    if (config != null)
-                    {
-                        return config;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to load configuration: {ex.Message}");
-            }
+            //        if (config != null)
+            //        {
+            //            return config;
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    System.Diagnostics.Debug.WriteLine($"Failed to load configuration: {ex.Message}");
+            //}
 
             return new VideoPlayerConfig();
         }
@@ -113,12 +110,12 @@ namespace Flyleaf.Configuration
         {
             try
             {
-                string json = JsonSerializer.Serialize(this, new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                });
+                //string json = JsonSerializer.Serialize(this, new JsonSerializerOptions
+                //{
+                //    WriteIndented = true
+                //});
                 
-                File.WriteAllText(configPath, json);
+                //File.WriteAllText(configPath, json);
             }
             catch (Exception ex)
             {

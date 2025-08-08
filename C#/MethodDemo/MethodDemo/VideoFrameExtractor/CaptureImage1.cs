@@ -287,7 +287,8 @@ namespace VideoFrameExtractor
                    videoSource.StartsWith("http://") || 
                    videoSource.StartsWith("https://") ||
                    videoSource.StartsWith("udp://") ||
-                   videoSource.StartsWith("rtp://");
+                   videoSource.StartsWith("rtp://")||
+                   videoSource.StartsWith("rtmp://");
         }
 
         /// <summary>

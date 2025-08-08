@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:FlyleafLib1.Controls"
     xmlns:designMode="clr-namespace:System.ComponentModel;assembly=PresentationFramework"
-    xmlns:fl="clr-namespace:FlyleafLib.Controls.WPF">
+    xmlns:fl="clr-namespace:FlyleafLib.Controls.WPF"
+    xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
 
     <Style TargetType="{x:Type fl:FlyleafHost}">
 
@@ -211,7 +212,71 @@
             </MultiTrigger>
         </Style.Triggers>
     </Style>
+    <Geometry x:Key="FullScreenGeometry" o:Freeze="True">M145.066667 85.333333h153.6c25.6 0 42.666667-17.066667 42.666666-42.666666S324.266667 0 298.666667 0H34.133333C25.6 0 17.066667 8.533333 8.533333 17.066667 0 25.6 0 34.133333 0 42.666667v256c0 25.6 17.066667 42.666667 42.666667 42.666666s42.666667-17.066667 42.666666-42.666666V145.066667l230.4 230.4c17.066667 17.066667 42.666667 17.066667 59.733334 0 17.066667-17.066667 17.066667-42.666667 0-59.733334L145.066667 85.333333z m170.666666 563.2L162.133333 802.133333l-76.8 76.8V725.333333C85.333333 699.733333 68.266667 682.666667 42.666667 682.666667s-42.666667 17.066667-42.666667 42.666666v256c0 25.6 17.066667 42.666667 42.666667 42.666667h256c25.6 0 42.666667-17.066667 42.666666-42.666667s-17.066667-42.666667-42.666666-42.666666H145.066667l76.8-76.8 153.6-153.6c17.066667-17.066667 17.066667-42.666667 0-59.733334-17.066667-17.066667-42.666667-17.066667-59.733334 0z m665.6 34.133334c-25.6 0-42.666667 17.066667-42.666666 42.666666v153.6l-76.8-76.8-153.6-153.6c-17.066667-17.066667-42.666667-17.066667-59.733334 0-17.066667 17.066667-17.066667 42.666667 0 59.733334l153.6 153.6 76.8 76.8H725.333333c-25.6 0-42.666667 17.066667-42.666666 42.666666s17.066667 42.666667 42.666666 42.666667h256c25.6 0 42.666667-17.066667 42.666667-42.666667v-256c0-25.6-17.066667-42.666667-42.666667-42.666666z m0-682.666667h-256c-25.6 0-42.666667 17.066667-42.666666 42.666667s17.066667 42.666667 42.666666 42.666666h153.6l-76.8 76.8-153.6 153.6c-17.066667 17.066667-17.066667 42.666667 0 59.733334 17.066667 17.066667 42.666667 17.066667 59.733334 0l153.6-153.6 76.8-76.8v153.6c0 25.6 17.066667 42.666667 42.666666 42.666666s42.666667-17.066667 42.666667-42.666666v-256c0-25.6-17.066667-42.666667-42.666667-42.666667z</Geometry>
+    <Style x:Key="ToggleButtonIconBaseStyle" TargetType="ToggleButton">
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Width" Value="50" />
+        <Setter Property="Height" Value="50" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Opacity="0.01" Color="White" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <StackPanel>
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentControl
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                <Path
+                                    x:Name="PathIcon"
+                                    Data="{StaticResource FullScreenGeometry}"
+                                    Fill="{TemplateBinding Foreground}"
+                                    Stretch="Uniform" />
+                            </ContentControl>
+                        </Border>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value=".9" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Opacity" Value=".6" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.4" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <LinearGradientBrush x:Key="PrimaryBrush" o:Freeze="True" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop o:Freeze="True" Offset="0" Color="#326cf3" />
+        <GradientStop o:Freeze="True" Offset="1" Color="#326cf3" />
+    </LinearGradientBrush>
+
+    <Style x:Key="loadingCirleStyle" TargetType="controls:LoadingCircle">
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Foreground" Value="#326cf3" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="DotDiameter" Value="5" />
+        <Setter Property="DotInterval" Value="30" />
+        <Setter Property="DotOffSet" Value="60" />
+        <Setter Property="DotDelayTime" Value="90" />
+        <Setter Property="DotSpeed" Value="4" />
+    </Style>
     <Style BasedOn="{StaticResource {x:Type fl:FlyleafHost}}" TargetType="{x:Type controls:LiveControl}">
+        <Setter Property="DetachedPosition" Value="CenterCenter" />
+        <Setter Property="DetachedFixedSize" Value="500,500" />
         <Setter Property="DetachedContent">
             <Setter.Value>
                 <Grid>
@@ -227,34 +292,14 @@
         <Setter Property="OverlayTemplate">
             <Setter.Value>
                 <ControlTemplate>
-
                     <Grid>
                         <Grid Name="PART_PlayingOverlay" Visibility="Collapsed">
                             <ToggleButton
                                 HorizontalAlignment="Right"
                                 VerticalAlignment="Bottom"
-                                Background="Black"
-                                Content="Attach / Detach"
-                                Foreground="DarkRed"
-                                IsChecked="{Binding IsAttached, Mode=TwoWay}" />
-                            <!--<StackPanel VerticalAlignment="Center">
-                                     <TextBlock
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Center"
-                                         Foreground="DarkRed"
-                                         Text="Template Host" />
-                                     <TextBlock
-                                         FontSize="20"
-                                         Foreground="Purple"
-                                         Text="{Binding IsAttached}" />
-                                     <ToggleButton
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Center"
-                                         Background="Black"
-                                         Content="Attach / Detach"
-                                         Foreground="DarkRed"
-                                         IsChecked="{Binding IsAttached, Mode=TwoWay}" />
-                                 </StackPanel>-->
+                                Foreground="White"
+                                IsChecked="{Binding IsAttached, Mode=TwoWay}"
+                                Style="{StaticResource ToggleButtonIconBaseStyle}" />
                         </Grid>
                         <Grid
                             x:Name="PART_NoVideoOverlay"
@@ -283,7 +328,7 @@
                                     FontSize="18"
                                     FontWeight="Bold"
                                     Foreground="#CCCCCC"
-                                    Text="No Video" />
+                                    Text="暂无视频播放" />
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Bottom"
@@ -332,7 +377,7 @@
                             Visibility="Collapsed">
                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <!--  Loading Animation  -->
-                                <Grid
+                                <!--<Grid
                                     Width="60"
                                     Height="60"
                                     Margin="0,0,0,20">
@@ -386,7 +431,8 @@
                                             </EventTrigger>
                                         </Ellipse.Triggers>
                                     </Ellipse>
-                                </Grid>
+                                </Grid>-->
+                                <controls:LoadingCircle Style="{StaticResource loadingCirleStyle}" />
                                 <TextBlock
                                     HorizontalAlignment="Center"
                                     FontSize="16"
@@ -398,7 +444,7 @@
                                     HorizontalAlignment="Center"
                                     FontSize="12"
                                     Foreground="#CCCCCC"
-                                    Text="Please wait while the media is being loaded..." />
+                                    Text="正在加载视频，请稍后！" />
                             </StackPanel>
                         </Grid>
                     </Grid>

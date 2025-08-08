@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Flyleaf.Common;
+using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Reflection;
-using System.Windows;
-using Flyleaf.Common;
-using Microsoft.Extensions.Logging;
 
 namespace Flyleaf.Services
 {
@@ -13,18 +11,18 @@ namespace Flyleaf.Services
     public class DynamicControlLoader1 : IDisposable
     {
         private static readonly Lazy<DynamicControlLoader1> _instance = new(() => new DynamicControlLoader1());
-        public static DynamicControlLoader Instance => _instance.Value;
-        private ILiveControl _liveControl;
+        public static DynamicControlLoader1 Instance => _instance.Value;
         private Assembly? _loadedAssembly;
-        private Type? _liveControlType;
-        private readonly ILogger<DynamicControlLoader>? _logger;
+        private IPlugin? _plugin;
+        private readonly ILogger<DynamicControlLoader1>? _logger;
         private bool _disposed = false;
 
         private DynamicControlLoader1()
         {
-            // 可以注入日志记录器
-            // _logger = loggerFactory?.CreateLogger<DynamicControlLoader>();
+            
         }
+
+        
 
         /// <summary>
         /// 初始化动态加载器
@@ -32,36 +30,32 @@ namespace Flyleaf.Services
         /// <returns>是否初始化成功</returns>
         public bool Initialize()
         {
-            if (_loadedAssembly != null && _liveControlType != null)
+            if (_loadedAssembly != null && _plugin != null)
             {
                 return true; // 已经初始化过了
             }
-
             try
             {
                 string dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Flyleaf", "FlyleafLib1.dll");
 
                 if (!File.Exists(dllPath))
                 {
-                    LogError($"FlyleafLib1.dll not found at: {dllPath}");
                     return false;
                 }
-
+                //var bb = Assembly.LoadFile(dllPath);
                 _loadedAssembly = Assembly.LoadFrom(dllPath);
-                _liveControlType = _loadedAssembly.GetType("FlyleafLib1.Controls.LiveControl");
-
-                if (_liveControlType == null)
+                var aa =  AppDomain.CurrentDomain.GetAssemblies();
+                var pluginType = _loadedAssembly.GetTypes().FirstOrDefault(p => p.GetInterface("IPlugin") != null);
+                if (pluginType == null)
                 {
-                    LogError("LiveControl type not found in FlyleafLib1.dll");
                     return false;
                 }
+                _plugin = Activator.CreateInstance(pluginType!) as IPlugin;
 
-                LogInfo("DynamicControlLoader initialized successfully");
                 return true;
             }
             catch (Exception ex)
             {
-                LogError($"Failed to initialize DynamicControlLoader: {ex.Message}", ex);
                 return false;
             }
         }
@@ -70,7 +64,7 @@ namespace Flyleaf.Services
         /// 创建LiveControl实例
         /// </summary>
         /// <returns>LiveControl实例，失败时返回null</returns>
-        public FrameworkElement? CreateLiveControl()
+        public ILiveControl? CreateLiveControl()
         {
             if (!Initialize())
             {
@@ -78,65 +72,41 @@ namespace Flyleaf.Services
             }
             try
             {
-                if (Activator.CreateInstance(_liveControlType!) is ILiveControl control)
+                var _liveControl = _plugin?.CreateControl();
+
+                if (_liveControl is ILiveControl control)
                 {
-                    _liveControl = control;
-                    LogInfo("LiveControl instance created successfully");
-                    _liveControl.StatusAction += StatusAction;
-                    return _liveControl.GetInstance() as FrameworkElement;
+                    return control;
                 }
                 else
                 {
-                    LogError("Failed to create LiveControl instance - invalid type");
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                LogError($"Exception creating LiveControl instance: {ex.Message}", ex);
                 return null;
             }
-        }
-
-        public void StatusAction(Status status)
-        {
-
-        }
-
-   
+        }      
         /// <summary>
         /// 设置控件的CameraUrl属性
         /// </summary>
         /// <param name="control">控件实例</param>
         /// <param name="url">视频URL</param>
         /// <returns>是否设置成功</returns>
-        public bool SetCameraUrl(string? url)
+        public bool SetCameraUrl(ILiveControl? control, string? url)
         {
             if (control == null)
             {
-                LogError("Control is null when setting CameraUrl");
                 return false;
             }
             try
             {
-                _liveControl.SetCameraUrl(url);
-                //var field = GetField("CameraUrlProperty");
-                //var cameraUrlProperty = field?.GetValue(null) as DependencyProperty;
-                //if (cameraUrlProperty != null)
-                //{
-                //    control.SetValue(cameraUrlProperty, url);
-                //    LogInfo($"CameraUrl set to: {url ?? "null"}");
-                //    return true;
-                //}
-                //else
-                //{
-                //    LogError("CameraUrlProperty not found");
-                //    return false;
-                //}
+                control.PlayLive(url);
+                return true;
             }
             catch (Exception ex)
             {
-                LogError($"Failed to set CameraUrl: {ex.Message}", ex);
                 return false;
             }
         }
@@ -147,49 +117,21 @@ namespace Flyleaf.Services
         /// <param name="control">控件实例</param>
         /// <param name="fileName">文件名</param>
         /// <returns>是否调用成功</returns>
-        public bool TakeSnapshot(FrameworkElement control, string? fileName = null)
+        public bool TakeSnapshot(ILiveControl? control, string? fileName = null)
         {
             if (control == null)
             {
-                LogError("Control is null when taking snapshot");
                 return false;
             }
 
             try
             {
-                var method = control.GetType().GetMethod("TakeSnapShot");
-                if (method != null)
-                {
-                    method.Invoke(control, new object[] { fileName });
-                    LogInfo($"Snapshot taken: {fileName ?? "default"}");
-                    return true;
-                }
-                else
-                {
-                    LogError("TakeSnapShot method not found");
-                    return false;
-                }
+                control.TakeSnapShot(fileName);
+                return true;
             }
             catch (Exception ex)
             {
-                LogError($"Failed to take snapshot: {ex.Message}", ex);
                 return false;
-            }
-        }
-
-        private void LogInfo(string message)
-        {
-            _logger?.LogInformation(message);
-            System.Diagnostics.Debug.WriteLine($"[DynamicControlLoader] INFO: {message}");
-        }
-
-        private void LogError(string message, Exception? ex = null)
-        {
-            _logger?.LogError(ex, message);
-            System.Diagnostics.Debug.WriteLine($"[DynamicControlLoader] ERROR: {message}");
-            if (ex != null)
-            {
-                System.Diagnostics.Debug.WriteLine($"[DynamicControlLoader] EXCEPTION: {ex}");
             }
         }
 
@@ -197,11 +139,9 @@ namespace Flyleaf.Services
         {
             if (!_disposed)
             {
-                // 注意：Assembly无法直接卸载，只能在AppDomain卸载时释放
                 _loadedAssembly = null;
-                _liveControlType = null;
+                _plugin = null;
                 _disposed = true;
-                LogInfo("DynamicControlLoader disposed");
             }
         }
     }

@@ -3,22 +3,27 @@ using FlyleafLib;
 using FlyleafLib.Controls.WPF;
 using FlyleafLib.MediaPlayer;
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace FlyleafLib1.Controls
 {
     public class LiveControl : FlyleafHost, ILiveControl
     {
-        public Action<Flyleaf.Common.Status>? StatusAction { get; set; }
-        public Action OpenCompleted { get; set; }
-        static LiveControl()
+        private static readonly Dictionary<FlyleafLib.MediaPlayer.Status, Flyleaf.Common.Status> StatusMap = new()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(LiveControl), new FrameworkPropertyMetadata(typeof(LiveControl)));
-        }
-        public Config Config { get; set; }
+            [FlyleafLib.MediaPlayer.Status.Playing] = Flyleaf.Common.Status.Playing,
+            [FlyleafLib.MediaPlayer.Status.Paused] = Flyleaf.Common.Status.Paused,
+            [FlyleafLib.MediaPlayer.Status.Stopped] = Flyleaf.Common.Status.Stopped,
+            [FlyleafLib.MediaPlayer.Status.Failed] = Flyleaf.Common.Status.Failed,
+            [FlyleafLib.MediaPlayer.Status.Ended] = Flyleaf.Common.Status.Ended,
+            [FlyleafLib.MediaPlayer.Status.Opening] = Flyleaf.Common.Status.Opening
+        };
 
-        public LiveControl()
+        public Action<Flyleaf.Common.Status>? StatusAction { get; set; }
+        public Action<bool> OpenCompleted { get; set; }
+
+        static LiveControl()
         {
             Engine.Start(new EngineConfig()
             {
@@ -36,6 +41,13 @@ namespace FlyleafLib1.Controls
                 UIRefreshInterval = 100,
                 UICurTimePerSecond = false // If set to true it updates when the actual timestamps second change rather than a fixed interval
             });
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(LiveControl), new FrameworkPropertyMetadata(typeof(LiveControl)));
+        }
+
+        public Config Config { get; set; }
+
+        public LiveControl()
+        {
             Config = new Config();
 
             Config.Player.Stats = true;
@@ -43,7 +55,7 @@ namespace FlyleafLib1.Controls
             Player = new Player(Config);
             Player.OpenCompleted += (o, e) =>
             {
-                OpenCompleted?.Invoke();
+                OpenCompleted?.Invoke(e.Success);
                 //Task.Run(async () =>
                 //{
                 //    await Task.Delay(3000);
@@ -54,25 +66,25 @@ namespace FlyleafLib1.Controls
             {
                 if (e.PropertyName == nameof(Player.Status))
                 {
-                    Flyleaf.Common.Status status = Player.Status switch
-                    {
-                        FlyleafLib.MediaPlayer.Status.Playing => Flyleaf.Common.Status.Playing,
-                        FlyleafLib.MediaPlayer.Status.Paused => Flyleaf.Common.Status.Paused,
-                        FlyleafLib.MediaPlayer.Status.Stopped => Flyleaf.Common.Status.Stopped,
-                        FlyleafLib.MediaPlayer.Status.Failed => Flyleaf.Common.Status.Failed,
-                        FlyleafLib.MediaPlayer.Status.Ended => Flyleaf.Common.Status.Ended,
-                        FlyleafLib.MediaPlayer.Status.Opening => Flyleaf.Common.Status.Opening,
-                        _=> Flyleaf.Common.Status.Stopped
-
-                    };
-                    StatusAction?.Invoke(status);
+                    StatusAction?.Invoke(StatusMap.TryGetValue(Player.Status, out var result) ? result : Flyleaf.Common.Status.Stopped);
                 }
-            };      
+            };
         }
-
-        public object GetInstance()
+        /// <summary>
+        /// 获取控件实例
+        /// </summary>
+        /// <returns></returns>
+        public FrameworkElement GetInstance()
         {
             return this;
+        }
+        /// <summary>
+        /// 获取播放状态
+        /// </summary>
+        /// <returns></returns>
+        public Flyleaf.Common.Status GetStatus()
+        {
+            return StatusMap.TryGetValue(Player.Status, out var result)? result: Flyleaf.Common.Status.Stopped; 
         }
 
         /// <summary>
@@ -105,6 +117,7 @@ namespace FlyleafLib1.Controls
         {
             CameraUrl = url;
         }
+
         /// <summary>
         /// Play Live Stream
         /// </summary>
@@ -113,13 +126,13 @@ namespace FlyleafLib1.Controls
         {
             try
             {
-                Player?.OpenAsync(url); 
+                Player?.OpenAsync(url);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
             }
         }
+
         /// <summary>
         /// Stop Live Stream
         /// </summary>
@@ -132,9 +145,8 @@ namespace FlyleafLib1.Controls
                     Player?.Stop();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-              
             }
         }
 

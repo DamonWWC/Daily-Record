@@ -14,7 +14,9 @@ namespace VideoFrameExtractor
             Console.WriteLine("1. Use FFmpeg-based extractor");
             Console.WriteLine("2. Use OpenCV-based extractor (No FFmpeg)");
             Console.WriteLine("3. Use Flyleaf-based extractor");
-            Console.Write("Select an option (1, 2, or 3): ");
+            Console.WriteLine("4. Use Live Stream Frame Capture (New!)");
+            Console.WriteLine("5. Live Stream Batch Capture Example");
+            Console.Write("Select an option (1, 2, 3, 4, or 5): ");
             
             string option = Console.ReadLine();
             
@@ -25,7 +27,22 @@ namespace VideoFrameExtractor
             }
             else if (option == "3")
             {
-                await CaptureImage2Example.RunExample();
+                //await CaptureImage2Example.RunExample();
+                return;
+            }
+            else if (option == "4")
+            {
+                await LiveStreamCaptureExample.RunExample();
+                return;
+            }
+            else if (option == "5")
+            {
+                Console.Write("Enter video source for batch example: ");
+                string batchSource = Console.ReadLine();
+                if (!string.IsNullOrEmpty(batchSource))
+                {
+                    await LiveStreamCaptureExample.RunBatchExample(batchSource);
+                }
                 return;
             }
             

@@ -6,9 +6,12 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.IO;
+using System.Threading.Channels;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using MessageBox = System.Windows.MessageBox;
 
 namespace BlankApp1.Views
 {
@@ -71,6 +74,35 @@ namespace BlankApp1.Views
             }
             return bytes;
         }
+        private  Channel<string> channelVideoAnalysis;
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+          
+           await channelVideoAnalysis.Writer.WriteAsync("test");
+        }
 
+        private async void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            channelVideoAnalysis = Channel.CreateUnbounded<string>(new UnboundedChannelOptions
+            {
+                AllowSynchronousContinuations = true,
+                SingleReader = true,
+                SingleWriter = false
+            });
+            await foreach (var item in channelVideoAnalysis.Reader.ReadAllAsync().ConfigureAwait(false))
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MessageBox.Show("11");
+                });
+            }
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            channelVideoAnalysis.Writer.Complete();
+            
+            
+        }
     }
 }

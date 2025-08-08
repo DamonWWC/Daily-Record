@@ -1,11 +1,73 @@
-﻿<Window x:Class="BlankApp1.Views.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:prism="http://prismlibrary.com/"
-        prism:ViewModelLocator.AutoWireViewModel="True"
-        Title="{Binding Title}" Height="350" Width="525" >
+﻿<Window
+    x:Class="BlankApp1.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:prism="http://prismlibrary.com/"
+     xmlns:controls="clr-namespace:BlankApp1.Controls"
+    Title="{Binding Title}"
+    Width="525"
+    Height="350"
+    prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>
+
+
+
+        <!--<Border
+            Width="200"
+            Height="200"
+            Margin="-8"
+            HorizontalAlignment="Left">
+            <ScrollViewer VerticalScrollBarVisibility="Visible">
+                <TextBlock
+                    Margin="8"
+                    FontSize="14"
+                    Text="1223123222222222222222222222222222222222222222222225555555555555555555777777777777777777777777777777777777777777777777222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222277777777777777777777777777777;"
+                    TextAlignment="Left"
+                    TextWrapping="Wrap" />
+            </ScrollViewer>
+
+        </Border>
+        <ScrollViewer HorizontalAlignment="Right" VerticalScrollBarVisibility="Visible">
+            <TextBlock
+                Width="200"
+                Height="100"
+                Margin="8"
+                FontSize="14"
+                Text="122312322222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222277777777777777777777777777777;"
+                TextAlignment="Left"
+                TextWrapping="Wrap" />
+        </ScrollViewer>-->
+
+        <!-- 示例1：任意控件附加通用悬浮提示（TextBlock） -->
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="将鼠标移到这里">
+            <controls:HoverTipService.IsEnabled>true</controls:HoverTipService.IsEnabled>
+            <controls:HoverTipService.Text>这是一段很长很长的提示文本，用来展示当内容超过一定尺寸时，弹出的提示会在内部通过 ScrollViewer 显示滚动条，并且支持鼠标滚轮滚动。为了更好地测试滚动效果，我们可以重复几段文本。换行一：当鼠标悬停在这里时，会看到一个包含多行文本的提示。换行二：使用滚轮即可上下滚动查看更多内容。换行三：确保在 MaxWidth 和 MaxHeight 限制下可以滚动显示。换行四：WPF ScrollViewer 支持垂直与水平滚动。换行五：结束。</controls:HoverTipService.Text>
+            <controls:HoverTipService.MaxWidth>260</controls:HoverTipService.MaxWidth>
+            <controls:HoverTipService.MaxHeight>140</controls:HoverTipService.MaxHeight>
+        </TextBlock>
+        
+        <!-- 示例2：也可继续使用封装控件（保留） -->
+        <controls:ScrollableTooltipTextBlock
+            Margin="5,0"
+            VerticalAlignment="Top"
+            TooltipMaxWidth="220"
+            TooltipMaxHeight="140"
+            Text="Hover me for long tooltip"
+            ToolTipText="这是一段很长很长的提示文本，用来展示当内容超过一定尺寸时，Tooltip 会在内部通过 ScrollViewer 显示滚动条，并且支持鼠标滚轮滚动。为了更好地测试滚动效果，我们可以重复几段文本。换行一：当鼠标悬停在这里时，会看到一个包含多行文本的提示。换行二：使用滚轮即可上下滚动查看更多内容。换行三：确保在 MaxWidth 和 MaxHeight 限制下可以滚动显示。换行四：WPF ScrollViewer 支持垂直与水平滚动。换行五：结束。" />
         <!--<ContentControl prism:RegionManager.RegionName="ContentRegion" />-->
-        <Button Height="100" Width="100" Click="Button_Click" Background="#FFB01515">click</Button>
+        <Button
+            Width="100"
+            Height="100"
+            Background="#FFB01515"
+            Click="Button_Click">
+            click
+        </Button>
+        <StackPanel>
+            <Button Click="Button_Click_2">订阅</Button>
+            <Button Click="Button_Click_1">发送</Button>
+
+            <Button Click="Button_Click_3">取消</Button>
+        </StackPanel>
+
     </Grid>
 </Window>

@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="8.0.4" />
+    <Compile Remove="Services\DynamicControlLoader.cs" />
   </ItemGroup>
 
   <ItemGroup>

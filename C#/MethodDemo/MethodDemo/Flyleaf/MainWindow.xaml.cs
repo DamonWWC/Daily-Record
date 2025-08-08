@@ -13,7 +13,7 @@ namespace Flyleaf
     {
         #region Constants and Configuration
 
-        private const string DEFAULT_RTMP_URL = "rtmp://ns8.indexforce.com/home/mystream";
+        private const string DEFAULT_RTMP_URL = "1234";
         private const string DEFAULT_LOCAL_FILE = "站台扶梯.mp4";
 
         #endregion
@@ -54,10 +54,10 @@ namespace Flyleaf
         /// </summary>
         private void SetupVideoControlEvents()
         {
-            if (flyleaf != null)
-            {
-                flyleaf.PlayAction = OnPlaybackStatusChanged;
-            }
+            //if (flyleaf != null)
+            //{
+            //    flyleaf.PlayAction = OnPlaybackStatusChanged;
+            //}
         }
 
         #endregion
@@ -128,60 +128,60 @@ namespace Flyleaf
         /// </summary>
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (flyleaf == null)
-                {
-                    ShowErrorMessage("Video Control Error", "Video control is not available.");
-                    return;
-                }
+            //try
+            //{
+            //    if (flyleaf == null)
+            //    {
+            //        ShowErrorMessage("Video Control Error", "Video control is not available.");
+            //        return;
+            //    }
 
-                if (flyleaf.IsPlaying)
-                {
-                    // Stop playback
-                    bool success = flyleaf.StopPlay();
-                    if (success)
-                    {
-                        LogInfo("Playback stopped by user");
-                        UpdatePlayStopButton(false);
-                        UpdateStatusText("Playback stopped");
-                    }
-                    else
-                    {
-                        ShowErrorMessage("Stop Error", "Failed to stop video playback.");
-                    }
-                }
-                else
-                {
-                    // Start playback
-                    if (!string.IsNullOrEmpty(CurrentVideoUrl))
-                    {
-                        UpdateStatusText("Starting playback...");
-                        bool success = await flyleaf.StartPlayAsync(CurrentVideoUrl);
-                        if (success)
-                        {
-                            LogInfo("Playback started by user");
-                            UpdatePlayStopButton(true);
-                            UpdateStatusText($"Playing: {CurrentVideoUrl}");
-                        }
-                        else
-                        {
-                            ShowErrorMessage("Play Error", "Failed to start video playback.");
-                            UpdateStatusText("Failed to start playback");
-                        }
-                    }
-                    else
-                    {
-                        ShowErrorMessage("No Video", "No video URL is available to play.");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LogError($"Error in button click handler: {ex.Message}", ex);
-                ShowErrorMessage("Unexpected Error", $"An unexpected error occurred: {ex.Message}");
-                UpdateStatusText("Error occurred");
-            }
+            //    if (flyleaf.IsPlaying)
+            //    {
+            //        // Stop playback
+            //        bool success = flyleaf.StopPlay();
+            //        if (success)
+            //        {
+            //            LogInfo("Playback stopped by user");
+            //            UpdatePlayStopButton(false);
+            //            UpdateStatusText("Playback stopped");
+            //        }
+            //        else
+            //        {
+            //            ShowErrorMessage("Stop Error", "Failed to stop video playback.");
+            //        }
+            //    }
+            //    else
+            //    {
+            //        // Start playback
+            //        if (!string.IsNullOrEmpty(CurrentVideoUrl))
+            //        {
+            //            UpdateStatusText("Starting playback...");
+            //            bool success = await flyleaf.StartPlayAsync(CurrentVideoUrl);
+            //            if (success)
+            //            {
+            //                LogInfo("Playback started by user");
+            //                UpdatePlayStopButton(true);
+            //                UpdateStatusText($"Playing: {CurrentVideoUrl}");
+            //            }
+            //            else
+            //            {
+            //                ShowErrorMessage("Play Error", "Failed to start video playback.");
+            //                UpdateStatusText("Failed to start playback");
+            //            }
+            //        }
+            //        else
+            //        {
+            //            ShowErrorMessage("No Video", "No video URL is available to play.");
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    LogError($"Error in button click handler: {ex.Message}", ex);
+            //    ShowErrorMessage("Unexpected Error", $"An unexpected error occurred: {ex.Message}");
+            //    UpdateStatusText("Error occurred");
+            //}
         }
 
         /// <summary>
@@ -189,39 +189,39 @@ namespace Flyleaf
         /// </summary>
         private void SnapshotButton_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (flyleaf == null)
-                {
-                    ShowErrorMessage("Video Control Error", "Video control is not available.");
-                    return;
-                }
+            //try
+            //{
+            //    if (flyleaf == null)
+            //    {
+            //        ShowErrorMessage("Video Control Error", "Video control is not available.");
+            //        return;
+            //    }
 
-                if (!flyleaf.IsPlaying)
-                {
-                    ShowErrorMessage("Snapshot Error", "Cannot take snapshot - no video is playing.");
-                    return;
-                }
+            //    if (!flyleaf.IsPlaying)
+            //    {
+            //        ShowErrorMessage("Snapshot Error", "Cannot take snapshot - no video is playing.");
+            //        return;
+            //    }
 
-                string fileName = $"snapshot_{DateTime.Now:yyyyMMdd_HHmmss}.png";
-                bool success = flyleaf.TakeSnapshot(fileName);
+            //    string fileName = $"snapshot_{DateTime.Now:yyyyMMdd_HHmmss}.png";
+            //    bool success = flyleaf.TakeSnapshot(fileName);
                 
-                if (success)
-                {
-                    UpdateStatusText($"Snapshot saved: {fileName}");
-                    LogInfo($"Snapshot taken: {fileName}");
-                }
-                else
-                {
-                    ShowErrorMessage("Snapshot Error", "Failed to take snapshot.");
-                    UpdateStatusText("Snapshot failed");
-                }
-            }
-            catch (Exception ex)
-            {
-                LogError($"Error taking snapshot: {ex.Message}", ex);
-                ShowErrorMessage("Snapshot Error", $"Failed to take snapshot: {ex.Message}");
-            }
+            //    if (success)
+            //    {
+            //        UpdateStatusText($"Snapshot saved: {fileName}");
+            //        LogInfo($"Snapshot taken: {fileName}");
+            //    }
+            //    else
+            //    {
+            //        ShowErrorMessage("Snapshot Error", "Failed to take snapshot.");
+            //        UpdateStatusText("Snapshot failed");
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    LogError($"Error taking snapshot: {ex.Message}", ex);
+            //    ShowErrorMessage("Snapshot Error", $"Failed to take snapshot: {ex.Message}");
+            //}
         }
 
         /// <summary>
@@ -311,6 +311,7 @@ namespace Flyleaf
 
                 // Start playback
                 bool success = await flyleaf.StartPlayAsync(CurrentVideoUrl);
+            
                 
                 if (success)
                 {
