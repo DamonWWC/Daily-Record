@@ -1,0 +1,23 @@
+---
+description: 依赖与 NuGet 包管理建议
+---
+
+# 依赖与包管理
+
+## 核心依赖（建议）
+- CommunityToolkit.Mvvm（MVVM 基础：ObservableObject、RelayCommand、IMessenger）
+- Microsoft.Extensions.DependencyInjection（DI 容器）
+- Microsoft.Extensions.Logging（日志）
+
+## 可选依赖
+- MaterialDesignThemes/MahApps.Metro（UI 组件库）
+- System.Reactive（响应式场景）
+
+## 安装建议（示例）
+- 使用包管理器或命令：
+  - `dotnet add WPFDeveloper package CommunityToolkit.Mvvm`
+  - `dotnet add WPFDeveloper package Microsoft.Extensions.DependencyInjection`
+  - `dotnet add WPFDeveloper package Microsoft.Extensions.Logging`
+
+## 版本与更新
+- 锁定兼容版本，定期检查更新与破坏性变更说明。

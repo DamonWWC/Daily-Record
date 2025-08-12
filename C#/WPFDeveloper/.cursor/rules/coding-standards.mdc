@@ -1,0 +1,32 @@
+---
+globs: *.cs,*.xaml
+---
+
+# 通用编码规范（C# 与 XAML）
+
+## 命名
+- C#：类型/属性/方法使用 PascalCase；字段与私有成员使用 `_camelCase`；局部变量使用 `camelCase`。
+- XAML：`x:Name` 用 PascalCase；资源键采用 `Feature.Control.Style` 风格。
+
+## 结构与可读性
+- 单一职责，小函数优先；避免深层嵌套；使用早返回。
+- 公开 API 与关键类编写 XML 注释；避免无意义注释。
+
+## 错误处理
+- 不吞异常；封装可恢复异常并对 UI 友好提示。
+- 全局异常在 `App.xaml.cs` 统一处理并记录日志。
+
+## 异步
+- 优先 `async/await`；避免 `Task.Result/Wait` 阻塞 UI。
+- 需要返回 UI 线程时使用 `Dispatcher`；支持取消 `CancellationToken`。
+
+## 绑定质量
+- 消除绑定错误（调试输出中不出现 binding error）。
+- 使用 `INotifyPropertyChanged` 与 `ObservableCollection<T>`。
+
+## 依赖与耦合
+- 面向接口，与实现解耦；通过 DI 注入依赖。
+- 禁止在 ViewModel 中直接引用具体 View。
+
+## 提交与评审
+- 保持小步提交，附带简洁说明；关键变更需代码评审。

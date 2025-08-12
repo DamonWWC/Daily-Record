@@ -1,0 +1,31 @@
+---
+description: 主窗体布局与导航约定
+---
+
+# 导航与布局规则
+
+## 主窗体布局
+- 使用 `Grid` 两列：
+  - 列 0：`Width=240` 左侧导航栏（`ListBox`/`TreeView`/`NavigationView`）
+  - 列 1：自适应右侧内容区（`ContentControl`/`Frame`/自定义 Region）
+- 建议在 [MainWindow.xaml](mdc:WPFDeveloper/MainWindow.xaml) 实现，右侧绑定 `CurrentView` 或 `CurrentViewModel`。
+
+## 导航模型
+- 导航项定义：`NavigationItem { Key, Title, Icon, ViewType, Order, Group }`
+- 数据源：由 `INavigationService` 或 `INavigationRegistry` 提供，支持分组与搜索。
+- 选中项变化 → 调用导航服务 `NavigateTo(key, params)`。
+
+## 视图激活
+- 导航服务根据 `key` 解析 View 与 ViewModel（DI 解析），并设置到内容区。
+- 视图激活/释放约定：
+  - `IActivatable`：`OnActivated(args)`、`OnDeactivated()`（可选）
+  - 允许 ViewModel 接收导航参数。
+
+## 命名与约定
+- 视图命名：`{Feature}View.xaml`，视图模型：`{Feature}ViewModel.cs`
+- 导航 Key 命名：全局唯一，采用 `Feature.Group.Item` 或 `Feature.Item`。
+- 资源键：`Nav.Item.{Key}`，图标统一来自 `PackIcon`/`Geometry` 资源。
+
+## 可访问性与响应
+- 支持键盘导航与焦点可视化；Tab 顺序正确。
+- 左侧可折叠；窗口尺寸变化时右侧自适应布局。

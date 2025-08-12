@@ -1,0 +1,17 @@
+---
+globs: *.xaml
+---
+
+# 资源、样式与主题
+
+## 资源组织
+- `App.xaml` 合并全局字典：颜色、尺寸、字体、控件样式。
+- 功能级/控件级样式放到独立字典，按需在视图合并。
+
+## 命名规范
+- 颜色：`Color.Primary`、`Brush.Accent`
+- 尺寸：`Size.Padding.S`、`Size.Corner.M`
+- 控件样式：`Style.Button.Primary`
+
+## 主题
+- 提供浅色/深色主题切换（可选）；动态资源用于主题感知。

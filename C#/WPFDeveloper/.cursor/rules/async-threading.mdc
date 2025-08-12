@@ -1,0 +1,16 @@
+---
+globs: *.cs
+---
+
+# 异步与线程模型
+
+## 基本约定
+- 所有 IO/长耗时操作使用 `async/await`；禁止阻塞 UI 线程。
+- 需要更新 UI 时使用 `Dispatcher.Invoke/BeginInvoke` 或在 UI 上下文中 `await`。
+
+## 取消与进度
+- 对可中断任务传入 `CancellationToken`；取消要幂等。
+- 使用 `IProgress<T>` 或消息机制向 UI 报告进度。
+
+## 并发
+- 使用 `SemaphoreSlim`/`Channel` 控制并发；避免共享可变状态。

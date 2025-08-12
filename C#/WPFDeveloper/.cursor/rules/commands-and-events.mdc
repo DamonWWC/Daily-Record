@@ -1,0 +1,17 @@
+---
+globs: *.cs
+---
+
+# 命令与事件
+
+## 命令
+- 使用 `RelayCommand`/`AsyncRelayCommand`（CommunityToolkit.Mvvm）
+- 命令命名：`LoadDataCommand`、`SaveCommand`；避免 `DoIt` 这类泛化命名。
+- `CanExecute` 与 `NotifyCanExecuteChanged()` 保持一致，避免按钮状态不一致。
+
+## 事件与消息
+- 跨模块通信使用 `IMessenger`；消息应定义为可读的记录/类。
+- 避免事件泄漏与循环订阅；在 `Dispose/OnDeactivated` 解除订阅。
+
+## 输入手势
+- 使用 `InputBindings` 将快捷键绑定到命令；在视图层声明。

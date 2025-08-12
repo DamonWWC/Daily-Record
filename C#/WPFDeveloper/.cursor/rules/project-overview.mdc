@@ -1,0 +1,32 @@
+---
+alwaysApply: true
+---
+
+# 项目总览与技术栈
+
+## 项目目标
+- **目标**：作为“日常技术收集与实现”的客户端应用，将常见技术点在本项目中实现与演示。
+- **主界面**：主窗体左侧为导航栏（功能分类/条目），右侧为功能展示区；通过导航切换右侧内容。
+
+## 技术栈
+- **平台**：.NET 8.0-windows（WPF）
+- **模式**：MVVM（采用 CommunityToolkit.Mvvm）
+- **依赖注入**：Microsoft.Extensions.DependencyInjection
+- **日志**：Microsoft.Extensions.Logging（按需）
+- **序列化**：System.Text.Json（按需）
+- **可选 UI**：MaterialDesignInXaml/MahApps.Metro（按需）
+
+## 现有入口文件
+- [WPFDeveloper.csproj](mdc:WPFDeveloper/WPFDeveloper.csproj)
+- [App.xaml](mdc:WPFDeveloper/App.xaml) / [App.xaml.cs](mdc:WPFDeveloper/App.xaml.cs)
+- [MainWindow.xaml](mdc:WPFDeveloper/MainWindow.xaml) / [MainWindow.xaml.cs](mdc:WPFDeveloper/MainWindow.xaml.cs)
+
+## 界面布局总览
+- 主窗体使用 `Grid` 分为左右两区：
+  - 左侧：导航栏（建议固定宽度 240，支持分组与搜索）
+  - 右侧：内容区（ContentControl/Frame/Region 显示对应功能视图）
+
+## 参考规则
+- 编码规范见：`csharp-wpf-conventions.mdc`、`xaml-conventions.mdc`、`coding-standards.mdc`
+- 架构与目录见：`architecture-mvvm.mdc`、`file-organization.mdc`
+- 导航与模块见：`navigation-layout.mdc`

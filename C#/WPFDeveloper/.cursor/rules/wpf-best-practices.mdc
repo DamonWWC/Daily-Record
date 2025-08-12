@@ -1,0 +1,53 @@
+
+# WPF 开发最佳实践
+
+## 架构模式
+- **MVVM (Model-View-ViewModel)**：复杂应用程序的首选模式
+- **代码后台**：适用于简单 UI 逻辑和事件处理
+- **依赖注入**：考虑用于大型应用程序
+- **命令模式**：为用户操作使用命令而不是事件处理程序
+
+## 性能指南
+- 为大型数据集使用虚拟化（VirtualizingStackPanel）
+- 使用 INotifyPropertyChanged 实现正确的数据绑定
+- 使用绑定模式避免不必要的 UI 更新
+- 使用 Dispatcher.Invoke 在后台线程执行重操作
+
+## 资源管理
+- 在 ResourceDictionary 文件中定义样式
+- 为静态内容使用 StaticResource
+- 为主题感知内容使用 DynamicResource
+- 按层次组织资源（应用程序 → 窗口 → 控件）
+
+## 数据绑定最佳实践
+- 为动态列表使用 ObservableCollection
+- 为双向绑定实现 INotifyPropertyChanged
+- 为数据转换使用转换器
+- 避免在绑定表达式中使用复杂逻辑
+
+## 控件开发
+- 为可重用 UI 组件创建 UserControls
+- 为完全新的控件类型使用 CustomControls
+- 为可绑定属性实现依赖属性
+- 遵循 WPF 属性和事件的命名约定
+
+## 样式和主题
+- 在整个应用程序中创建一致的视觉样式
+- 为全局控件外观使用隐式样式
+- 支持高 DPI 显示器的适当缩放
+- 考虑可访问性要求（对比度、键盘导航）
+
+## 错误处理
+- 优雅地处理绑定错误
+- 为可能失败的 UI 操作使用 try-catch 块
+- 在 App.xaml.cs 中实现全局异常处理
+- 为用户提供有意义的错误消息
+
+## 测试策略
+- 将业务逻辑与 UI 代码分离以便于测试
+- 使用 MVVM 模式启用 ViewModels 的单元测试
+- 考虑为关键用户工作流进行 UI 自动化测试
+- 在测试中适当模拟依赖项
+- Use MVVM pattern to enable unit testing of ViewModels
+- Consider UI automation testing for critical user workflows
+- Mock dependencies appropriately in tests

@@ -1,0 +1,28 @@
+
+# WPF 项目结构指南
+
+这是一个 WPF (.NET 8.0-windows) 应用程序，具有以下结构：
+
+## 主要项目文件
+- [WPFDeveloper.csproj](mdc:WPFDeveloper/WPFDeveloper.csproj) - 主项目文件，目标框架为 .NET 8.0-windows，启用 WPF
+- [App.xaml](mdc:WPFDeveloper/App.xaml) - 应用程序定义和全局资源
+- [App.xaml.cs](mdc:WPFDeveloper/App.xaml.cs) - 应用程序代码后台
+- [MainWindow.xaml](mdc:WPFDeveloper/MainWindow.xaml) - 主窗口 UI 定义
+- [MainWindow.xaml.cs](mdc:WPFDeveloper/MainWindow.xaml.cs) - 主窗口代码后台
+- [AssemblyInfo.cs](mdc:WPFDeveloper/AssemblyInfo.cs) - 程序集元数据
+
+## 项目配置
+- 目标框架：.NET 8.0-windows
+- 可空引用类型：已启用
+- 隐式 using：已启用
+- 输出类型：Windows 可执行文件 (WinExe)
+
+## 命名空间约定
+所有类的根命名空间为 `WPFDeveloper`。
+
+## 构建输出
+- Debug 构建输出到 `WPFDeveloper/bin/Debug/net8.0-windows/`
+- 中间文件存储在 `WPFDeveloper/obj/Debug/net8.0-windows/`
+## Build Output
+- Debug builds go to `WPFDeveloper/bin/Debug/net8.0-windows/`
+- Intermediate files are stored in `WPFDeveloper/obj/Debug/net8.0-windows/`
