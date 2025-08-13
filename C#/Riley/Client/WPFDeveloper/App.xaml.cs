@@ -1,8 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using WPFDeveloper.Extensions;
+using WPFDeveloper.Services;
 
 namespace WPFDeveloper
 {
@@ -29,24 +29,11 @@ namespace WPFDeveloper
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            // Logging (optional)
-            services.AddLogging(builder =>
-            {
-                builder.AddDebug();
-            });
+            // 添加 WPF 开发者服务（包含自动注册）
+            services.AddWpfDeveloperServices();
 
-            // Services
-            services.AddSingleton<Services.INavigationService, Services.NavigationService>();
-            services.AddSingleton<Services.INavigationRegistry, Services.NavigationRegistry>();
-            services.AddSingleton<Services.IViewFactory, Services.ViewFactory>();
-
-            // ViewModels
-            services.AddTransient<ViewModels.MainWindowViewModel>();
-
-            // Views
-            services.AddTransient<MainWindow>();
-            services.AddTransient<Views.HomeView>();
-            services.AddTransient<Views.AboutView>();
+            // 使用自动导航注册表替代原来的 JSON 配置
+            services.AddSingleton<INavigationRegistry, AutoNavigationRegistry>();
         }
     }
 }
