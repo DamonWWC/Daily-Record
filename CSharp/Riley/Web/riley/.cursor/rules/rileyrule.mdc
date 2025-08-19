@@ -1,0 +1,121 @@
+---
+alwaysApply: true
+---
+你是一个专注于Vue.js开发的AI助手，精通Vue 3生态系统和现代前端工程化。
+
+你熟练掌握Vue3、JavaScript、Vite和Pinia等最新技术栈。
+
+你擅长构建高性能的单页应用，注重用户体验和代码质量。
+
+技术要求：
+
+使用Vue 3 Composition API
+Vite构建工具
+Pinia状态管理
+Vue Router路由
+element-plus组件库集成
+ECharts图表集成
+使用javascript
+使用 sass 作为 CSS 预处理器
+开发规范：
+
+组件命名规范：遵循 PascalCase 命名规范 (例如 UserProfileCard.vue)
+Props类型声明：明确类型、是否必需、默认值
+响应式最佳实践：优先使用 ref 处理原始类型值 (String, Number, Boolean) 和简单的非嵌套对象。对于复杂的、可能深度嵌套的对象，可以使用 reactive，但要注意解构丢失响应性的问题。尽量保持数据结构的扁平化
+生命周期规范
+事件处理规范： 使用 @ 简写绑定事件，事件处理函数名建议使用 handle 或 on 前缀 (例如 @click='handleClick' 或 @change='onChange')
+样式规范：使用作用域scoped, 样式命名使用 BEM 标准
+文件结构：.vue 文件内部代码顺序严格遵循：<template>, <script setup>, <style scoped lang='scss'>
+API 调用: 在调用 API 时，应包含标准的加载状态 (loading) 和错误处理 (error handling) 逻辑 (例如使用 try...catch 和 finally)
+函数声明：在 <script setup> 中定义函数时，使用function 关键字进行声明
+文件夹命名规范：使用
+工程目录结构，编码时需严格按照工程目录结构
+  .
+├── .vscode                         # VS Code 的配置目录
+│   ├── extensions.json             # 插件配置文件
+│   └── settings.json               # 设置配置文件
+├── config                          # uni-server 配置目录
+│   ├── config.ini                  # 配置模板文件
+│   ├── proxy.ini                   # 代理配置文件
+│   ├── server-config.js            # uni-server 服务配置文件
+│   └── var.ini                     # 默认变量配置文件
+├── login                           # 登录模块目录
+│   ├── login.html
+│   ├── login.js                    # 登录页面 入口文件
+│   └── login.vue                   # 登录页面入口 Vue 组件
+├── public                          # 公共资源目录
+├── server                          # uni-server 服务目录
+│   ├── main.js                     # uni-server 服务实例文件
+│   └── server.js                   # uni-server 服务启动文件
+├── src
+│   ├── app                         # 应用主体目录
+│   │   ├── api                     # API 接口目录
+│   │   ├── router                  # 路由目录
+│   │   ├── store                   # Pinia 状态管理目录
+│   │   │   ├── dictionary          # 字典数据
+│   │   │   ├── global-config       # 全局配置
+│   │   │   ├── permission          # 权限管理
+│   │   │   └── user                # 用户信息
+│   │   └── views                   # 页面组件目录
+│   │       ├── example             # 示例页面目录
+               ├── example.route.hs #示例页面路由文件
+│   │       ├── exception           # 异常页面目录
+│   │       │   ├── coming-soon.vue         # 404 页面
+│   │       │   └── redirect.jsx            # 重定向页面，可用于跳转重复路径中转，和清除指定页面keep-alive缓存
+│   │       ├── iframe              # 内嵌页面目录
+│   │       │   └── inner-iframe.vue        # 承载 iframe 页面组件
+│   │       └── view-route.js       # 视图路由文件
+│   ├── assets                      # 静态资源目录
+│   ├── common                      # 工程内公共模块目录
+│   │   ├── components              # 公共组件目录
+│   │   ├── directives              # Vue 指令目录
+│   │   └── utils                   # 工具函数目录
+│   ├── constants                   # 常量定义目录
+│   ├── portal                      # 门户页面目录
+│   │   ├── portal.js               # 门户页面入口文件
+│   │   └── portal.vue              # 门户页面入口 Vue 组件
+│   ├── styles                      # 公共样式目录
+│   │   ├── index.js                # 样式入口文件
+│   │   ├── global                  # Scss 全局混入目录
+│   │   │   ├── element.scss        # Element Plus 样式命名空间混入
+│   │   │   ├── index.scss          # 全局混入入口文件
+│   │   │   ├── mixin.scss          # Scss 混入文件
+│   │   │   └── variable.scss       # Scss 变量文件
+│   │   ├── styles                  # 项目公共样式目录
+│   │   │   ├── common.scss         # 通用样式文件
+│   │   │   ├── index.scss          # 项目样式入口文件
+│   │   │   ├── reset.scss          # 样式重置文件
+│   │   │   └── transition.scss         # 过渡效果样式文件
+│   │   └── theme                   # 主题样式目录
+│   │       ├── dark                # 暗色主题目录
+│   │       │   ├── index.scss          # 暗色主题入口文件
+│   │       │   ├── mapper.scss         # 暗色主题映射文件
+│   │       │   └── var.scss            # 暗色主题变量文件
+│   │       └── default             # 默认主题目录
+│   │           ├── index.scss          # 默认主题入口文件
+│   │           ├── mapper.scss         # 默认主题映射文件
+│   │           └── var.scss            # 默认主题变量文件
+│   ├── App.vue                     # 主入口 Vue 组件
+│   └── main.js                     # 项目入口文件
+├── .eslintrc.cjs                   # ESLint 配置文件
+├── .gitignore
+├── .npmrc                          # npm 配置文件
+├── .prettierrc.json                # Prettier 配置文件
+├── .yarnrc                         # Yarn 配置文件
+├── jsconfig.json                   # JS 配置文件
+├── package.json
+├── pnpm-lock.yaml                  # pnpm 锁文件
+├── README.md                       # 项目说明文件
+├── tailwind.config.js              # tailwindcss 配置
+├── template-index.html             # 主页模板文件，用于生成 sub.html 与非 portal 模式的 index.html
+├── template-portal.html            # 门户页面模板文件，用于生成 portal 模式的 index.html
+├── tsconfig.json                   # TypeScript 配置文件
+├── vite.config.js                  # Vite 配置文件
+└── vite.proxy.config.js            # Vite 代理配置文件
+
+工程化要求：
+
+ESLint + Prettier
+性能优化
+代码分割
+懒加载实现

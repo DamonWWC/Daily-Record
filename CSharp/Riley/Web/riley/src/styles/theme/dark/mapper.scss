@@ -1,0 +1,28 @@
+// 暗色主题映射文件
+
+// 将CSS变量映射到SCSS变量
+$primary-color: var(--el-color-primary);
+$success-color: var(--el-color-success);
+$warning-color: var(--el-color-warning);
+$danger-color: var(--el-color-danger);
+$info-color: var(--el-color-info);
+
+$text-primary: var(--el-text-color-primary);
+$text-regular: var(--el-text-color-regular);
+$text-secondary: var(--el-text-color-secondary);
+$text-placeholder: var(--el-text-color-placeholder);
+$text-disabled: var(--el-text-color-disabled);
+
+$border-color-base: var(--el-border-color);
+$border-color-light: var(--el-border-color-light);
+$border-color-lighter: var(--el-border-color-lighter);
+$border-color-extra-light: var(--el-border-color-extra-light);
+
+$bg-color: var(--el-bg-color);
+$bg-color-page: var(--el-bg-color-page);
+$bg-color-overlay: var(--el-bg-color-overlay);
+
+$fill-color: var(--el-fill-color);
+$fill-color-light: var(--el-fill-color-light);
+$fill-color-lighter: var(--el-fill-color-lighter);
+$fill-color-extra-light: var(--el-fill-color-extra-light);
