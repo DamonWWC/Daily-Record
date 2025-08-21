@@ -1,13 +1,23 @@
 // 请求工具函数
 
 import axios from 'axios'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox, ElLoading } from 'element-plus'
 import { getLocalStorage, removeLocalStorage } from './storage'
 import { STORAGE_KEYS } from '@/constants'
 
+// 获取API基础URL
+const getBaseURL = () => {
+  // 开发环境使用代理
+  if (import.meta.env.DEV) {
+    return '/api'
+  }
+  // 生产环境使用环境变量
+  return import.meta.env.VITE_API_BASE_URL || '/api'
+}
+
 // 创建axios实例
 const request = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: getBaseURL(),
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
@@ -26,6 +36,9 @@ request.interceptors.request.use(
     // 添加loading状态
     config.loading = true
 
+    // 添加请求时间戳
+    config.metadata = { startTime: new Date() }
+
     return config
   },
   (error) => {
@@ -43,6 +56,13 @@ request.interceptors.response.use(
       config.loading = false
     }
 
+    // 计算请求耗时
+    if (config.metadata?.startTime) {
+      const endTime = new Date()
+      const duration = endTime - config.metadata.startTime
+      console.log(`请求耗时: ${duration}ms`, config.url)
+    }
+
     // 处理业务错误
     if (data.code !== 200 && data.code !== 0) {
       ElMessage.error(data.message || '请求失败')
@@ -57,6 +77,13 @@ request.interceptors.response.use(
     // 关闭loading
     if (config?.loading) {
       config.loading = false
+    }
+
+    // 计算请求耗时
+    if (config?.metadata?.startTime) {
+      const endTime = new Date()
+      const duration = endTime - config.metadata.startTime
+      console.log(`请求失败耗时: ${duration}ms`, config.url)
     }
 
     // 处理HTTP错误
@@ -140,5 +167,27 @@ export function createConfirmRequest(requestFn, message = '确定要执行此操
         throw error
       }
     }
+  }
+}
+
+// 创建重试请求方法
+export function createRetryRequest(requestFn, maxRetries = 3, delay = 1000) {
+  return async (...args) => {
+    let lastError
+
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        return await requestFn(...args)
+      } catch (error) {
+        lastError = error
+
+        if (i < maxRetries - 1) {
+          console.log(`请求失败，${delay}ms后重试 (${i + 1}/${maxRetries})`)
+          await new Promise(resolve => setTimeout(resolve, delay))
+        }
+      }
+    }
+
+    throw lastError
   }
 }
