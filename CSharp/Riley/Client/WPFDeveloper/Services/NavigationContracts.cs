@@ -9,16 +9,6 @@ namespace WPFDeveloper.Services
     {
         Task<IReadOnlyList<NavigationItem>> GetNavigationItemsAsync();
     }
-
-    public interface INavigationService
-    {
-        Type ResolveViewType(string key);
-    }
-
-    public interface IViewFactory
-    {
-        object CreateView(Type viewType);
-    }
 }
 
 

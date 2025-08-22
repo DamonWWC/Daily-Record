@@ -3,6 +3,7 @@ using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using WPFDeveloper.Extensions;
 using WPFDeveloper.Services;
+using WPFDeveloper.Views;
 
 namespace WPFDeveloper
 {
@@ -22,7 +23,11 @@ namespace WPFDeveloper
             ConfigureServices(services);
 
             ServiceProvider = services.BuildServiceProvider();
-
+            
+            // 测试视图注册是否成功
+            var homeView = ServiceProvider.GetService<HomeView>();
+            var aboutView = ServiceProvider.GetService<AboutView>();
+            
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
         }

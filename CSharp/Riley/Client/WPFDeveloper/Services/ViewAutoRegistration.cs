@@ -56,9 +56,9 @@ namespace WPFDeveloper.Services
         private readonly Dictionary<string, ViewInfo> _registeredViews = new(StringComparer.OrdinalIgnoreCase);
         private readonly ILogger<ViewAutoRegistration> _logger;
 
-        public ViewAutoRegistration(ILogger<ViewAutoRegistration> logger)
+        public ViewAutoRegistration(ILogger<ViewAutoRegistration>? logger)
         {
-            _logger = logger;
+            _logger = logger ?? Microsoft.Extensions.Logging.Abstractions.NullLogger<ViewAutoRegistration>.Instance;
         }
 
         public void RegisterViews(IServiceCollection services)
@@ -133,6 +133,8 @@ namespace WPFDeveloper.Services
                 case Attributes.ServiceLifetime.Transient:
                 default:
                     services.AddTransient(viewType);
+                    //services.AddKeyedTransient(viewType, viewAttribute.Key);
+                    //services.AddKeyedTransient(viewType, viewAttribute.Key);
                     break;
             }
 
@@ -155,6 +157,22 @@ namespace WPFDeveloper.Services
         public Type? GetViewType(string key)
         {
             return _registeredViews.TryGetValue(key, out var viewInfo) ? viewInfo.ViewType : null;
+        }
+
+        /// <summary>
+        /// 将已注册的视图信息复制到另一个实例
+        /// </summary>
+        /// <param name="target">目标实例</param>
+        public void CopyRegisteredViewsTo(ViewAutoRegistration target)
+        {
+            if (target == null) throw new ArgumentNullException(nameof(target));
+
+            foreach (var kvp in _registeredViews)
+            {
+                target._registeredViews[kvp.Key] = kvp.Value;
+            }
+
+            _logger.LogDebug("已复制 {Count} 个视图注册信息", _registeredViews.Count);
         }
     }
 }

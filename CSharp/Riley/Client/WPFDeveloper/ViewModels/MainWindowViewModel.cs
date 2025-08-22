@@ -1,20 +1,24 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging;
 using WPFDeveloper.Models;
 using WPFDeveloper.Services;
+using WPFDeveloper.Views;
 
 namespace WPFDeveloper.ViewModels
 {
     public class MainWindowViewModel : ObservableObject
     {
-        private readonly INavigationService navigationService;
+       
+        private readonly IServiceProvider serviceProvider;
+        private readonly IViewAutoRegistration viewAutoRegistration;
         private readonly INavigationRegistry navigationRegistry;
-        private readonly IViewFactory viewFactory;
+      
         private readonly ILogger<MainWindowViewModel> logger;
 
         public ObservableCollection<NavigationItem> NavigationItems { get; } = new();
@@ -67,14 +71,18 @@ namespace WPFDeveloper.ViewModels
 
         public IAsyncRelayCommand InitializeCommand { get; }
 
-        public MainWindowViewModel(INavigationService navigationService,
+        public MainWindowViewModel(
                                    INavigationRegistry navigationRegistry,
-                                   IViewFactory viewFactory,
+                                  
+                                   IServiceProvider serviceProvider,
+                                   IViewAutoRegistration viewAutoRegistration,
                                    ILogger<MainWindowViewModel> logger)
         {
-            this.navigationService = navigationService;
+            this.viewAutoRegistration = viewAutoRegistration;
+            
+            this.serviceProvider= serviceProvider;
             this.navigationRegistry = navigationRegistry;
-            this.viewFactory = viewFactory;
+           
             this.logger = logger;
 
             InitializeCommand = new AsyncRelayCommand(InitializeAsync);
@@ -113,8 +121,15 @@ namespace WPFDeveloper.ViewModels
         {
             try
             {
-                var viewType = navigationService.ResolveViewType(key);
-                var view = viewFactory.CreateView(viewType);
+                var viewType = viewAutoRegistration.GetViewType(key);
+                //var view2 = serviceProvider.GetRequiredService<AboutView>();
+                //var aaa = serviceProvider.GetRequiredKeyedService(viewType,"about");
+                var view = serviceProvider.GetRequiredService(viewType);
+
+                //var viewType = navigationService.ResolveViewType(key);
+               // var view = viewFactory.CreateView(viewType);
+
+               
                 CurrentView = view;
             }
             catch (Exception ex)
