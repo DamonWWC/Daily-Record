@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using WPFDeveloper.Attributes;
 using WPFDeveloper.Interop;
 
 namespace WPFDeveloper.Services
@@ -13,6 +14,7 @@ namespace WPFDeveloper.Services
     /// 外部进程宿主服务实现
     /// 负责管理外部EXE程序的启动、嵌入和交互
     /// </summary>
+    [ServiceRegistration(typeof(IExternalProcessHostService), WPFDeveloper.Attributes.ServiceLifetime.Singleton)]
     public class ExternalProcessHostService : IExternalProcessHostService, IDisposable
     {
         private readonly ILogger<ExternalProcessHostService> _logger;

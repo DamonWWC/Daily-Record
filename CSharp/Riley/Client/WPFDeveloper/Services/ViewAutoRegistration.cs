@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 using WPFDeveloper.Attributes;
-using WPFDeveloper.Models;
 
 namespace WPFDeveloper.Services
 {
@@ -44,8 +40,7 @@ namespace WPFDeveloper.Services
         public string? Group { get; set; }
         public int Order { get; set; }
         public bool IsEnabled { get; set; }
-        public Type ViewType { get; set; } = null!;
-        public Attributes.ServiceLifetime Lifetime { get; set; }
+        public Type ViewType { get; set; } = null!;       
     }
 
     /// <summary>
@@ -117,26 +112,25 @@ namespace WPFDeveloper.Services
                 Group = viewAttribute.Group,
                 Order = viewAttribute.Order,
                 IsEnabled = viewAttribute.IsEnabled,
-                ViewType = viewType,
-                Lifetime = viewAttribute.Lifetime
+                ViewType = viewType,              
             };
 
             // 根据生命周期注册到 DI 容器
-            switch (viewAttribute.Lifetime)
-            {
-                case Attributes.ServiceLifetime.Singleton:
-                    services.AddSingleton(viewType);
-                    break;
-                case Attributes.ServiceLifetime.Scoped:
-                    services.AddScoped(viewType);
-                    break;
-                case Attributes.ServiceLifetime.Transient:
-                default:
-                    services.AddTransient(viewType);
-                    //services.AddKeyedTransient(viewType, viewAttribute.Key);
-                    //services.AddKeyedTransient(viewType, viewAttribute.Key);
-                    break;
-            }
+            //switch (viewAttribute.Lifetime)
+            //{
+            //    case Attributes.ServiceLifetime.Singleton:
+            //        services.AddSingleton(viewType);
+            //        break;
+            //    case Attributes.ServiceLifetime.Scoped:
+            //        services.AddScoped(viewType);
+            //        break;
+            //    case Attributes.ServiceLifetime.Transient:
+            //    default:
+            //        services.AddTransient(viewType);
+            //        //services.AddKeyedTransient(viewType, viewAttribute.Key);
+            //        //services.AddKeyedTransient(viewType, viewAttribute.Key);
+            //        break;
+            //}
 
             // 添加到注册表
             _registeredViews[viewAttribute.Key] = viewInfo;

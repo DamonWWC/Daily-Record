@@ -1,6 +1,9 @@
 ﻿using Prism.Mvvm;
-using System.Text.Json;
+using RestSharp;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
 namespace BlankApp1.ViewModels
 {
@@ -18,7 +21,7 @@ namespace BlankApp1.ViewModels
 
 
 
-
+            DownloadLargeFile("http://127.0.0.1:6607/mics/task/micsTaskLog/exportExcel?micsTaskLogIds=23", "D:\\");
 
             var jsinfo = new JsInfo
             {
@@ -43,6 +46,35 @@ namespace BlankApp1.ViewModels
 
             var screens= WpfScreenHelper.Screen.AllScreens;
         }
+        public void DownloadLargeFile(string url, string savePath)
+        {
+           
+            var client = new RestClient(url);
+            var request = new RestRequest();
+            
+            string tempFile = Path.GetTempFileName();
+
+            try
+            {
+                using (var writer = File.OpenWrite(tempFile))
+                {
+                    request.ResponseWriter = (responseStream) =>
+                    {
+                        responseStream.CopyTo(writer);
+                        return responseStream;
+                    };
+                    client.DownloadData(request); // 流写入临时文件
+                }
+                File.Move(tempFile, savePath); // 转移至目标路径
+            }
+            finally
+            {
+                if (File.Exists(tempFile))
+                    File.Delete(tempFile); // 必须清理临时文件❗️
+            }
+        }
+
+
     }
     public class JsInfo
     {

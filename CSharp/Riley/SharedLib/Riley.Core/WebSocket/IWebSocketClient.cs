@@ -251,4 +251,50 @@ public class WebSocketStatistics
     /// 最后一次心跳时间
     /// </summary>
     public DateTime? LastHeartbeatAt { get; set; }
+
+    /// <summary>
+    /// 总处理消息数（高性能版本）
+    /// </summary>
+    public long TotalMessagesProcessed { get; set; }
+
+    /// <summary>
+    /// 总处理字节数（高性能版本）
+    /// </summary>
+    public long TotalBytesProcessed { get; set; }
+
+    /// <summary>
+    /// 计算消息处理速率（消息/秒）
+    /// </summary>
+    public double MessagesPerSecond
+    {
+        get
+        {
+            var duration = ConnectedDuration;
+            return duration?.TotalSeconds > 0 ? MessagesReceived / duration.Value.TotalSeconds : 0;
+        }
+    }
+
+    /// <summary>
+    /// 计算数据传输速率（字节/秒）
+    /// </summary>
+    public double BytesPerSecond
+    {
+        get
+        {
+            var duration = ConnectedDuration;
+            return duration?.TotalSeconds > 0 ? BytesReceived / duration.Value.TotalSeconds : 0;
+        }
+    }
+
+    /// <summary>
+    /// 计算错误率
+    /// </summary>
+    public double ErrorRate
+    {
+        get
+        {
+            var totalMessages = Math.Max(MessagesReceived + MessagesSent, 1);
+            return ErrorCount / (double)totalMessages;
+        }
+    }
 }

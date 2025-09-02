@@ -43,14 +43,4 @@ namespace WPFDeveloper.Attributes
             Key = key ?? throw new ArgumentNullException(nameof(key));
         }
     }
-
-    /// <summary>
-    /// 服务生命周期枚举
-    /// </summary>
-    public enum ServiceLifetime
-    {
-        Transient,
-        Scoped,
-        Singleton
-    }
 }

@@ -67,6 +67,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlyleafLib", "FlyleafLib\Fl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flyleaf.Common", "Flyeaf.Common\Flyleaf.Common.csproj", "{29471820-AFEF-4609-B2D6-D68B76CBE41B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp2", "ConsoleApp2\ConsoleApp2.csproj", "{D73F9D54-3EF3-496B-B4A2-90543DAF798B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -461,6 +463,18 @@ Global
 		{29471820-AFEF-4609-B2D6-D68B76CBE41B}.Release|x64.Build.0 = Release|Any CPU
 		{29471820-AFEF-4609-B2D6-D68B76CBE41B}.Release|x86.ActiveCfg = Release|Any CPU
 		{29471820-AFEF-4609-B2D6-D68B76CBE41B}.Release|x86.Build.0 = Release|Any CPU
+		{D73F9D54-3EF3-496B-B4A2-90543DAF798B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D73F9D54-3EF3-496B-B4A2-90543DAF798B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D73F9D54-3EF3-496B-B4A2-90543DAF798B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D73F9D54-3EF3-496B-B4A2-90543DAF798B}.Debug|x64.Build.0 = Debug|Any CPU
+		{D73F9D54-3EF3-496B-B4A2-90543DAF798B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D73F9D54-3EF3-496B-B4A2-90543DAF798B}.Debug|x86.Build.0 = Debug|Any CPU
+		{D73F9D54-3EF3-496B-B4A2-90543DAF798B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D73F9D54-3EF3-496B-B4A2-90543DAF798B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D73F9D54-3EF3-496B-B4A2-90543DAF798B}.Release|x64.ActiveCfg = Release|Any CPU
+		{D73F9D54-3EF3-496B-B4A2-90543DAF798B}.Release|x64.Build.0 = Release|Any CPU
+		{D73F9D54-3EF3-496B-B4A2-90543DAF798B}.Release|x86.ActiveCfg = Release|Any CPU
+		{D73F9D54-3EF3-496B-B4A2-90543DAF798B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
