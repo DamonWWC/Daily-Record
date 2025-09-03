@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Riley.Server.Configuration;
 using Riley.Server.Data;
+using Riley.Server.Services;
 
 namespace Riley.Server.Extensions
 {
@@ -24,9 +25,13 @@ namespace Riley.Server.Extensions
                 throw new InvalidOperationException("数据库配置未找到");
             }
 
-            services.AddDbContextFactory<ApplicationDbContext>(options =>
+            // 注册配置加密服务
+            services.AddSingleton<IConfigurationEncryptionService, ConfigurationEncryptionService>();
+
+            services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
             {
-                ConfigureDatabaseProvider(options, databaseSettings);
+                var encryptionService = serviceProvider.GetRequiredService<IConfigurationEncryptionService>();
+                ConfigureDatabaseProvider(options, databaseSettings, encryptionService);
             });
 
             return services;
@@ -37,18 +42,22 @@ namespace Riley.Server.Extensions
         /// </summary>
         /// <param name="options">DbContext选项构建器</param>
         /// <param name="databaseSettings">数据库设置</param>
-        private static void ConfigureDatabaseProvider(DbContextOptionsBuilder options, DatabaseSettings databaseSettings)
+        /// <param name="encryptionService">配置加密服务</param>
+        private static void ConfigureDatabaseProvider(DbContextOptionsBuilder options, DatabaseSettings databaseSettings, IConfigurationEncryptionService encryptionService)
         {
             switch (databaseSettings.Provider.ToLowerInvariant())
             {
                 case "sqlserver":
-                    ConfigureSqlServer(options, databaseSettings.ConnectionStrings.SqlServer);
+                    var sqlServerConnectionString = encryptionService.DecryptConnectionStringIfNeeded(databaseSettings.ConnectionStrings.SqlServer);
+                    ConfigureSqlServer(options, sqlServerConnectionString);
                     break;
                 case "postgresql":
-                    ConfigurePostgreSQL(options, databaseSettings.ConnectionStrings.PostgreSQL);
+                    var postgresqlConnectionString = encryptionService.DecryptConnectionStringIfNeeded(databaseSettings.ConnectionStrings.PostgreSQL);
+                    ConfigurePostgreSQL(options, postgresqlConnectionString);
                     break;
                 case "mysql":
-                    ConfigureMySQL(options, databaseSettings.ConnectionStrings.MySQL);
+                    var mysqlConnectionString = encryptionService.DecryptConnectionStringIfNeeded(databaseSettings.ConnectionStrings.MySQL);
+                    ConfigureMySQL(options, mysqlConnectionString);
                     break;
                 default:
                     throw new NotSupportedException($"不支持的数据库提供程序: {databaseSettings.Provider}");

@@ -44,13 +44,17 @@ namespace Riley.Server.Data
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Username).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.PasswordHash).IsRequired().HasMaxLength(255);
                 entity.Property(e => e.Phone).HasMaxLength(20);
+                entity.Property(e => e.Role).HasMaxLength(100).HasDefaultValue("User");
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql(GetCurrentTimestampSql());
                 entity.Property(e => e.IsActive).HasDefaultValue(true);
                 
                 // 创建唯一索引
                 entity.HasIndex(e => e.Email).IsUnique();
+                entity.HasIndex(e => e.Username).IsUnique();
             });
 
             // 配置Product实体

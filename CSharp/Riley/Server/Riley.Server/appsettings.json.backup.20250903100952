@@ -2,9 +2,9 @@
   "DatabaseSettings": {
     "Provider": "PostgreSQL",
     "ConnectionStrings": {
-      "SqlServer": "ENC:BupTbOmaDT6ZFKCN9MggxifOPprDvvdVSfn5P\u002B7PQ7QX6Hi1jmKT0oFIwDgNlFZ7ZmRmAx\u002BpsdnU5KgrcIb2t82A5/8Qy5hHRCqFo/2PGOcdsCODvyihaC9PbsndpZ7cotR8Akj7vNf3K4DR\u002BpXIgQmslAgzztHb0/WNdwqfTRs=",
-      "PostgreSQL": "ENC:Jk2iqA4eTDNULeMOarXKW3nECXwUN73Vl4L3FnJjacZuGy7tbTDjUvctowjUtu\u002B\u002BAuw2bw2mlourDbzvYvfFBh1bLRV/xN3Li8OYyMy8FMWT80ribTigxpIZA5QwZrJyS9mV2RgOSXBJnpNG6Dcmyw==",
-      "MySQL": "ENC:ilAySAA6idNaZVXtvtvPRRQ5sbrltSoEac6ADKK7dTzg2yOKmRLlKp6/mFfZuIGF2/FFraw1hWF5AXjiAuyiZJ6vDkEjVCbW11scpoIFeH4XeVf7\u002BLVMQlHntHWDbC3L"
+      "SqlServer": "Server=(localdb)\\mssqllocaldb;Database=RileyServerDb;Trusted_Connection=true;MultipleActiveResultSets=true",
+      "PostgreSQL": "Host=118.126.105.146; Port=5432;Database=rileydb;Username=rileySql;Password=riley",
+      "MySQL": "Server=localhost;Database=RileyServerDb;Uid=root;Pwd=your_password;"
     }
   },
   "EncryptionSettings": {
