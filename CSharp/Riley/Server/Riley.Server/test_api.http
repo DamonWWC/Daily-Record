@@ -1,0 +1,23 @@
+### 
+# Riley.Server API 测试文件
+
+### 1. 测试认证端点 - 登录
+POST http://localhost:5141/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "user1",
+  "password": "password123"
+}
+
+### 2. 测试用户列表端点（需要认证）
+GET http://localhost:5141/api/users
+
+### 3. 测试产品列表端点
+GET http://localhost:5141/api/products
+
+### 4. 测试数据库端点
+GET http://localhost:5141/api/database
+
+### 5. 测试健康检查
+GET http://localhost:5141/health

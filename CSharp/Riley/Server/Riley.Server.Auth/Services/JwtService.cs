@@ -1,10 +1,12 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Riley.Server.Models;
+using Riley.Server.Auth.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Riley.Server.Services
+namespace Riley.Server.Auth.Services
 {
     /// <summary>
     /// JWT服务实现

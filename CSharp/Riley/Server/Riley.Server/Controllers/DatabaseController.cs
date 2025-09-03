@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Riley.Server.Auth.Data;
 using Riley.Server.Configuration;
 using Riley.Server.Data;
 
@@ -10,12 +11,14 @@ namespace Riley.Server.Controllers
     public class DatabaseController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly AuthDbContext _authDbContext;
         private readonly IConfiguration _configuration;
         private readonly ILogger<DatabaseController> _logger;
 
-        public DatabaseController(ApplicationDbContext context, IConfiguration configuration, ILogger<DatabaseController> logger)
+        public DatabaseController(ApplicationDbContext context,AuthDbContext authDbContext, IConfiguration configuration, ILogger<DatabaseController> logger)
         {
             _context = context;
+            _authDbContext = authDbContext;
             _configuration = configuration;
             _logger = logger;
         }
@@ -89,11 +92,11 @@ namespace Riley.Server.Controllers
         {
             try
             {
-                var userCount = await _context.Users.CountAsync();
+                var userCount = await _authDbContext.Users.CountAsync();
                 var productCount = await _context.Products.CountAsync();
                 var orderCount = await _context.Orders.CountAsync();
                 var orderItemCount = await _context.OrderItems.CountAsync();
-                var activeUserCount = await _context.Users.CountAsync(u => u.IsActive);
+                var activeUserCount = await _authDbContext.Users.CountAsync(u => u.IsActive);
                 var availableProductCount = await _context.Products.CountAsync(p => p.IsAvailable);
 
                 var statistics = new

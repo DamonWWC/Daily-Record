@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Riley.Server", "Server\Rile
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFDeveloper.SourceGenerators", "Client\WPFDeveloper.SourceGenerators\WPFDeveloper.SourceGenerators\WPFDeveloper.SourceGenerators.csproj", "{37FA3589-A814-0CA4-F2CF-D5C13258C4D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Riley.Server.Auth", "Server\Riley.Server.Auth\Riley.Server.Auth.csproj", "{9AC22D49-DC64-6F2B-52A3-9EFBB0FBF26C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{37FA3589-A814-0CA4-F2CF-D5C13258C4D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37FA3589-A814-0CA4-F2CF-D5C13258C4D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37FA3589-A814-0CA4-F2CF-D5C13258C4D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AC22D49-DC64-6F2B-52A3-9EFBB0FBF26C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AC22D49-DC64-6F2B-52A3-9EFBB0FBF26C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AC22D49-DC64-6F2B-52A3-9EFBB0FBF26C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AC22D49-DC64-6F2B-52A3-9EFBB0FBF26C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{3CD8237B-0B1D-4D1F-80EB-C2082093883F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{952CBE64-C260-4395-AF03-72AFCE5AAA11} = {636F7A67-204B-452C-A834-CD29F6897B8B}
 		{37FA3589-A814-0CA4-F2CF-D5C13258C4D1} = {BFABC47A-F1D5-44E5-A41E-032E04C82C57}
+		{9AC22D49-DC64-6F2B-52A3-9EFBB0FBF26C} = {636F7A67-204B-452C-A834-CD29F6897B8B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {571BC290-4158-4A83-8803-FF2CAFA01F17}

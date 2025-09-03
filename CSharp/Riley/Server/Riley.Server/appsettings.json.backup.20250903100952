@@ -3,7 +3,7 @@
     "Provider": "PostgreSQL",
     "ConnectionStrings": {
       "SqlServer": "Server=(localdb)\\mssqllocaldb;Database=RileyServerDb;Trusted_Connection=true;MultipleActiveResultSets=true",
-      "PostgreSQL": "Host=118.126.105.146; Port=5432;Database=rileydb;Username=rileySql;Password=riley",
+      "PostgreSQL": "Host=localhost; Port=5432;Database=db;Username=root;Password=root",
       "MySQL": "Server=localhost;Database=RileyServerDb;Uid=root;Pwd=your_password;"
     }
   },

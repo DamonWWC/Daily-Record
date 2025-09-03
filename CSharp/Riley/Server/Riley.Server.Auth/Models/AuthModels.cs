@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Riley.Server.Models
+namespace Riley.Server.Auth.Models
 {
     /// <summary>
     /// 登录请求模型

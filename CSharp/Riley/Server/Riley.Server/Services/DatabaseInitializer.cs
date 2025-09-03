@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Riley.Server.Auth.Data;
+using Riley.Server.Auth.Models;
 using Riley.Server.Data;
 using Riley.Server.Models;
 
@@ -10,10 +12,12 @@ namespace Riley.Server.Services
     public class DatabaseInitializer
     {
         private readonly ApplicationDbContext _context;
+        private readonly AuthDbContext _authDbContext;
         private readonly ILogger<DatabaseInitializer> _logger;
 
-        public DatabaseInitializer(ApplicationDbContext context, ILogger<DatabaseInitializer> logger)
+        public DatabaseInitializer(ApplicationDbContext context,AuthDbContext authDbContext, ILogger<DatabaseInitializer> logger)
         {
+            _authDbContext = authDbContext;
             _context = context;
             _logger = logger;
         }
@@ -31,7 +35,7 @@ namespace Riley.Server.Services
                 await _context.Database.EnsureCreatedAsync();
 
                 // 检查是否需要种子数据
-                if (!await _context.Users.AnyAsync())
+                if (!await _authDbContext.Users.AnyAsync())
                 {
                     await SeedDataAsync();
                 }
@@ -58,7 +62,7 @@ namespace Riley.Server.Services
                 _logger.LogInformation("添加种子数据...");
 
                 // 添加示例用户（如果不存在）
-                var existingUsers = await _context.Users.ToListAsync();
+                var existingUsers = await _authDbContext.Users.ToListAsync();
                 var usersToAdd = new List<User>();
 
                 var userEmails = new[] { "zhangsan@example.com", "lisi@example.com", "wangwu@example.com" };
@@ -69,26 +73,29 @@ namespace Riley.Server.Services
                 {
                     if (!existingUsers.Any(u => u.Email == userEmails[i]))
                     {
-                        usersToAdd.Add(new User
-                        {
-                            Name = userNames[i],
-                            Email = userEmails[i],
-                            Phone = userPhones[i],
-                            CreatedAt = DateTime.UtcNow,
-                            IsActive = true
-                        });
+                                                 usersToAdd.Add(new User
+                         {
+                             Username = $"user{i + 1}",
+                             Name = userNames[i],
+                             Email = userEmails[i],
+                             PasswordHash = "$2a$11$J5KZJq1vSbF8i3dS9WHnoOLVJbHgMB8kClHKVm8wZZ9V9UPhvB2zG", // 默认密码：123456
+                             Phone = userPhones[i],
+                             Role = "User",
+                             CreatedAt = DateTime.UtcNow,
+                             IsActive = true
+                         });
                     }
                 }
 
                 if (usersToAdd.Any())
                 {
-                    await _context.Users.AddRangeAsync(usersToAdd);
+                    await _authDbContext.Users.AddRangeAsync(usersToAdd);
                     await _context.SaveChangesAsync();
                     _logger.LogInformation($"添加了 {usersToAdd.Count} 个用户");
                 }
 
                 // 重新获取所有用户（包括新添加的）
-                var allUsers = await _context.Users.ToListAsync();
+                var allUsers = await _authDbContext.Users.ToListAsync();
 
                 // 添加示例产品（如果不存在）
                 var existingProducts = await _context.Products.ToListAsync();

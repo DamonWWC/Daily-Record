@@ -1,22 +1,21 @@
 using BCrypt.Net;
-using Microsoft.EntityFrameworkCore;
-using Riley.Server.Data;
-using Riley.Server.Models;
+using Microsoft.Extensions.Logging;
+using Riley.Server.Auth.Models;
 
-namespace Riley.Server.Services
+namespace Riley.Server.Auth.Services
 {
     /// <summary>
     /// 认证服务实现
     /// </summary>
     public class AuthService : IAuthService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUserRepository _userRepository;
         private readonly IJwtService _jwtService;
         private readonly ILogger<AuthService> _logger;
 
-        public AuthService(ApplicationDbContext context, IJwtService jwtService, ILogger<AuthService> logger)
+        public AuthService(IUserRepository userRepository, IJwtService jwtService, ILogger<AuthService> logger)
         {
-            _context = context;
+            _userRepository = userRepository;
             _jwtService = jwtService;
             _logger = logger;
         }
@@ -113,22 +112,21 @@ namespace Riley.Server.Services
                     CreatedAt = DateTime.UtcNow
                 };
 
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
+                var createdUser = await _userRepository.CreateUserAsync(user);
 
                 var userInfo = new UserInfo
                 {
-                    Id = user.Id,
-                    Username = user.Username,
-                    Name = user.Name,
-                    Email = user.Email,
-                    Phone = user.Phone,
-                    Role = user.Role,
-                    IsActive = user.IsActive,
-                    CreatedAt = user.CreatedAt
+                    Id = createdUser.Id,
+                    Username = createdUser.Username,
+                    Name = createdUser.Name,
+                    Email = createdUser.Email,
+                    Phone = createdUser.Phone,
+                    Role = createdUser.Role,
+                    IsActive = createdUser.IsActive,
+                    CreatedAt = createdUser.CreatedAt
                 };
 
-                _logger.LogInformation("用户注册成功：{Username} (ID: {UserId})", user.Username, user.Id);
+                _logger.LogInformation("用户注册成功：{Username} (ID: {UserId})", createdUser.Username, createdUser.Id);
                 return ApiResponse<UserInfo>.Ok(userInfo, "注册成功");
             }
             catch (Exception ex)
@@ -153,7 +151,7 @@ namespace Riley.Server.Services
                 {
                     return null;
                 }
-
+                var aa = BCrypt.Net.BCrypt.InterrogateHash("$2a$11$J5KZJq1vSbF8i3dS9WHnoOLVJbHgMB8kClHKVm8wZZ9V9UPhvB2zG");
                 // 验证密码
                 var isPasswordValid = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
                 return isPasswordValid ? user : null;
@@ -172,16 +170,7 @@ namespace Riley.Server.Services
         /// <returns>用户信息</returns>
         public async Task<User?> GetUserByUsernameAsync(string username)
         {
-            try
-            {
-                return await _context.Users
-                    .FirstOrDefaultAsync(u => u.Username == username);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "根据用户名获取用户信息时发生错误，用户名: {Username}", username);
-                return null;
-            }
+            return await _userRepository.GetUserByUsernameAsync(username);
         }
 
         /// <summary>
@@ -191,16 +180,7 @@ namespace Riley.Server.Services
         /// <returns>用户信息</returns>
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            try
-            {
-                return await _context.Users
-                    .FirstOrDefaultAsync(u => u.Email == email);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "根据邮箱获取用户信息时发生错误，邮箱: {Email}", email);
-                return null;
-            }
+            return await _userRepository.GetUserByEmailAsync(email);
         }
 
         /// <summary>
@@ -210,16 +190,7 @@ namespace Riley.Server.Services
         /// <returns>用户信息</returns>
         public async Task<User?> GetUserByIdAsync(int userId)
         {
-            try
-            {
-                return await _context.Users
-                    .FirstOrDefaultAsync(u => u.Id == userId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "根据ID获取用户信息时发生错误，用户ID: {UserId}", userId);
-                return null;
-            }
+            return await _userRepository.GetUserByIdAsync(userId);
         }
     }
 }

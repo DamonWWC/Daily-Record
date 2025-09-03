@@ -1,6 +1,6 @@
-using Riley.Server.Models;
+using Riley.Server.Auth.Models;
 
-namespace Riley.Server.Services
+namespace Riley.Server.Auth.Services
 {
     /// <summary>
     /// JWT服务接口

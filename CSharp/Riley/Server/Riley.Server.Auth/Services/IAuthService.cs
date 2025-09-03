@@ -1,6 +1,6 @@
-using Riley.Server.Models;
+using Riley.Server.Auth.Models;
 
-namespace Riley.Server.Services
+namespace Riley.Server.Auth.Services
 {
     /// <summary>
     /// 认证服务接口

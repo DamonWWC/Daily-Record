@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Riley.Server.Models;
-using Riley.Server.Services;
+using Microsoft.Extensions.Logging;
+using Riley.Server.Auth.Models;
+using Riley.Server.Auth.Services;
 using System.Security.Claims;
 
-namespace Riley.Server.Controllers
+namespace Riley.Server.Auth.Controllers
 {
     /// <summary>
     /// 认证控制器
@@ -15,11 +17,13 @@ namespace Riley.Server.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IJwtService _jwtService;
         private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IAuthService authService, ILogger<AuthController> logger)
+        public AuthController(IAuthService authService, IJwtService jwtService, ILogger<AuthController> logger)
         {
             _authService = authService;
+            _jwtService = jwtService;
             _logger = logger;
         }
 
@@ -199,16 +203,8 @@ namespace Riley.Server.Controllers
                 }
 
                 // 重新生成令牌
-                var loginRequest = new LoginRequest
-                {
-                    Username = user.Username,
-                    Password = "" // 这里不需要密码，因为已经通过JWT验证了用户身份
-                };
-
-                // 直接构造响应，避免重新验证密码
-                var jwtService = HttpContext.RequestServices.GetRequiredService<IJwtService>();
-                var token = jwtService.GenerateToken(user);
-                var expirationMinutes = jwtService.GetTokenExpirationMinutes();
+                var token = _jwtService.GenerateToken(user);
+                var expirationMinutes = _jwtService.GetTokenExpirationMinutes();
 
                 var response = new LoginResponse
                 {
@@ -244,9 +240,9 @@ namespace Riley.Server.Controllers
         /// <returns>登出响应</returns>
         [HttpPost("logout")]
         [Authorize]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
-        public ActionResult<ApiResponse<object>> Logout()
+        [ProducesResponseType(typeof(ApiResponse<object?>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object?>), StatusCodes.Status401Unauthorized)]
+        public ActionResult<ApiResponse<object?>> Logout()
         {
             try
             {

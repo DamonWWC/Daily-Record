@@ -1,11 +1,8 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Riley.Server.Data;
+using Riley.Server.Auth.Extensions;
 using Riley.Server.Extensions;
 using Riley.Server.Services;
 using Riley.Server.Tools;
-using System.Text;
 
 namespace Riley.Server
 {
@@ -60,64 +57,16 @@ namespace Riley.Server
                     }
                 });
             });
-
-            //builder.Services.AddDbContext<ApplicationDbContext>();
+           
             // 添加多数据库支持的EntityFramework服务
             builder.Services.AddMultiDatabaseSupport(builder.Configuration);
 
             // 注册数据库初始化服务
             builder.Services.AddScoped<DatabaseInitializer>();
 
-            // 注册JWT和认证服务
-            builder.Services.AddScoped<IJwtService, JwtService>();
-            builder.Services.AddScoped<IAuthService, AuthService>();
-
-            // 配置JWT认证
-            var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-            var secretKey = jwtSettings["SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey未配置");
-            var issuer = jwtSettings["Issuer"] ?? "Riley.Server";
-            var audience = jwtSettings["Audience"] ?? "Riley.Client";
-
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
-                    ValidateIssuer = true,
-                    ValidIssuer = issuer,
-                    ValidateAudience = true,
-                    ValidAudience = audience,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero, // 不允许时间偏差
-                    RequireExpirationTime = true
-                };
-
-                options.Events = new JwtBearerEvents
-                {
-                    OnAuthenticationFailed = context =>
-                    {
-                        var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-                        logger.LogWarning("JWT认证失败: {Message}", context.Exception.Message);
-                        return Task.CompletedTask;
-                    },
-                    OnChallenge = context =>
-                    {
-                        var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-                        logger.LogWarning("JWT认证挑战: {Error}", context.Error);
-                        return Task.CompletedTask;
-                    }
-                };
-            });
-
-            builder.Services.AddAuthorization();
-
+            // 注册Riley认证模块
+            builder.Services.AddRileyAuthModule(builder.Configuration);
+                     
             var app = builder.Build();
 
             // 初始化数据库
