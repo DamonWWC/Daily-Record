@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using Riley.Server.Data;
+using Riley.Server.Extensions;
+using Riley.Server.Services;
 
 namespace Riley.Server
 {
@@ -14,7 +18,21 @@ namespace Riley.Server
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            //builder.Services.AddDbContext<ApplicationDbContext>();
+            // 添加多数据库支持的EntityFramework服务
+            builder.Services.AddMultiDatabaseSupport(builder.Configuration);
+
+            // 注册数据库初始化服务
+            builder.Services.AddScoped<DatabaseInitializer>();
+
             var app = builder.Build();
+
+            // 初始化数据库
+            using (var scope = app.Services.CreateScope())
+            {
+                var initializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+                initializer.InitializeAsync().Wait();
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
