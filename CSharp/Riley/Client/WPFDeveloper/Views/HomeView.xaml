@@ -1,0 +1,171 @@
+<UserControl x:Class="WPFDeveloper.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+    
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="CardBackground" Color="#ffffff"/>
+        <SolidColorBrush x:Key="PrimaryColor" Color="#667eea"/>
+        <SolidColorBrush x:Key="SecondaryColor" Color="#f093fb"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#1a202c"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#4a5568"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#e2e8f0"/>
+        <SolidColorBrush x:Key="HoverColor" Color="#edf2f7"/>
+        
+        <LinearGradientBrush x:Key="PrimaryGradient" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#667eea" Offset="0"/>
+            <GradientStop Color="#764ba2" Offset="1"/>
+        </LinearGradientBrush>
+        
+        <DropShadowEffect x:Key="CardShadow" Color="#000000" Direction="270" ShadowDepth="2" Opacity="0.1" BlurRadius="8"/>
+        <FontFamily x:Key="ModernFont">Segoe UI</FontFamily>
+    </UserControl.Resources>
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Background="Transparent">
+        <StackPanel Margin="0,0,0,20">
+            <!-- 欢迎卡片 -->
+            <Border Background="{StaticResource PrimaryGradient}" 
+                    CornerRadius="16" 
+                    Padding="32,24" 
+                    Margin="0,0,0,24"
+                    Effect="{StaticResource CardShadow}">
+                <StackPanel>
+                    <TextBlock Text="欢迎使用 WPFDeveloper" 
+                               FontSize="28" 
+                               FontWeight="Bold" 
+                               Foreground="White"
+                               FontFamily="{StaticResource ModernFont}"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,8"/>
+                    <TextBlock Text="这是一个用于日常技术收集与实现的客户端应用" 
+                               FontSize="16" 
+                               Foreground="White" 
+                               Opacity="0.9"
+                               FontFamily="{StaticResource ModernFont}"
+                               HorizontalAlignment="Center"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- 功能卡片网格 -->
+            <UniformGrid Columns="2" Margin="0,0,0,24">
+                <!-- 快速开始卡片 -->
+                <Border Background="{StaticResource CardBackground}" 
+                        CornerRadius="12" 
+                        Padding="24" 
+                        Margin="0,0,16,16"
+                        Effect="{StaticResource CardShadow}"
+                        Cursor="Hand">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Effect" Value="{StaticResource CardShadow}"/>
+                                    <Setter Property="Background" Value="{StaticResource HoverColor}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    
+                    <StackPanel>
+                        <Ellipse Width="48" Height="48" 
+                                 Fill="{StaticResource PrimaryColor}" 
+                                 Margin="0,0,0,16"
+                                 HorizontalAlignment="Left"/>
+                        <TextBlock Text="快速开始" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"
+                                   FontFamily="{StaticResource ModernFont}"
+                                   Foreground="{StaticResource TextPrimary}"
+                                   Margin="0,0,0,8"/>
+                        <TextBlock Text="了解如何使用本应用进行技术收集和实现" 
+                                   FontSize="14"
+                                   FontFamily="{StaticResource ModernFont}"
+                                   Foreground="{StaticResource TextSecondary}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+                
+                <!-- 技术分类卡片 -->
+                <Border Background="{StaticResource CardBackground}" 
+                        CornerRadius="12" 
+                        Padding="24" 
+                        Margin="16,0,0,16"
+                        Effect="{StaticResource CardShadow}"
+                        Cursor="Hand">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Effect" Value="{StaticResource CardShadow}"/>
+                                    <Setter Property="Background" Value="{StaticResource HoverColor}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    
+                    <StackPanel>
+                        <Ellipse Width="48" Height="48" 
+                                 Fill="{StaticResource SecondaryColor}" 
+                                 Margin="0,0,0,16"
+                                 HorizontalAlignment="Left"/>
+                        <TextBlock Text="技术分类" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"
+                                   FontFamily="{StaticResource ModernFont}"
+                                   Foreground="{StaticResource TextPrimary}"
+                                   Margin="0,0,0,8"/>
+                        <TextBlock Text="浏览各种技术分类，找到你感兴趣的技术点" 
+                                   FontSize="14"
+                                   FontFamily="{StaticResource ModernFont}"
+                                   Foreground="{StaticResource TextSecondary}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+            
+            <!-- 最近活动卡片 -->
+            <Border Background="{StaticResource CardBackground}" 
+                    CornerRadius="12" 
+                    Padding="24" 
+                    Effect="{StaticResource CardShadow}">
+                <StackPanel>
+                    <TextBlock Text="最近活动" 
+                               FontSize="20" 
+                               FontWeight="SemiBold"
+                               FontFamily="{StaticResource ModernFont}"
+                               Foreground="{StaticResource TextPrimary}"
+                               Margin="0,0,0,16"/>
+                    
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <Ellipse Width="8" Height="8" Fill="{StaticResource PrimaryColor}" Margin="0,0,12,0"/>
+                        <TextBlock Text="创建了新的技术收集项目" 
+                                   FontSize="14"
+                                   FontFamily="{StaticResource ModernFont}"
+                                   Foreground="{StaticResource TextSecondary}"/>
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <Ellipse Width="8" Height="8" Fill="{StaticResource SecondaryColor}" Margin="0,0,12,0"/>
+                        <TextBlock Text="完成了 WPF MVVM 架构搭建" 
+                                   FontSize="14"
+                                   FontFamily="{StaticResource ModernFont}"
+                                   Foreground="{StaticResource TextSecondary}"/>
+                    </StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="8" Height="8" Fill="{StaticResource PrimaryColor}" Margin="0,0,12,0"/>
+                        <TextBlock Text="添加了导航系统配置" 
+                                   FontSize="14"
+                                   FontFamily="{StaticResource ModernFont}"
+                                   Foreground="{StaticResource TextSecondary}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
+
+

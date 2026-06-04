@@ -1,0 +1,44 @@
+
+# 文件组织指南
+
+## 目录结构建议
+随着 WPF 项目的增长，使用以下约定组织文件：
+
+```
+WPFDeveloper/
+├── Views/           # XAML 窗口和用户控件
+├── ViewModels/      # MVVM 的 ViewModel 类
+├── Models/          # 数据模型和业务逻辑
+├── Controls/        # 自定义控件和用户控件
+├── Converters/      # 数据绑定的值转换器
+├── Resources/       # 资源字典、图像等
+├── Services/        # 业务逻辑服务
+├── Utilities/       # 辅助类和扩展
+└── Themes/          # 应用程序主题和样式
+```
+
+## 文件命名约定
+- **窗口**：`MainWindow.xaml`、`SettingsWindow.xaml`
+- **用户控件**：`CustomerInfoControl.xaml`、`DataGridControl.xaml`
+- **ViewModels**：`MainWindowViewModel.cs`、`CustomerViewModel.cs`
+- **模型**：`Customer.cs`、`Order.cs`
+- **转换器**：`BoolToVisibilityConverter.cs`、`DateTimeConverter.cs`
+- **服务**：`DataService.cs`、`ConfigurationService.cs`
+
+## XAML 文件对
+- 每个 `.xaml` 文件都应该有其对应的 `.xaml.cs` 代码后台
+- 使用 MVVM 模式时保持代码后台最小化
+- 使用与文件名匹配的有意义的类名
+
+## 资源文件
+- 在单独的 ResourceDictionary 文件中分组相关样式
+- 使用描述性名称：`ButtonStyles.xaml`、`ColorResources.xaml`
+- 在 `App.xaml` 或窗口级别合并资源字典
+
+## 项目引用
+- 通过包管理器或 PackageReference 添加 NuGet 包
+- 在注释或 README 中记录外部依赖项
+- 保持项目文件清洁有序
+- Add NuGet packages through Package Manager or PackageReference
+- Document external dependencies in comments or README
+- Keep the project file clean and organized

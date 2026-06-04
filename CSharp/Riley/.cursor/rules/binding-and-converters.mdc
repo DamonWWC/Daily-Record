@@ -1,0 +1,17 @@
+---
+globs: *.xaml,*.cs
+---
+
+# 数据绑定与转换器
+
+## 绑定
+- 明确 `Mode` 与 `UpdateSourceTrigger`（尤其是输入类控件）。
+- 复杂路径使用 `Binding Path=...` 明示；避免过深绑定链。
+- 绑定失败必须在调试输出为 0；必要时使用 `FallbackValue/TargetNullValue`。
+
+## 验证
+- 简单场景使用 `IDataErrorInfo/INotifyDataErrorInfo`；配合样式提示错误。
+
+## 转换器
+- 命名后缀 `Converter`，如 `BoolToVisibilityConverter`。
+- 仅承担轻量转换；复杂逻辑放到 ViewModel/服务。

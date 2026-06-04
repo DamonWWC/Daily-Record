@@ -1,0 +1,33 @@
+---
+alwaysApply: true
+---
+
+# 架构与 MVVM 规则
+
+## 设计原则
+- 遵循 **SOLID**：高内聚、低耦合；面向接口；依赖倒置；单一职责；开闭原则。
+- 职责清晰：视图仅负责 UI；ViewModel 处理状态与命令；Model 承载领域与数据；Service/Repository 负责 IO/集成。
+
+## MVVM 分层
+- **Views**：`*.xaml` + `*.xaml.cs`，仅少量交互/视觉处理，不写业务逻辑。
+- **ViewModels**：属性可绑定、命令触发、协调服务调用，基于 `ObservableObject`。
+- **Models**：数据与领域对象，保持 POCO 与可序列化。
+- **Services/Repositories**：外部交互与持久化抽象，面向接口编程。
+
+## 依赖注入与生命周期
+- 使用 `Microsoft.Extensions.DependencyInjection`：
+  - 单例：配置、日志、消息总线等共享组件
+  - 作用域/瞬态：服务、仓储、视图模型（按需）
+- 在 `App.xaml.cs` 中构建 `ServiceProvider`，集中注册。
+
+## 模块化与可扩展
+- 每个功能视为一个“模块”（View + ViewModel + 相关 Service/Model）。
+- 导航项与模块一一对应，可按目录或约定自动发现。
+
+## 事件与消息
+- 进程内消息/事件总线（如 `IMessenger`）用于跨模块通信，避免直接引用。
+- UI 线程更新通过 `Dispatcher` 或 `SynchronizationContext` 协调。
+
+## 导航
+- 通过 `INavigationService` 抽象导航；传递导航参数（弱类型字典或强类型记录）。
+- 右侧内容区只承载当前激活视图，支持返回/前进历史（可选）。

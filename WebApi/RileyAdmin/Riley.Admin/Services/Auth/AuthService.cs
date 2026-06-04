@@ -48,6 +48,8 @@ namespace Riley.Admin.Services.Auth
             _loginLogService = loginLogService;
             _adminContext = adminContext;
             _jwtConfig = jwtConfig.Value;
+
+
             _userToken = userToken;
             _cache = cache;
             _passwordHasher = passwordHasher;

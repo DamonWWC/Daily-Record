@@ -1,0 +1,119 @@
+// Element Plus 样式命名空间混入
+
+// 全局 Element Plus 样式覆盖
+.el-button {
+  &--primary {
+    background-color: color.adjust($primary-color, $lightness: 10%);
+    border-color: color.adjust($primary-color, $lightness: 10%);
+
+    &:hover {
+      background-color: color.adjust($primary-color, $lightness: 10%);
+      border-color: color.adjust($primary-color, $lightness: 10%);
+    }
+  }
+
+  &--success {
+    background-color: color.adjust($success-color, $lightness: 10%);
+    border-color: color.adjust($success-color, $lightness: 10%);
+
+    &:hover {
+      background-color: color.adjust($success-color, $lightness: 10%);
+      border-color: color.adjust($success-color, $lightness: 10%);
+    }
+  }
+
+  &--warning {
+    background-color: color.adjust($warning-color, $lightness: 10%);
+    border-color: color.adjust($warning-color, $lightness: 10%);
+
+    &:hover {
+      background-color: color.adjust($warning-color, $lightness: 10%);
+      border-color: color.adjust($warning-color, $lightness: 10%);
+    }
+  }
+
+  &--danger {
+    background-color: color.adjust($danger-color, $lightness: 10%);
+    border-color: color.adjust($danger-color, $lightness: 10%);
+
+    &:hover {
+      background-color: color.adjust($danger-color, $lightness: 10%);
+      border-color: color.adjust($danger-color, $lightness: 10%);
+    }
+  }
+}
+
+.el-input {
+  .el-input__wrapper {
+    border-radius: $border-radius-base;
+
+    &.is-focus {
+      box-shadow: 0 0 0 1px $primary-color;
+    }
+  }
+}
+
+.el-table {
+  .el-table__header {
+    background-color: $background-color-light;
+  }
+
+  .el-table__row {
+    &:hover {
+      background-color: $background-color-light;
+    }
+  }
+}
+
+.el-pagination {
+  .el-pager li {
+    border-radius: $border-radius-base;
+
+    &.is-active {
+      background-color: $primary-color;
+      color: #fff;
+    }
+  }
+}
+
+.el-dialog {
+  border-radius: $border-radius-large;
+
+  .el-dialog__header {
+    border-bottom: 1px solid $border-color-light;
+    padding: $spacing-lg;
+  }
+
+  .el-dialog__body {
+    padding: $spacing-lg;
+  }
+
+  .el-dialog__footer {
+    border-top: 1px solid $border-color-light;
+    padding: $spacing-lg;
+  }
+}
+
+.el-message {
+  border-radius: $border-radius-base;
+
+  &--success {
+    background-color: color.adjust($success-color, $lightness: 45%);
+    border-color: $success-color;
+  }
+
+  &--warning {
+    background-color: color.adjust($warning-color, $lightness: 45%);
+    border-color: $warning-color;
+  }
+
+  &--error {
+    background-color: color.adjust($danger-color, $lightness: 45%);
+    border-color: $danger-color;
+  }
+
+  &--info {
+    background-color: color.adjust($info-color, $lightness: 45%);
+    border-color: $info-color;
+  }
+}

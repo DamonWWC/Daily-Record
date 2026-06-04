@@ -1,0 +1,43 @@
+
+# C# WPF 编码约定
+
+## 代码后台指南
+- 保持代码后台最小化 - 优先使用 MVVM 模式
+- 适当使用部分类来生成代码
+- 在构造函数中始终调用 `InitializeComponent()`
+- 仅在代码后台处理简单的 UI 逻辑事件
+
+## 命名空间和 Using 语句
+- 将 using 语句放在文件顶部
+- 按逻辑分组 using 语句（System 优先，然后是 WPF，最后是自定义）
+- 使用项目的根命名空间：`WPFDeveloper`
+
+## 类结构
+- 为公共成员使用 XML 文档注释
+- 遵循模式：`/// <summary>` 用于类/方法描述
+- 为数据绑定实现 INotifyPropertyChanged
+- 为自定义控件使用依赖属性
+
+## 事件处理
+- 使用有意义的事件处理程序名称（例如 `OnButtonClick`、`HandleTextChanged`）
+- 为自定义控件优先使用路由事件
+- 对内存敏感的场景使用弱事件模式
+
+## WPF 特定模式
+- 使用 Dispatcher.Invoke 进行跨线程 UI 更新
+- 为资源实现适当的处置模式
+- 为菜单和工具栏命令使用 CommandBinding
+- 为复杂应用程序遵循 MVVM 模式
+
+## 可空引用类型
+- 项目已启用可空引用类型
+- 使用适当的可空注释（`?`、`!`）
+- 在 UI 代码中适当处理空值情况
+
+## 隐式 Using
+- 项目已启用隐式 using
+- 常见的 System 命名空间自动可用
+- 在需要时仍明确声明 WPF 特定命名空间
+- The project has implicit usings enabled
+- Common System namespaces are automatically available
+- Still explicitly declare WPF-specific namespaces when needed

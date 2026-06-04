@@ -1,0 +1,26 @@
+{
+  "DatabaseSettings": {
+    "Provider": "PostgreSQL",
+    "ConnectionStrings": {
+      "SqlServer": "Server=(localdb)\\mssqllocaldb;Database=RileyServerDb;Trusted_Connection=true;MultipleActiveResultSets=true",
+      "PostgreSQL": "Host=localhost; Port=5432;Database=db;Username=root;Password=root",
+      "MySQL": "Server=localhost;Database=RileyServerDb;Uid=root;Pwd=your_password;"
+    }
+  },
+  "EncryptionSettings": {
+    "Key": "Riley_Encryption_Key_2024_This_Should_Be_A_Very_Long_And_Secure_Key_For_Production_Config_Encryption"
+  },
+  "JwtSettings": {
+    "SecretKey": "Riley_JWT_Secret_Key_2024_This_Should_Be_A_Very_Long_And_Secure_Key_For_Production",
+    "Issuer": "Riley.Server",
+    "Audience": "Riley.Client",
+    "ExpirationMinutes": 60
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}

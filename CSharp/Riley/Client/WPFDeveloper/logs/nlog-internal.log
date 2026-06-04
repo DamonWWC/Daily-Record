@@ -1,0 +1,21 @@
+2025-08-29 18:03:44.3265 Info Loading assembly name: NLog.Extensions.Logging
+2025-08-29 18:03:44.4528 Info NLog.Extensions.Logging, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.14.587. Product version: 5.3.14+5569b1f67d043941ac7bb3dc0ac87aa8914ca8a4. GlobalAssemblyCache: False
+2025-08-29 18:03:44.8904 Info Registered target NLog.Targets.Wrappers.AsyncTargetWrapper(Name=console)
+2025-08-29 18:03:45.2099 Info Registered target NLog.Targets.Wrappers.AsyncTargetWrapper(Name=debugger)
+2025-08-29 18:03:45.5335 Info Registered target NLog.Targets.Wrappers.AsyncTargetWrapper(Name=allfile)
+2025-08-29 18:03:45.7734 Info Registered target NLog.Targets.Wrappers.AsyncTargetWrapper(Name=errorfile)
+2025-08-29 18:03:45.8138 Info Registered target NLog.Targets.Wrappers.AsyncTargetWrapper(Name=performancefile)
+2025-08-29 18:03:45.9138 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.4.2778. Product version: 5.3.4+73d83d3161d31288ca5c554cc50d27b6bed5f28b. GlobalAssemblyCache: False
+2025-08-29 18:03:46.2993 Info Validating config: Targets=5, ConfigItems=104, FilePath=E:\资料\学习代码\Daily-Record\CSharp\Riley\Client\WPFDeveloper\bin\Debug\net8.0-windows\NLog.config
+2025-08-29 18:03:46.7420 Info Configuration initialized.
+2025-08-29 18:03:47.0716 Info Loading NLog config from XML file: E:\资料\学习代码\Daily-Record\CSharp\Riley\Client\WPFDeveloper\bin\Debug\net8.0-windows\NLog.config
+2025-08-29 18:03:47.2768 Info Registered target NLog.Targets.Wrappers.AsyncTargetWrapper(Name=console)
+2025-08-29 18:03:47.3167 Info Registered target NLog.Targets.Wrappers.AsyncTargetWrapper(Name=debugger)
+2025-08-29 18:03:47.3666 Info Registered target NLog.Targets.Wrappers.AsyncTargetWrapper(Name=allfile)
+2025-08-29 18:03:47.3904 Info Registered target NLog.Targets.Wrappers.AsyncTargetWrapper(Name=errorfile)
+2025-08-29 18:03:47.4159 Info Registered target NLog.Targets.Wrappers.AsyncTargetWrapper(Name=performancefile)
+2025-08-29 18:03:47.4604 Info Closing old configuration.
+2025-08-29 18:03:47.7656 Info Validating config: Targets=5, ConfigItems=104, FilePath=E:\资料\学习代码\Daily-Record\CSharp\Riley\Client\WPFDeveloper\bin\Debug\net8.0-windows\NLog.config
+2025-08-29 18:03:47.9025 Info Configuration initialized.
+2025-08-29 18:03:54.2848 Info AppDomain Shutting down. LogFactory closing...
+2025-08-29 18:03:54.6715 Info LogFactory has been closed.

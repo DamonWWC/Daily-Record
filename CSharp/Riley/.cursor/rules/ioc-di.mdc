@@ -1,0 +1,19 @@
+---
+globs: *.cs
+---
+
+# 依赖注入（DI）规则
+
+## 总体策略
+- 在 [App.xaml.cs](mdc:WPFDeveloper/App.xaml.cs) 构建 `ServiceCollection` 与 `ServiceProvider`。
+- 所有外部依赖通过接口抽象并在启动时注册。
+
+## 生命周期
+- 单例：日志、配置、消息总线、导航注册表。
+- 瞬态/作用域：服务、仓储、视图模型（根据状态与成本选择）。
+
+## 解析与工厂
+- 通过构造函数注入依赖；必要时使用工厂委托/`IServiceProvider` 创建动态实例。
+
+## 配置
+- 将注册拆分到扩展方法 `AddXxxModule(this IServiceCollection services)`，模块自包含可复用。
