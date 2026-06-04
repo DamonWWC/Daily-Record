@@ -1,0 +1,21 @@
+﻿<Window
+    x:Class="VLCDemo.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:VLCDemo"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="MainWindow"
+    Width="800"
+    Height="450"
+    mc:Ignorable="d">
+    <Grid>
+        <!--<local:VideoPanelView
+            CameraCodes="{Binding CameraCodes}"
+            Column="3"
+            Interval="30"
+            Row="3" />-->
+        <!--<local:VideoPlayView CameraCode="rtmp://ns8.indexforce.com/home/mystream1"/>-->
+        <!--<local:VideoPlayView CameraCode="E:\资料\学习代码\Daily-Record\CSharp\MethodDemo\MethodDemo\VLCDemo\bin\Debug\Video\出入口.mp4"/>-->
+    </Grid>
+</Window>

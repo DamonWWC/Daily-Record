@@ -93,7 +93,7 @@ namespace VideoFrameExtractor
                 //        string outputPath = Path.Combine("output", $"local_frame_opencv_{position}s.jpg");
                 //        Console.WriteLine($"Capturing frame at {position}s to {outputPath}...");
 
-                //        bool success = await captureImage.CaptureFrameAsync(videoPath, outputPath, position);
+                       //bool success = await captureImage.CaptureFrameAsync(videoPath, outputPath, position);
                 //        Console.WriteLine(success ? "Frame captured successfully!" : "Failed to capture frame.");
                 //    }
                 //}

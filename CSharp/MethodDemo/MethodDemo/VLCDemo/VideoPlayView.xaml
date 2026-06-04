@@ -1,0 +1,192 @@
+﻿<UserControl
+    x:Class="VLCDemo.VideoPlayView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:VLCDemo"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+    xmlns:wpf="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="loadingCirleStyle" TargetType="local:LoadingCircle">
+                <Setter Property="Width" Value="40" />
+                <Setter Property="Foreground" Value="#326cf3" />
+                <Setter Property="Height" Value="40" />
+                <Setter Property="DotDiameter" Value="5" />
+                <Setter Property="DotInterval" Value="30" />
+                <Setter Property="DotOffSet" Value="60" />
+                <Setter Property="DotDelayTime" Value="90" />
+                <Setter Property="DotSpeed" Value="4" />
+            </Style>
+            <Style x:Key="FontIcon" TargetType="TextBlock">
+                <Setter Property="FontFamily" Value="/VLCDemo;component/#iconfont" />
+                <!--<Setter Property="Foreground" Value="#FFFFFF"/>-->
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="TextAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+            <GeometryGroup x:Key="fullScreenButton" o:Freeze="True">
+                <PathGeometry>M897.024 126.976v770.048H126.976V126.976h770.048m65.536-65.536H61.44v901.12h901.12V61.44z</PathGeometry>
+                <PathGeometry>M199.23968 777.138176l169.576448-169.5744 46.340096 46.338048-169.5744 169.578496z</PathGeometry>
+                <PathGeometry>M170.8032 786.6368h240.0256v65.536H170.8032z</PathGeometry>
+                <PathGeometry>M170.668032 852.035584v-240.0256h65.536v240.0256zM778.469376 823.67488l-169.578496-169.578496 46.340096-46.340096 169.578496 169.578496z</PathGeometry>
+                <PathGeometry>M787.68128 852.103168v-240.0256h65.536v240.0256z</PathGeometry>
+                <PathGeometry>M853.129216 852.099072h-240.0256v-65.536h240.0256zM824.653824 246.767616l-169.576448 169.578496-46.340096-46.340096 169.576448-169.578496z</PathGeometry>
+                <PathGeometry>M853.245952 237.408256h-240.0256v-65.536h240.0256z</PathGeometry>
+                <PathGeometry>M853.159936 171.927552v240.0256h-65.536v-240.0256zM245.682176 200.310784l169.576448 169.578496-46.340096 46.340096-169.576448-169.578496z</PathGeometry>
+                <PathGeometry>M236.161024 171.804672v240.0256h-65.536v-240.0256z</PathGeometry>
+                <PathGeometry>M170.8032 171.8272h240.0256v65.536H170.8032z</PathGeometry>
+            </GeometryGroup>
+            <Geometry x:Key="restoreScreenButton" o:Freeze="True">M919.7568 13.1072H171.4688A124.8256 124.8256 0 0 0 46.7456 137.8304v748.3392a124.8256 124.8256 0 0 0 124.7232 124.7232h748.288a124.8768 124.8768 0 0 0 124.7232-124.7232V137.8304A124.8768 124.8768 0 0 0 919.7568 13.1072z m62.3616 873.0624a62.464 62.464 0 0 1-62.3616 62.3104H171.4688a62.4128 62.4128 0 0 1-62.3616-62.3104V137.8304a62.464 62.464 0 0 1 62.3616-62.3616h748.288a62.464 62.464 0 0 1 62.3616 62.3616v748.3392zM451.84 575.9488H295.936a31.1808 31.1808 0 1 0 0 62.3616h80.64l-133.8368 133.8368a31.1808 31.1808 0 1 0 44.0832 44.1344l133.8368-133.888v80.64a31.232 31.232 0 0 0 62.4128 0v-155.904a31.232 31.232 0 0 0-31.232-31.1808z m263.4752 61.6448h80.5888a31.232 31.232 0 0 0 0-62.3616h-155.8528a31.1808 31.1808 0 0 0-31.232 31.1808v155.904a31.232 31.232 0 0 0 62.4128 0v-80.64l133.8368 133.888a31.0784 31.0784 0 0 0 44.0832 0 31.1808 31.1808 0 0 0 0-44.0832l-133.8368-133.888z m89.088-428.4416l-133.888 133.8368V262.3488a31.1808 31.1808 0 0 0-62.3616 0V418.304c0 17.2544 13.9264 31.232 31.1296 31.232h155.9552a31.1808 31.1808 0 0 0 0-62.4128h-80.64l133.8368-133.8368a31.1808 31.1808 0 1 0-44.032-44.0832z m-353.28 21.3504a31.1296 31.1296 0 0 0-31.1296 31.1296v80.6912L286.1056 208.384a31.1808 31.1808 0 1 0-44.032 44.0832l133.8368 133.888H295.2704a31.1808 31.1808 0 1 0 0 62.3616h155.904a31.1808 31.1808 0 0 0 31.1808-31.232V261.7344a31.232 31.232 0 0 0-31.232-31.232z</Geometry>
+
+            <Style x:Key="ButtonIcon" TargetType="Button">
+                <!--<Setter Property="Background" Value="{x:Null}" />-->
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <SolidColorBrush Opacity="0.01" Color="White" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentControl
+                                    Margin="{TemplateBinding Padding}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                    <Path
+                                        x:Name="Path"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Data="{TemplateBinding Tag}"
+                                        Fill="{TemplateBinding Foreground}"
+                                        SnapsToDevicePixels="True"
+                                        Stretch="Uniform"
+                                        Stroke="{TemplateBinding BorderBrush}" />
+                                </ContentControl>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value=".9" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Opacity" Value=".6" />
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value=".4" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ButtonCustom" TargetType="Button">
+                <Setter Property="Background" Value="{x:Null}" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border
+                                x:Name="Chrome"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                SnapsToDevicePixels="True">
+                                <ContentPresenter
+                                    Margin="{TemplateBinding Padding}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    RecognizesAccessKey="True"
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value=".9" />
+                                    <!--<Setter TargetName="Chrome" Property="Background" Value="{Binding Path=(controls:BackgroundSwitchElement.MouseHoverBackground), RelativeSource={RelativeSource Mode=TemplatedParent}}" />-->
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Opacity" Value=".6" />
+                                    <!--<Setter TargetName="Chrome" Property="Background" Value="{Binding Path=(controls:BackgroundSwitchElement.MouseDownBackground), RelativeSource={RelativeSource Mode=TemplatedParent}}" />-->
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value=".4" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+
+        <wpf:VideoView x:Name="videoView" Background="Black">
+            <Grid
+                x:Name="backPanel"
+                Margin="10"
+                Background="#01000000">
+                <Border x:Name="backBorder" Margin="-10" />
+
+                <Grid
+                    x:Name="tipPanel"
+                    Background="Transparent"
+                    ToolTip="无">
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Vertical">
+                        <local:LoadingCircle
+                            x:Name="loading"
+                            Style="{StaticResource loadingCirleStyle}"
+                            Visibility="Collapsed" />
+                        <TextBlock
+                            x:Name="tip"
+                            Foreground="#ffffff"
+                            Text="无视频播放"
+                            TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+                </Grid>
+                <Image
+                    x:Name="Image_NoneVideo"
+                    Source="/VLCDemo;component/NoneVideo_IOMS.png"
+                    Visibility="Collapsed" />
+                <Button
+                    x:Name="fullScreenButton"
+                    Width="40"
+                    Height="40"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Style="{StaticResource ButtonIcon}"
+                    Tag="{StaticResource fullScreenButton}"
+                    Visibility="Collapsed" />
+                <Button
+                    x:Name="restoreScreenButton"
+                    Width="40"
+                    Height="40"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Style="{StaticResource ButtonIcon}"
+                    Tag="{StaticResource restoreScreenButton}"
+                    Visibility="Visible" />
+            </Grid>
+        </wpf:VideoView>
+    </Grid>
+</UserControl>
