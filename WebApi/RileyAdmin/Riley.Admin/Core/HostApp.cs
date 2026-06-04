@@ -1,19 +1,29 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
+using Riley.Admin.Auth.Dto;
 using Riley.Admin.Core.Auth;
 using Riley.Admin.Core.Configs;
 using Riley.Admin.Services.Db;
+using Riley.Admin.Services.Db.Models;
+using Riley.Admin.Services.LoginLog;
+using Riley.Admin.Services.LoginLog.Dto;
+using Riley.Admin.Tools.Cache;
 using Riley.Common.Helpers;
 using System.Reflection;
+using System.Text;
 
 namespace Riley.Admin.Core
 {
@@ -54,7 +64,7 @@ namespace Riley.Admin.Core
                         ServerVersion.Parse("8.0.36-mysql")
                     );
                 });
-
+                services.AddHttpClient();
                 services.AddControllers();
                 services.AddEndpointsApiExplorer();
 
@@ -98,6 +108,7 @@ namespace Riley.Admin.Core
                         }
                     );
                 });
+
                 ConfigureService(services, env, configuration);
                 var app = builder.Build();
 
@@ -129,14 +140,65 @@ namespace Riley.Admin.Core
             IConfiguration configuration
         )
         {
+            #region 认证
+
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = nameof(ResponseAuthenticationHandler); //401
+                    options.DefaultForbidScheme = nameof(ResponseAuthenticationHandler); //403
+                })
+                .AddJwtBearer(options =>
+                {
+                    var dbConfig = services
+                        .BuildServiceProvider()
+                        .GetService<IOptions<JwtConfig>>()
+                        ?.Value;
+                    options.TokenValidationParameters =
+                        new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidIssuer = dbConfig?.Issuer,
+                            ValidateAudience = true,
+                            ValidAudience = dbConfig?.Audience,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(
+                                Encoding.UTF8.GetBytes(dbConfig?.SecurityKey ?? string.Empty)
+                            ),
+                            ClockSkew = TimeSpan.FromMinutes(5)
+                        };
+                })
+                .AddScheme<AuthenticationSchemeOptions, ResponseAuthenticationHandler>(
+                    nameof(ResponseAuthenticationHandler),
+                    o => { }
+                );
+
+            #endregion
+
             #region 缓存
 
             services.AddMemoryCache();
+
+            services.AddSingleton<ICacheTools, MemoryCacheTool>();
+            services.AddDistributedMemoryCache();
 
             #endregion
 
 
             services.AddSingleton<IUserToken, UserToken>();
+            services.AddSingleton(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
+            services.AddTransient<ILoginLogService, LoginLogService>();
+
+            #region AutoMapper映射配置
+            services.AddAutoMapper(cfp =>
+            {
+                cfp.CreateMap<AdUser, AuthLoginOutput>();
+                cfp.CreateMap<LoginLogAddInput, AdLoginLog>();
+            });
+
+            #endregion
         }
     }
 }

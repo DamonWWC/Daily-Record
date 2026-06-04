@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Riley.Admin.Auth.Dto;
 
@@ -11,17 +12,20 @@ public class AuthLoginInput
     /// 账号
     /// </summary>
     [Required(ErrorMessage = "用户名不能为空")]
+    [DefaultValue("admin")]
     public string UserName { get; set; }
 
     /// <summary>
     /// 密码
     /// </summary>
     [Required(ErrorMessage = "密码不能为空")]
+    [DefaultValue("123asd")]
     public string Password { get; set; }
 
     /// <summary>
     /// 密码键
     /// </summary>
+    [DefaultValue("")]
     public string PasswordKey { get; set; }
 
     /// <summary>

@@ -121,11 +121,6 @@ public partial class AdminContext : DbContext
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
         
-    
-
-
-
-
 
         modelBuilder.Entity<AdApi>(entity =>
         {

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Riley.Admin.Domain.User;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Riley.Admin.Services.Db.Models;
 
@@ -30,8 +32,8 @@ public partial class AdUser
 
     /// <summary>
     /// 密码加密类型
-    /// </summary>
-    public int? PasswordEncryptType { get; set; }
+    /// </summary>  
+    public PasswordEncryptType? PasswordEncryptType { get; set; }
 
     /// <summary>
     /// 姓名
@@ -81,7 +83,7 @@ public partial class AdUser
     /// <summary>
     /// 启用
     /// </summary>
-    public ulong Enabled { get; set; }
+    public bool Enabled { get; set; }
 
     /// <summary>
     /// 创建者用户Id
