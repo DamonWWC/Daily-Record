@@ -1,0 +1,31 @@
+<mxfile host="Electron" modified="2023-09-08T02:42:24.359Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.8 Chrome/114.0.5735.289 Electron/25.5.0 Safari/537.36" etag="dVeoVG04C1jx10vuoraL" version="21.6.8" type="device">
+  <diagram name="第 1 页" id="EZdh9EB5PSQYVqTuE1DM">
+    <mxGraphModel dx="1101" dy="992" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KyYQ3stkZA9Gp7vFDOEE-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="150" width="480" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="KyYQ3stkZA9Gp7vFDOEE-2" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="240" width="520" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="KyYQ3stkZA9Gp7vFDOEE-3" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="240" width="110" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="KyYQ3stkZA9Gp7vFDOEE-4" value="客户端后台管理" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="230" y="150" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KyYQ3stkZA9Gp7vFDOEE-5" value="基础能力" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="605" y="250" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KyYQ3stkZA9Gp7vFDOEE-7" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="600" width="250" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="KyYQ3stkZA9Gp7vFDOEE-8" value="MVVM架构" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="280" width="90" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
