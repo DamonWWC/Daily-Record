@@ -1,0 +1,281 @@
+.common-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 18px;
+
+    .gradient {
+        padding: 2px 48px 2px 8px;
+        border-left: 2px solid #409eff;
+        background: linear-gradient(to right, #e6f7ff, transparent);
+    }
+    .icon {
+        margin-right: 8px;
+        color: rgb(0 0 0 / 85%);
+
+        & + span {
+            padding: 2px 0;
+        }
+    }
+    .btns {
+        margin-left: auto;
+    }
+}
+.common-label-item {
+    $border-color: rgb(0 0 0 / 15%);
+
+    @mixin label-item {
+        .label-item {
+            display: flex;
+            overflow: hidden;
+            border-right: 1px solid $border-color;
+            border-bottom: 1px solid $border-color;
+            color: rgba(#000, 0.65);
+            @content;
+        }
+    }
+    @mixin label {
+        .label {
+            overflow: hidden;
+            width: 150px;
+            flex: none;
+            padding: 6px 10px;
+            border-right: 1px solid $border-color;
+            background-color: rgba(#000, 0.05);
+            text-align: right;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            @content;
+        }
+    }
+    @mixin text {
+        .text {
+            overflow: hidden;
+            padding: 6px 10px;
+            @content;
+
+            &.nowrap {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+    }
+
+    // 使用 flex 方式布局
+    &--flex {
+        --layout-num: 2;
+
+        display: flex;
+        flex-wrap: wrap;
+        border-top: 1px solid $border-color;
+        border-left: 1px solid $border-color;
+
+        @include label-item {
+            width: calc(100% / var(--layout-num));
+
+            // 用于独占一行
+            &.single {
+                width: 100%;
+                flex: none;
+            }
+            // 用于最后一个元素占满后面的剩余空间
+            &.full {
+                flex-grow: 1;
+            }
+        }
+        @include label;
+        @include text;
+    }
+
+    // 使用 grid 方式布局
+    &--grid {
+        --layout-num: 2;
+
+        display: grid;
+        border-top: 1px solid $border-color;
+        border-left: 1px solid $border-color;
+        grid-template-columns: repeat(var(--layout-num), 1fr);
+
+        @include label-item {
+            // 用于独占一行
+            &.single {
+                grid-column: 1 / -1;
+            }
+        }
+        @include label;
+        @include text;
+    }
+}
+.common-form::v-deep {
+    --layout-num: 3;
+
+    display: grid;
+    margin-bottom: -16px;
+    grid-template-columns: repeat(var(--layout-num), 1fr);
+
+    &.is-right .el-form-item {
+        justify-content: flex-end;
+    }
+    .el-form-item {
+        display: flex;
+        overflow: hidden;
+        justify-content: center;
+        margin-right: 0;
+        margin-bottom: 16px;
+
+        // 用于独占一行
+        &.single {
+            grid-column: 1 / -1;
+        }
+    }
+    .el-form-item__label {
+        white-space: nowrap;
+    }
+    .el-form-item__content {
+        overflow: hidden;
+        flex: 0 1 75%;
+
+        .el-select,
+        .el-input-number,
+        .el-date-editor,
+        .el-range-editor.el-input__inner {
+            width: 100%;
+        }
+        .el-textarea,
+        .el-textarea .el-textarea__inner {
+            height: 100%;
+        }
+        .el-radio-group {
+            display: flex;
+            height: 100%;
+            flex-wrap: wrap;
+            align-content: flex-start;
+
+            .el-radio {
+                height: 32px;
+                line-height: 32px;
+            }
+            .el-radio-button {
+                flex: 1;
+            }
+            .el-radio-button__inner {
+                display: inline-flex;
+                width: 100%;
+                height: 100%;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        .el-checkbox-group {
+            display: flex;
+            height: 100%;
+            flex-wrap: wrap;
+            align-content: flex-start;
+
+            .el-checkbox {
+                height: 32px;
+                line-height: 32px;
+            }
+            .el-checkbox-button {
+                flex: 1;
+
+                &.is-focus {
+                    .el-checkbox-button__inner {
+                        border-color: rgb(0 0 0 / 15%);
+                    }
+                }
+            }
+            .el-checkbox-button__inner {
+                display: inline-flex;
+                width: 100%;
+                height: 100%;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+}
+.common-table::v-deep {
+    border-radius: 2px;
+
+    .cell {
+        .cell-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 5px;
+            background-color: #909399;
+            vertical-align: middle;
+
+            &.primary {
+                background-color: #409eff;
+            }
+            &.success {
+                background-color: #67c23a;
+            }
+            &.warning {
+                background-color: #e6a23c;
+            }
+            &.danger {
+                background-color: #f56c6c;
+            }
+        }
+    }
+    th {
+        height: 48px;
+        padding: 5px 0;
+        background-color: #e5f1fc;
+
+        > .cell {
+            display: flex;
+            align-items: center;
+        }
+        &.is-center > .cell {
+            justify-content: center;
+        }
+        &.is-right > .cell {
+            justify-content: flex-end;
+        }
+    }
+    td {
+        border-bottom: none;
+
+        &:first-child {
+            padding-left: 14px;
+        }
+    }
+    .el-table__header-wrapper {
+        border-bottom: 2px solid #1a90ff;
+    }
+    .el-table__fixed-right-patch {
+        border-bottom: 1px solid #1a90ff;
+        background-color: #e5f1fc;
+    }
+    .el-table-column--selection .cell {
+        text-overflow: unset;
+    }
+    thead tr:first-child th:first-child {
+        border-radius: 0;
+    }
+    &.el-table--striped .el-table__body tr.el-table__row--striped td {
+        background-color: rgba(#53a2ed, 0.09);
+    }
+    &.el-table--enable-row-hover .el-table__body tr:hover > td {
+        background-color: rgba(#53a2ed, 0.06);
+    }
+}
+
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: rgba(#000, 0.15);
+    box-shadow: inset 1px 0 5px hsl(0deg 0% 100% / 15%);
+}
+::-webkit-scrollbar-track {
+    background: rgba(#000, 0.05);
+}

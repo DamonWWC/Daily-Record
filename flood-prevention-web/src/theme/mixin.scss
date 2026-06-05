@@ -1,0 +1,20 @@
+/**
+  * 这里只添加 scss 方法之类的登西
+  * 不 ! 要 ! 写! 入 ! 样式 ! 或变量 !
+  * 样式写到 ../styles.scss 去 
+  * 变量写到 ./variable.scss 去
+  */
+
+@use "sass:math";
+
+@function strip-unit($number) {
+    @if type-of($number) == "number" and not unitless($number) {
+        @return math.div($number, $number * 0 + 1);
+    }
+    @return $number;
+}
+
+@function toem($px, $context: 14) {
+    // @return math.div(strip-unit($px), strip-unit($context)) * 1em;
+    @return strip-unit($px) * 1px;
+}

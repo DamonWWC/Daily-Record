@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>flood-prevention-web - iframe</title>
+    <style>
+      #portal-iframe {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe id="portal-iframe"></iframe>
+    <script>
+        function render () {
+          var url = window.location.href;
+          var result = url.slice(url.indexOf('?') + 1).split('&');
+          var obj = {};
+          for (var i = 0, len = result.length; i < len; i++) {
+              var item = result[i];
+              var arr = item.split('=');
+              obj[arr[0]] = arr[1];
+          }
+          var portalIframe = document.getElementById('portal-iframe');
+          if (portalIframe) {
+            portalIframe.src = decodeURIComponent(obj['url']);
+          }
+          return Promise.resolve();
+        }
+
+        (function(global) {
+          function listenUrlChange (e) {
+            render();
+          }
+
+          global['portal-iframe'] = {
+            bootstrap: function() {
+              console.log('portal-iframe bootstrap');
+              return Promise.resolve();
+            },
+            mount: function() {
+              console.log('portal-iframe mount');
+              window.addEventListener('popstate', listenUrlChange);
+              return render();
+            },
+            unmount: function() {
+              console.log('portal-iframe unmount');
+              window.removeEventListener('popstate', listenUrlChange);
+              return Promise.resolve();
+            },
+          };
+        })(window);
+    </script>
+  </body>
+</html>

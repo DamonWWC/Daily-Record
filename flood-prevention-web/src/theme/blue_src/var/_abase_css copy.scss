@@ -1,0 +1,133 @@
+@import "@ecp/ecp-ui/styles/tools/colors.scss";
+
+[data-theme^="blue"] {
+    $--color-white-default: #fff;
+    $--color-black-default: #000;
+
+    // 主色变体
+    $--color-primary-default: #1890ff;
+    @include set-color-variable("primary", $--color-primary-default);
+    --color-primary-light-7: var(--color-primary-assist-2);
+    --color-primary-light-9: var(--background-color-primary);
+    --color-primary-assist-1: var(--color-primary-opacity-2);
+    --color-primary-assist-2: var(--color-primary-dark-1-5);
+    --color-primary-assist-3: var(--color-primary-dark-2-5);
+    --color-primary-assist-4: var(--color-primary-dark-4);
+    --color-primary-assist-5: var(--color-primary-dark-3);
+
+    // 功能色
+    /* 成功 */
+    $--color-success-default: #49aa19;
+    @include set-color-variable("success", $--color-success-default);
+    --color-success-assist-1: var(--color-success-opacity-1);
+    --color-success-assist-2: var(--color-success-dark-1-5);
+    --color-success-assist-3: var(--color-success-dark-2-5);
+    --color-success-assist-4: var(--color-success-dark-4);
+    --color-success-assist-5: var(--color-success-dark-5);
+
+    /* 警告 */
+    $--color-warning-default: #d89614;
+    @include set-color-variable("warning", $--color-warning-default);
+    --color-warning-assist-1: var(--color-warning-opacity-1);
+    --color-warning-assist-2: var(--color-warning-dark-1-5);
+    --color-warning-assist-3: var(--color-warning-dark-2-5);
+    --color-warning-assist-4: var(--color-warning-dark-4);
+    --color-warning-assist-5: var(--color-warning-dark-5);
+
+    /* 错误 */
+    $--color-danger-default: #a61d24;
+    @include set-color-variable("danger", $--color-danger-default);
+    --color-danger-assist-1: var(--color-danger-opacity-1);
+    --color-danger-assist-2: var(--color-danger-dark-1-5);
+    --color-danger-assist-3: var(--color-danger-dark-2-5);
+    --color-danger-assist-4: var(--color-danger-dark-4);
+    --color-danger-assist-5: var(--color-danger-dark-5);
+
+    /* 信息 */
+    $--color-info-default: rgba($--color-black-default, 45%);
+    @include set-color-variable("info", $--color-info-default);
+    --color-info-assist-1: var(--color-info-opacity-1);
+    --color-info-assist-2: var(--color-info-light-1-5);
+    --color-info-assist-3: var(--color-info-dark-2);
+    --color-info-assist-4: var(--color-info-light-4);
+    --color-info-assist-5: var(--color-info-light-5);
+
+    // 字体色
+    --color-text-light: var(--color-white);
+    --color-text-primary: var(--color-white-opacity-8-5);
+    --color-text-regular: var(--color-white-opacity-6-5);
+    --color-text-secondary: var(--color-white-opacity-4-5);
+    --color-text-placeholder: var(--color-white-opacity-3);
+    --color-text-mark: var(--color-white-opacity-1-5);
+    --color-text-shadow: var(--color-white-opacity-0-9);
+    --color-text-light-darken: var(--color-white-opacity-4);
+    --font-color-disabled-base: var(--color-text-placeholder);
+
+    --color-text-light-reverse: var(--color-black);
+    --color-text-primary-reverse: var(--color-black-opacity-8-5);
+    --color-text-regular-reverse: var(--color-black-opacity-6-5);
+    --color-text-secondary-reverse: var(--color-black-opacity-4-5);
+    --color-text-placeholder-reverse: var(--color-black-opacity-2-5);
+    --color-text-mark-reverse: var(--color-black-opacity-1-5);
+    --color-text-shadow-reverse: var(--color-black-opacity-0-9);
+    --color-text-light-darken-reverse: var(--color-black-opacity-5);
+    --font-color-disabled-base-reverse: var(--color-text-placeholder-reverse);
+
+    // 导航栏色
+    --color-nav-background-primary: var(--color-primary-light-9);
+    --color-nav-background-regular: var(--color-primary-light-5);
+
+    // 背景色
+    --background-color-page: #18202f;
+    --background-color-base: var(--color-white-opacity-0-8);
+    --background-color-light: var(--color-white-opacity-0-4);
+    --background-color-primary: #1e293e;
+    --background-color-dialog: #233048;
+    --background-color-loading: rgba(3, 5, 7, 70%);
+
+    // 1.1.x 版本以上 弃用
+    --background-color-white: var(--color-white);
+
+    // 填充色
+    --fill-base: var(--color-white);
+    --fill-color-light: var(--color-white-opacity-1);
+    --fill-color-primary: var(--color-white-opacity-6-5);
+    --fill-color-secondary: var(--color-white-opacity-4-5);
+    --fill-color-placeholder: var(--color-white-opacity-3);
+
+    // Link
+    --link-color: var(--color-primary);
+    --link-hover-color: var(--color-primary-assist-2);
+
+    // 边框
+    --border-color-base: var(--color-white-opacity-2);
+    --border-color-light: #{rgba($--color-white-default, 12%)};
+    --border-color-dash: #{rgba($--color-white-default, 12%)};
+    --border-color-disabled: var(--color-white-opacity-2);
+    --border-color-hover: var(--color-primary);
+
+    --border-base: var(--border-width-base) var(--border-style-base)
+        var(--border-color-base);
+    --border-dash: var(--border-width-base) dashed var(--border-color-base);
+    --border-hover: var(--border-width-base) var(--border-style-base)
+        var(--border-color-hover);
+
+    // 阴影样式
+    --box-shadow-color-base: var(--color-black-opacity-2);
+    --box-shadow-base: 0px 2px 8px 0px var(--box-shadow-color-base);
+    --box-shadow-bottom-select: 0px 2px 8px 0px var(--box-shadow-color-base);
+    --box-shadow-bottom: 0px 4px 12px 0px var(--box-shadow-color-base);
+    --box-shadow-left: -2px 0px 8px 0px var(--box-shadow-color-base);
+    --box-shadow-right: 2px 0px 8px 0px var(--box-shadow-color-base);
+    --box-shadow-top: 0px -2px 8px 0px var(--box-shadow-color-base);
+    --box-shadow-input-focus: 0px 0px 0px 2px var(--color-primary-opacity-2-5);
+
+    // 禁用色
+    --disabled-fill-base: var(--background-color-base);
+    --disabled-color-base: var(--color-text-placeholder);
+    --border-color-disabled: var(--border-color-light);
+
+    // 滚动条
+    --scrollbar-background-color: var(--color-white-opacity-2-5);
+    --scrollbar-hover-background-color: var(--color-white-opacity-4-5);
+}

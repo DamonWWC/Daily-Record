@@ -1,0 +1,61 @@
+// 折角面板
+.corner-box {
+  border: 1px solid rgba(23, 85, 127, 0.65);
+  background-image: linear-gradient(180deg, rgba(0, 40, 75, 0.30) 0%, rgba(0, 40, 75, 0.50) 100%);
+  position: relative;
+  padding: 0 12px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-style: solid;
+    border-top: 10px solid transparent;
+    border-right: 10px solid #0C4972;
+  }
+}
+
+// 带条状装饰图标的标题
+.striped-header {
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  color: #FFFFFF;
+  border-bottom: 1px solid rgba(23, 85, 127, 0.65);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 12px;
+    height: 100%;
+    border-bottom: 2px solid rgba(23, 85, 127, 0.65);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: url('~@assets/images/strip.svg') no-repeat;
+  }
+}
+
+.blue-img-button {
+  background: url('~@assets/images/btn-bg.png') !important;
+  background-position: center;
+  border-radius: 0;
+  border: 0;
+  background-size: cover;
+  height: 64px;
+
+  &:hover {
+    color: #fff;
+  }
+}
