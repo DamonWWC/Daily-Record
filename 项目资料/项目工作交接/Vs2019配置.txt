@@ -1,0 +1,9 @@
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional
+
+
+vs2019的密钥：NYWVH-HT4XC-R2WYW-9Y3CM-X4V3Y
+
+
+
+
+MsBuild的环境变量： C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin
