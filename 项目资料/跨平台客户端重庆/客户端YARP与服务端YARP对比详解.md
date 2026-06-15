@@ -341,3 +341,267 @@ OCC 站 AlarmSyncReciver 接收
 ```
 
 两层 YARP 的核心价值相同——**让调用方不需要知道后端的真实地址**，但它们服务的对象不同：客户端 YARP 服务于桌面 UI，服务端 YARP 服务于站间服务协作。
+
+---
+
+## 服务端出站请求是否经过自己的 YARP
+
+**会的，而且所有出站请求都必须经过。**
+
+### 证据链
+
+**1. HttpClient 和 WebSocketClient 的 BaseUrl 指向自己的 YARP 端口**
+
+```csharp
+// Server/MicsClient.Server/Program.cs
+
+private static void SetupProxy(WebApplicationBuilder builder, int proxyPort)
+{
+    // YARP 监听此端口
+    builder.WebHost.ConfigureKestrel(opt => opt.ListenAnyIP(proxyPort));
+
+    builder.Services.AddReverseProxy()
+        .LoadFromMemory(ProxyHelper.GetRouteConfigs(), ProxyHelper.GetClusterConfigs())
+        .LoadFromConfig(builder.Configuration.GetSection("ServerProxy"));
+
+    // HttpClient 的 BaseUrl 也是这个端口 ↓
+    builder.Services.AddMicsHttpClient(
+        options => options.SetBaseUrl("http://localhost:" + proxyPort));
+
+    // WebSocketClient 的 BaseUrl 也是这个端口 ↓
+    builder.Services.AddMicsWebsocketClient(
+        options => options.SetBaseUrl("ws://localhost:" + proxyPort));
+}
+```
+
+**2. 所有出站调用的路径都带 `/{loc}/` 或 `/{server}/` 前缀**
+
+搜遍整个 Server 项目，所有出站请求无一例外：
+
+```csharp
+// HTTP 调用
+httpClient.PostAsync($"/{loc}/alarm/confirm", req)     // AlarmService
+httpClient.PostAsync($"/{loc}/alarm/close", req)       // AlarmService
+httpClient.PostAsync($"/{loc}/device/control", req)    // DeviceControlService
+httpClient.CheckUrl($"/{server}/Health")                // PrimaryCheckService
+
+// WebSocket 连接
+wsc.ConnectAsync($"/{loc.Name}/alarm/sync")            // AlarmSyncReciver
+wsc.ConnectAsync($"/{loc}/device")                     // DataPointAggregator
+wsc.ConnectAsync($"/{loc.Name}/event/sync")            // EventSyncReciver
+wsc.ConnectAsync($"/{loc}/right/sync")                 // SessionSyncReciver
+```
+
+这些路径全部命中 YARP 的车站级/服务器级路由规则，被转发到对应车站。
+
+### 服务端 YARP 同时承担两个角色
+
+```
+                        服务端 Kestrel (localhost:15001)
+                        ┌─────────────────────────────────────────────┐
+                        │                                             │
+  【入站】              │                                             │
+  客户端 YARP ─────────→│  YARP 路由匹配                               │
+  其他车站 ────────────→│  ├─ /XDZ/** → XDZ 集群 (转发给 XDZ)          │
+                        │  ├─ /OCC/** → OCC 集群 (转发给 OCC)          │
+                        │  └─ 未匹配  → fallthrough → 本地端点         │
+                        │         ├─ /alarm/query   → AlarmController │
+                        │         ├─ /alarm/sync    → AlarmWebSocket  │
+                        │         └─ /device/**     → DeviceService   │
+                        │                                             │
+  【出站】              │                                             │
+  AlarmService ────────→│  HttpClient → localhost:15001/XDZ/alarm/confirm
+  AlarmSyncReciver ────→│  WebSocket  → localhost:15001/XDZ/alarm/sync
+  DataPointAggregator ─→│  WebSocket  → localhost:15001/XDZ/device
+                        │       │                                     │
+                        │       ▼                                     │
+                        │  YARP 路由匹配: /XDZ/** → XDZ 集群           │
+                        │       │                                     │
+                        │       ▼                                     │
+                        │  转发到 http://192.168.1.10:15001/alarm/confirm
+                        └─────────────────────────────────────────────┘
+```
+
+入站和出站共用同一个 YARP，因为**它们走的是同一个端口**。出站请求从本地服务发出 → 回到 `localhost:15001` → YARP 当它是一个新的入站请求来路由 → 转发到远端。
+
+### 这样设计的好处
+
+服务端代码永远不需要知道其他车站的真实 IP：
+
+```csharp
+// 不需要这样写（硬编码 IP）
+httpClient.PostAsync("http://192.168.1.10:15001/alarm/confirm", req)
+
+// 只需要这样写（逻辑名称）
+httpClient.PostAsync($"/{loc}/alarm/confirm", req)
+// YARP 自动解析 loc="XDZ" → 查集群配置 → 选健康实例 → 转发
+```
+
+换 IP、加节点、故障转移，改配置文件就行，代码零改动。
+
+---
+
+## 请求到达目标服务器后如何找到接口函数
+
+### 问题
+
+YARP 将请求转发到目标服务器，例如 `http://192.168.1.10:15001/alarm/confirm`，目标服务器是如何找到 `/alarm/confirm` 对应的处理函数的？
+
+### 先回忆请求是怎么到达 192.168.1.10 的
+
+```
+OCC 站 AlarmService
+    │
+    │  httpClient.PostAsync("/XDZ/alarm/confirm", req)
+    │  BaseUrl = "http://localhost:15001"
+    │
+    ▼
+OCC 站 Kestrel (localhost:15001)
+    │
+    │  服务端 YARP 匹配: /XDZ/{**remainder}
+    │  去掉前缀 /XDZ → remainder = "alarm/confirm"
+    │  转发目标: http://192.168.1.10:15001
+    │
+    ▼
+XDZ 站 Kestrel (192.168.1.10:15001)
+    收到的请求路径: POST /alarm/confirm    ← 注意：前缀已被去掉
+```
+
+### 到达 192.168.1.10 后发生了什么
+
+XDZ 站服务器收到 `POST /alarm/confirm` 后，进入 ASP.NET Core 中间件管道：
+
+```csharp
+// Server/MicsClient.Server/Program.cs
+
+var app = builder.Build();
+
+// ① 全局异常处理
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
+// ② 授权
+app.UseAuthorization();
+
+// ③ 跨域
+app.UseCors();
+
+// ④ YARP 反向代理（检查是否匹配路由）
+app.MapReverseProxy();
+
+// ⑤ 静态文件（/pages 前缀）
+app.UseStaticFiles(new StaticFileOptions { RequestPath = "/pages", ... });
+
+// ⑥ Blazor
+app.MapBlazorHub("maintain");
+
+// ⑦ 所有业务 Minimal API 端点 ← 这里注册了 /alarm/confirm
+app.UseMicsService();
+```
+
+### 关键：第 ④ 步 YARP 匹配不上，放行
+
+XDZ 站的 YARP 路由规则是：
+
+```
+/XDZ/{**remainder}   → XDZ 集群
+/OCC/{**remainder}   → OCC 集群
+```
+
+但现在到达的请求路径是 `/alarm/confirm`，**不带任何车站前缀**，所以 YARP 所有路由都不匹配。
+
+**YARP 不匹配时的行为**：它不拦截请求，而是把请求交给管道中的下一个中间件（即 fallthrough）。
+
+```
+请求: POST /alarm/confirm
+    │
+    ▼
+YARP: /XDZ/** 匹配？ ❌  /OCC/** 匹配？ ❌
+    │
+    │  不匹配 → 不处理 → 放行给下一个中间件
+    │
+    ▼
+EndpointRouting: 查找已注册的端点
+    │
+    │  /alarm/confirm 有注册吗？ ✅ 有！
+    │
+    ▼
+AlarmServerExtention.MapRoute() 中注册的端点被命中
+```
+
+### 第 ⑦ 步：Minimal API 端点匹配
+
+`app.UseMicsService()` 最终调用了 `app.UseAlarmService()`，其中注册了所有报警端点：
+
+```csharp
+// Server/MicsClient.Server.Alarm/AlarmServerExtention.cs
+
+public static WebApplication UseAlarmService(this WebApplication app)
+{
+    MapRoute(app);
+    return app;
+}
+
+private static void MapRoute(WebApplication app)
+{
+    // WebSocket 端点
+    app.MapMethods("/alarm/subscribe", ["CONNECT", "GET"], async (HttpContext context) => { ... });
+    app.MapMethods("/alarm/sync", ["CONNECT", "GET"], async (HttpContext context) => { ... });
+
+    // HTTP 端点 ← 就是这里匹配到了 /alarm/confirm
+    app.MapPost("/alarm/confirm", async (AlarmConfirmReq req, HttpContext context) =>
+    {
+        var controller = context.RequestServices.GetRequiredService<IAlarmController>();
+        return await controller.ConfirmAlarms(req, context);
+    })
+    .WithTags("报警")
+    .WithName("确认报警");
+
+    app.MapPost("/alarm/close", ...);
+    app.MapPost("/alarm/query", ...);
+    app.MapPost("/alarm/queryhist", ...);
+    // ... 更多端点
+}
+```
+
+### 完整流程图
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│  XDZ 站服务器 (192.168.1.10:15001)  收到 POST /alarm/confirm           │
+│                                                                         │
+│  ┌─── 中间件管道 ──────────────────────────────────────────────────┐    │
+│  │                                                                 │    │
+│  │  ① GlobalExceptionMiddleware → 通过                             │    │
+│  │  ② Authorization           → 通过                               │    │
+│  │  ③ CORS                    → 通过                               │    │
+│  │  ④ YARP MapReverseProxy:                                        │    │
+│  │     路由表:                                                      │    │
+│  │       /XDZ/** → XDZ集群    匹配 /alarm/confirm ? ❌              │    │
+│  │       /OCC/** → OCC集群    匹配 /alarm/confirm ? ❌              │    │
+│  │     全部不匹配 → 放行 (fallthrough)                              │    │
+│  │  ⑤ StaticFiles /pages       匹配 /alarm/confirm ? ❌ → 放行      │    │
+│  │  ⑥ Blazor /maintain         匹配 /alarm/confirm ? ❌ → 放行      │    │
+│  │  ⑦ EndpointRouting:                                             │    │
+│  │     已注册端点:                                                  │    │
+│  │       POST /alarm/confirm   匹配 ? ✅ ← 命中！                  │    │
+│  │       POST /alarm/close                                          │    │
+│  │       POST /alarm/query                                          │    │
+│  │       GET  /alarm/sync                                           │    │
+│  │       ...                                                        │    │
+│  │                                                                  │    │
+│  └──────────────────────────────────────────────────────────────────┘    │
+│                                                                         │
+│  执行端点处理函数:                                                       │
+│  ┌──────────────────────────────────────────────────────────────┐       │
+│  │  AlarmConfirmReq req ← 从请求体反序列化                       │       │
+│  │  IAlarmController controller ← 从 DI 容器解析                 │       │
+│  │  return await controller.ConfirmAlarms(req, context);         │       │
+│  └──────────────────────────────────────────────────────────────┘       │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### 一句话总结
+
+> 请求到达目标服务器后，**YARP 匹配不上就放行**，然后由 ASP.NET Core 的 **EndpointRouting** 在已注册的 Minimal API 端点中找到 `/alarm/confirm` 并执行对应的处理函数。
+
+之所以能匹配上，根本原因是 **YARP 在转发时已经把车站前缀 `/XDZ` 去掉了**（`WithTransformPathRemovePrefix`），到达目标服务器的路径就是纯净的 `/alarm/confirm`，与目标服务器本地注册的端点路径完全一致。
