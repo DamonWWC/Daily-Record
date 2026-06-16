@@ -1,0 +1,14 @@
+<Application x:Class="SubProcessDemo.Worker.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources>
+        <SolidColorBrush x:Key="BgDark" Color="#181825" />
+        <SolidColorBrush x:Key="BgCard" Color="#1E1E2E" />
+        <SolidColorBrush x:Key="FgPrimary" Color="#CDD6F4" />
+        <SolidColorBrush x:Key="FgSecondary" Color="#A6ADC8" />
+        <SolidColorBrush x:Key="FgAccent" Color="#89B4FA" />
+        <SolidColorBrush x:Key="Green" Color="#A6E3A1" />
+        <SolidColorBrush x:Key="Yellow" Color="#F9E2AF" />
+        <SolidColorBrush x:Key="Red" Color="#F38BA8" />
+    </Application.Resources>
+</Application>
