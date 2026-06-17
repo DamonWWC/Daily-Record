@@ -68,8 +68,8 @@ public partial class MainWindow : Window
         Log($"[策略④] JIT 预编译: {methods} 个方法, 耗时 {jitMs:F1}ms");
 
         _poolManager = new ProcessPoolManager(workerPath);
-        _poolManager.OnLog += msg => Dispatcher.Invoke(() => Log(msg));
-        _poolManager.OnWorkerStateChanged += (id, info) => Dispatcher.Invoke(() => UpdatePoolUI());
+        _poolManager.OnLog += msg => SafeInvoke(() => Log(msg));
+        _poolManager.OnWorkerStateChanged += (id, info) => SafeInvoke(() => UpdatePoolUI());
 
         _serviceDispatcher = new ServiceDispatcher(_poolManager);
         _serviceDispatcher.OnLog += msg => Dispatcher.Invoke(() => Log(msg));
@@ -83,6 +83,9 @@ public partial class MainWindow : Window
         BtnColdStart.IsEnabled = true;
         BtnServiceProxy.IsEnabled = _poolManager.HasActiveProcess;
         BtnTieredWarmUp.IsEnabled = true;
+        BtnDeactivate.IsEnabled = _poolManager.HasActiveProcess;
+        BtnBreakPipe.IsEnabled = _poolManager.HasReadyProcess || _poolManager.HasActiveProcess;
+        BtnCrash.IsEnabled = _poolManager.HasReadyProcess || _poolManager.HasActiveProcess;
 
         Log("═══════════════════════════════════════\n");
     }
@@ -115,10 +118,65 @@ public partial class MainWindow : Window
         UpdatePoolUI();
         BtnActivate.IsEnabled = _poolManager.HasReadyProcess;
         BtnServiceProxy.IsEnabled = _poolManager.HasActiveProcess;
+        BtnDeactivate.IsEnabled = _poolManager.HasActiveProcess;
     }
 
     // ═══════════════════════════════════════════════════════════
-    // 冷启动对比
+    // 回收模块（Active → Ready，隐藏子进程窗口）
+    // ═══════════════════════════════════════════════════════════
+    private async void BtnDeactivate_Click(object sender, RoutedEventArgs e)
+    {
+        if (_poolManager == null) return;
+
+        BtnDeactivate.IsEnabled = false;
+        Log("回收模块：将 Active 进程退回 Ready，隐藏子进程窗口");
+
+        var success = await _poolManager.DeactivateAsync();
+
+        if (success)
+        {
+            Log("✅ 回收完成，子进程窗口已隐藏，进程可被再次激活");
+        }
+        else
+        {
+            Log("❌ 回收失败：无 Active 进程");
+        }
+
+        UpdatePoolUI();
+        BtnActivate.IsEnabled = _poolManager.HasReadyProcess;
+        BtnServiceProxy.IsEnabled = _poolManager.HasActiveProcess;
+        BtnDeactivate.IsEnabled = _poolManager.HasActiveProcess;
+        BtnBreakPipe.IsEnabled = _poolManager.HasReadyProcess || _poolManager.HasActiveProcess;
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // ⚡ 模拟管道断开 + 自动重连
+    // ═══════════════════════════════════════════════════════════
+    private async void BtnBreakPipe_Click(object sender, RoutedEventArgs e)
+    {
+        if (_poolManager == null) return;
+
+        BtnBreakPipe.IsEnabled = false;
+        Log("═══════════════════════════════════════");
+        Log("⚡ 模拟管道断开：强制关闭 Server 端管道，观察双端自动重连");
+        Log("  Host: Server 管道关闭 → Disconnected → 重建 Server 管道等待重连");
+        Log("  Worker: 检测到管道关闭 → Disconnected → AutoReconnect 指数退避重连");
+
+        var (success, workerId) = await _poolManager.SimulateBrokenPipeAsync();
+
+        if (success)
+        {
+            Log($"✅ [{workerId}] 双端自动重连成功！管道已恢复");
+        }
+        else
+        {
+            Log($"❌ [{workerId}] 重连失败或超时");
+        }
+
+        UpdatePoolUI();
+        Log("═══════════════════════════════════════\n");
+        BtnBreakPipe.IsEnabled = _poolManager.HasReadyProcess || _poolManager.HasActiveProcess;
+    }
     // ═══════════════════════════════════════════════════════════
     private async void BtnColdStart_Click(object sender, RoutedEventArgs e)
     {
@@ -184,6 +242,40 @@ public partial class MainWindow : Window
     }
 
     // ═══════════════════════════════════════════════════════════
+    // 💥 模拟子进程崩溃 + 自动重启恢复
+    // ═══════════════════════════════════════════════════════════
+    private async void BtnCrash_Click(object sender, RoutedEventArgs e)
+    {
+        if (_poolManager == null) return;
+
+        BtnCrash.IsEnabled = false;
+        Log("═══════════════════════════════════════");
+        Log("💥 模拟子进程崩溃：强制 Kill 进程，观察 Host 检测异常并自动重启");
+        Log("  Host: Process.Exited 事件检测到 ExitCode≠0 → 2秒后 AutoRestartWorkerAsync");
+        Log("  AutoRestart: 清理旧通道 → 启动新进程 → 等待预热 → 恢复 Ready");
+
+        var (success, workerId) = await _poolManager.SimulateCrashAsync();
+
+        if (success)
+        {
+            Log($"[{workerId}] 进程已终止，等待 Host 自动检测并重启...");
+            // 给自动重启一些时间（2s 延迟 + 预热时间）
+            await Task.Delay(5000);
+            UpdatePoolUI();
+            Log($"当前进程池状态：");
+            foreach (var w in _poolManager.Workers)
+                Log($"  {w.WorkerId}: {w.State} (PID={w.Pid})");
+        }
+        else
+        {
+            Log("❌ 崩溃模拟失败");
+        }
+
+        Log("═══════════════════════════════════════\n");
+        BtnCrash.IsEnabled = _poolManager.HasReadyProcess || _poolManager.HasActiveProcess;
+    }
+
+    // ═══════════════════════════════════════════════════════════
     // 策略⑤：分级预热
     // ═══════════════════════════════════════════════════════════
     private async void BtnTieredWarmUp_Click(object sender, RoutedEventArgs e)
@@ -232,6 +324,9 @@ public partial class MainWindow : Window
         BtnColdStart.IsEnabled = false;
         BtnServiceProxy.IsEnabled = false;
         BtnTieredWarmUp.IsEnabled = false;
+        BtnDeactivate.IsEnabled = false;
+        BtnBreakPipe.IsEnabled = false;
+        BtnCrash.IsEnabled = false;
 
         Log("重置完成");
     }
@@ -355,6 +450,18 @@ public partial class MainWindow : Window
         var entry = $"[{time}] {message}";
         LogList.Items.Add(entry);
         LogList.ScrollIntoView(entry);
+    }
+
+    /// <summary>安全的 Dispatcher.Invoke，关闭期间不抛异常</summary>
+    private void SafeInvoke(Action action)
+    {
+        try
+        {
+            if (!Dispatcher.HasShutdownStarted && !Dispatcher.HasShutdownFinished)
+                Dispatcher.Invoke(action);
+        }
+        catch (TaskCanceledException) { }
+        catch (ObjectDisposedException) { }
     }
 
     private void BtnClearLog_Click(object sender, RoutedEventArgs e)

@@ -87,6 +87,23 @@ public partial class WorkerWindow : Window
         }
     }
 
+    /// <summary>隐藏窗口，退回待命状态（Active → Ready）</summary>
+    public void Conceal()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            Visibility = Visibility.Hidden;
+            ShowInTaskbar = false;
+            _isVisible = false;
+            _pendingLogs.Clear();
+
+            // 重置界面状态
+            TitleText.Text = "Worker 子进程 — 就绪待命";
+            StepText.Text = "等待主进程发送激活指令...";
+            SetStateBadge(WorkerState.Ready);
+        });
+    }
+
     /// <summary>更新当前步骤文本</summary>
     public void SetStep(string text, WorkerState state)
     {
@@ -133,5 +150,18 @@ public partial class WorkerWindow : Window
         StateBadge.Background = bg!;
         StateText.Foreground = fg!;
         StateText.Text = text;
+    }
+
+    /// <summary>模拟崩溃按钮点击</summary>
+    private void BtnCrash_Click(object sender, RoutedEventArgs e)
+    {
+        AddLog("💥 模拟未处理异常 → 进程即将崩溃");
+        // 模拟未处理异常导致的进程崩溃
+        // 使用 Environment.Exit(1) 模拟非正常退出（exit code ≠ 0）
+        Task.Run(() =>
+        {
+            Thread.Sleep(200); // 让日志有时间刷出
+            Environment.Exit(1);
+        });
     }
 }

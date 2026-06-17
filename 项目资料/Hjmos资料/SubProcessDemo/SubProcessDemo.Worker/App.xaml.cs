@@ -86,13 +86,22 @@ public partial class App : Application
         _window.SetStep("步骤 4/4：连接命名管道...", WorkerState.WarmingUp);
         stepSw.Restart();
         _channel = await SimpleIpcChannel.CreateClientAsync(pipeName);
+        _channel.AutoReconnect = true;  // 启用自动重连
         stepSw.Stop();
         _window.AddLog($"  ✅ 管道已连接 ({stepSw.ElapsedMilliseconds}ms)");
 
-        // 注册管道错误处理
+        // 注册管道事件
         _channel.ErrorOccurred += ex =>
         {
-            Dispatcher.Invoke(() => _window.AddLog($"❌ 管道错误: {ex.Message}"));
+            DispatcherInvoke(() => _window.AddLog($"❌ 管道错误: {ex.Message}"));
+        };
+        _channel.Disconnected += () =>
+        {
+            DispatcherInvoke(() => _window.AddLog("⚠️ 管道断开，正在自动重连..."));
+        };
+        _channel.Reconnected += () =>
+        {
+            DispatcherInvoke(() => _window.AddLog("✅ 管道已重连，通信恢复"));
         };
 
         totalSw.Stop();
@@ -119,6 +128,9 @@ public partial class App : Application
                     {
                         case IpcMessageType.ActivateModule:
                             await HandleActivation(msg);
+                            break;
+                        case IpcMessageType.DeactivateModule:
+                            await HandleDeactivation(msg);
                             break;
                         case IpcMessageType.Shutdown:
                             Dispatcher.Invoke(() => Shutdown());
@@ -169,6 +181,25 @@ public partial class App : Application
             Type = IpcMessageType.ModuleActivated,
             CallId = msg.CallId,
             Payload = JsonSerializer.Serialize(new { ModuleName = moduleName, ActivationMs = sw.Elapsed.TotalMilliseconds })
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // 处理模块回收（Active → Ready，隐藏窗口）
+    // ═══════════════════════════════════════════════════════════
+    private async Task HandleDeactivation(IpcMessage msg)
+    {
+        DispatcherInvoke(() =>
+        {
+            _window!.AddLog("收到回收指令：隐藏窗口，退回 Ready 状态");
+            _window.Conceal();
+        });
+
+        // 向主进程确认已退回 Ready
+        await _channel!.SendAsync(new IpcMessage
+        {
+            Type = IpcMessageType.ModuleDeactivated,
+            CallId = msg.CallId,
         });
     }
 

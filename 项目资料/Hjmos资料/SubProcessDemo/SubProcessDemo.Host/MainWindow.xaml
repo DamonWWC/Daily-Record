@@ -37,6 +37,9 @@
             <Button Content="③ 冷启动对比" x:Name="BtnColdStart" Click="BtnColdStart_Click" Margin="0,0,8,0" IsEnabled="False" />
             <Button Content="④ 服务代理测试" x:Name="BtnServiceProxy" Click="BtnServiceProxy_Click" Margin="0,0,8,0" IsEnabled="False" />
             <Button Content="⑤ 分级预热" x:Name="BtnTieredWarmUp" Click="BtnTieredWarmUp_Click" Margin="0,0,8,0" IsEnabled="False" />
+            <Button Content="↩ 回收模块" x:Name="BtnDeactivate" Click="BtnDeactivate_Click" Margin="0,0,8,0" IsEnabled="False" />
+            <Button Content="⚡ 模拟断管" x:Name="BtnBreakPipe" Click="BtnBreakPipe_Click" Margin="0,0,8,0" IsEnabled="False" />
+            <Button Content="💥 模拟崩溃" x:Name="BtnCrash" Click="BtnCrash_Click" Margin="0,0,8,0" IsEnabled="False" />
             <Button Content="🔄 重置" x:Name="BtnReset" Click="BtnReset_Click" />
         </WrapPanel>
 

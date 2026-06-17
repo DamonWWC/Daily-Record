@@ -15,6 +15,8 @@ public enum IpcMessageType
     Shutdown = 4,
     HealthCheck = 5,
     HealthReport = 6,
+    DeactivateModule = 7,     // 主进程 → 子进程：回收模块，隐藏窗口，退回 Ready
+    ModuleDeactivated = 8,    // 子进程 → 主进程：确认已退回 Ready
 
     // 服务代理
     ServiceCall = 10,
